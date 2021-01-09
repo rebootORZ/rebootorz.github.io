@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>WiFi Pineapple之Evil Portal | rebootORZ</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1610210580372">
+<link rel="stylesheet" href="https://rebootorz.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="前言：
+  WiFi Pineapple（大菠萝）是由国外无线安全审计公司Hak5开发并售卖的一款无线安全测试神器。集合了一些功能强大的模块，基本可以还原钓鱼攻击的全过程。在学习无线安全时也是一个不错的工具，本文主要讲Evil Portal..." />
+    <meta name="keywords" content="物联网安全" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://rebootorz.github.io">
+        <img src="https://rebootorz.github.io/images/avatar.png?v=1610210580372" class="site-logo">
+        <h1 class="site-title">rebootORZ</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/rebootORZ/" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      一名默默无闻的攻城狮
+    </div>
+    <div class="site-footer">
+      高度自律  绝对自由 | <a class="rss" href="https://rebootorz.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">WiFi Pineapple之Evil Portal</h2>
+            <div class="post-date">2021-01-09</div>
+            
+              <div class="feature-container" style="background-image: url('https://rebootorz.github.io/post-images/WiFI-Pineapple-Evil-Portal.png')">
+              </div>
+            
+            <div class="post-content" v-pre>
+              <h1 id="前言">前言：</h1>
+<p>  WiFi Pineapple（大菠萝）是由国外无线安全审计公司Hak5开发并售卖的一款无线安全测试神器。集合了一些功能强大的模块，基本可以还原钓鱼攻击的全过程。在学习无线安全时也是一个不错的工具，本文主要讲Evil Portal(恶意门户)模块的使用。</p>
+<h1 id="简单设备介绍">简单设备介绍：</h1>
+<p><img src="https://rebootorz.github.io/post-images/1610209619964.png" alt="" loading="lazy"><br>
+设备的天线是SMA口，所以如果我们需要接收信号能力更强的时候，例如搜索到更多WI-FI信号且信号满格，我们就可以换个增益天线，比如下面第二张图的增益天线<br>
+<img src="https://rebootorz.github.io/post-images/1610209840016.png" alt="" loading="lazy"><br>
+<img src="https://rebootorz.github.io/post-images/1610209980545.png" alt="" loading="lazy"></p>
+<h1 id="evil-portal介绍">Evil Portal介绍：</h1>
+<p>  Evil Portal(邪恶门户)，顾名思义就是一个wifi门户页面，上面携带了恶意的内容，例如当别人连接了这个WI-FI后，会自动跳转到我们设置的门户页面，页面的内容我们可以通过代码进行控制，从而诱导用户去输入账号、密码等敏感信息。<br>
+<strong>使用方式</strong><br>
+  当第一次启动设备，接通电源后，会发出一个Pineapple_xxxx的信号：<br>
+<img src="https://rebootorz.github.io/post-images/1610210063088.png" alt="" loading="lazy"><br>
+连接这个WI-FI并访问管理端地址：http://172.16.42.1:1471<br>
+输入默认账号密码进行登录<br>
+<img src="https://rebootorz.github.io/post-images/1610210086439.png" alt="" loading="lazy"><br>
+<img src="https://rebootorz.github.io/post-images/1610210091407.png" alt="" loading="lazy"><br>
+这里就不讲基础功能的使用了，直接进入正题：<br>
+在modules中下载Evil Portal模块：<br>
+<img src="https://rebootorz.github.io/post-images/1610210115657.png" alt="" loading="lazy"><br>
+注：这里需要确保你的大菠萝能够联网，这个可以是桥接wifi或者直接插网线。<br>
+在这里找到Evil Portal然后install即可：<br>
+<img src="https://rebootorz.github.io/post-images/1610210124125.png" alt="" loading="lazy"><br>
+在使用之前，我们需要先设置我们要使用的恶意ap的ssid：<br>
+来到Networking并设置Open SSID为我们的恶意ap ssid<br>
+<img src="https://rebootorz.github.io/post-images/1610210140924.png" alt="" loading="lazy"><br>
+接下来，进入Evil Portal模块：<br>
+<img src="https://rebootorz.github.io/post-images/1610210158906.png" alt="" loading="lazy"><br>
+创建一个恶意门户：<br>
+<img src="https://rebootorz.github.io/post-images/1610210177627.png" alt="" loading="lazy"><br>
+点进去后，可以看到默认已经为我们创建了3个样板文件，且这些文件我们是可以进行编辑的，但是这里我们无法直接进行文件的增删：<br>
+<img src="https://rebootorz.github.io/post-images/1610210204621.png" alt="" loading="lazy"><br>
+这些文件就是我们恶意门户的源码文件，既然无法直接增删，我们就使用ssh直接连上设备进行操作：<br>
+默认的ssh账号密码：root/pineapplesareyummy<br>
+<img src="https://rebootorz.github.io/post-images/1610210219609.png" alt="" loading="lazy"><br>
+文件路径在：/root/portals/门户名称<br>
+<img src="https://rebootorz.github.io/post-images/1610210234046.png" alt="" loading="lazy"><br>
+除了.ep文件不删除，其余文件全部删掉，然后将我们的门户代码上传上去<br>
+<img src="https://rebootorz.github.io/post-images/1610210251462.png" alt="" loading="lazy"><br>
+这里需要注意，根据我们要实现功能的不同，代码要进行调整，例如这里试图用虚假的门户页面使得连接wifi的用户输入wifi的密码，所以这里我们需要在代码中实现将用户输入保存的操作，例如：<br>
+（这个b.txt文件最终会存储在设备的/www/b.txt）<br>
+这里需要注意，根据我们要实现功能的不同，代码要进行调整，例如这里试图用虚假的门户页面使得连接wifi的用户输入wifi的密码，所以这里我们需要在代码中实现将用户输入保存的操作，例如：<br>
+（这个b.txt文件最终会存储在设备的/www/b.txt）<br>
+<img src="https://rebootorz.github.io/post-images/1610210295626.png" alt="" loading="lazy"><br>
+然后到web界面上启用模块，并启用“强制门户”，最后激活门户：<br>
+<img src="https://rebootorz.github.io/post-images/1610210316246.png" alt="" loading="lazy"><br>
+查看预览：<br>
+<img src="https://rebootorz.github.io/post-images/1610210331963.png" alt="" loading="lazy"><br>
+这里会发现存在中文导致的乱码，这个因为我测试的时候通过在ssh里用vim编辑，无法正常输入中文，所以我就换了个方法：<br>
+直接在web管理端编辑这个文件，然后将带有中文的源码复制进去：<br>
+<img src="https://rebootorz.github.io/post-images/1610210351175.png" alt="" loading="lazy"><br>
+<img src="https://rebootorz.github.io/post-images/1610210357130.png" alt="" loading="lazy"><br>
+保存后再次预览：<br>
+成功了<br>
+<img src="https://rebootorz.github.io/post-images/1610210369930.png" alt="" loading="lazy"><br>
+接下来就上见证奇迹的时刻：<br>
+我们访问这个WI-FI，弹出了门户页面：<br>
+<img src="https://rebootorz.github.io/post-images/1610210387180.png" alt="" loading="lazy"><br>
+输入rebootORZ，然后提交：<br>
+<img src="https://rebootorz.github.io/post-images/1610210406015.png" alt="" loading="lazy"><br>
+接下来用户就可以正常进行上网了（前提是我们的大菠萝有网），用户不会有任何察觉。<br>
+然后我们ssh到设备上查看记录：<br>
+可以看到密码了(这里显示的位置有点错乱，可能是输出的问题，影响不大)。<br>
+<img src="https://rebootorz.github.io/post-images/1610210425748.png" alt="" loading="lazy"><br>
+最后我们就可以拿这个密码去访问真实的目标wifi了。</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="tag">
+                    物联网安全
+                  </a>
+                
+              </div>
+            
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+  </body>
+</html>
