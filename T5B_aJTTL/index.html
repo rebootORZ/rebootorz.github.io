@@ -7,7 +7,7 @@
 <meta name="description" content="一名默默无闻的攻城狮">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1610347808353">
+<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1610349455450">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 <link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
@@ -85,7 +85,7 @@
             <p class="article-meta">
               2021-01-11
               
-                <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge warning">
+                <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge secondary">
                   红队
                 </a>
               
@@ -97,7 +97,7 @@
 <h1 id="项目地址">项目地址</h1>
 <p>https://github.com/fatedier/frp/blob/master/README_zh.md</p>
 <h1 id="实验拓扑图">实验拓扑图</h1>
-<figure data-type="image" tabindex="1"><img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image001.png" alt="clip_image001.png" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://rebootorz.github.io/post-images/1610348318438.png" alt="" loading="lazy"></figure>
 <h1 id="实验内容">实验内容</h1>
 <p>完成两种穿透：<br>
 A-B-DMZ-内网A<br>
@@ -110,56 +110,57 @@ A-B-DMZ-内网A-内网B</p>
 <div class="wiz-table-container" style="position: relative; padding: 0px;" contenteditable="false"><div class="wiz-table-body" contenteditable="false"><table class="MsoTableGrid" border="1" style="width: 973px;"><tbody><tr><td width="553" valign="top" style="width: 972px;"><p class="MsoNormal"><span>#</span>通用配置段<span><o:p></o:p></span></p><p class="MsoNormal"><span>[common]<o:p></o:p></span></p><p class="MsoNormal"><span>#frp</span>服务端<span>IP</span>或域名<span> [</span>实战中一般都会直接用域名<span>]<o:p></o:p></span></p><p class="MsoNormal"><span>server_addr = XXX.XXX.XXX.XX<o:p></o:p></span></p><p class="MsoNormal"><span>#frp</span>服务器端口<span><o:p></o:p></span></p><p class="MsoNormal"><span>server_port = 7000<o:p></o:p></span></p><p class="MsoNormal"><span><o:p>&nbsp;</o:p></span></p><p class="MsoNormal"><span>#</span>授权<span>token</span>，此处必须与服务端保持一致，否则无法建立连接<span><o:p></o:p></span></p><p class="MsoNormal"><span>auth_token = Admin@auth<o:p></o:p></span></p><p class="MsoNormal"><span>#</span>启用特权模式<span> [</span>特权模式下服务端无需配置<span>]<o:p></o:p></span></p><p class="MsoNormal"><span>privilege_mode = true<o:p></o:p></span></p><p class="MsoNormal"><span>#</span>特权模式<span> token,</span>同样要与服务端完全保持一致<span><o:p></o:p></span></p><p class="MsoNormal"><span>privilege_token = Admin@privilege<o:p></o:p></span></p><p class="MsoNormal"><span><o:p>&nbsp;</o:p></span></p><p class="MsoNormal"><span>#</span>心跳检查间隔与超时时间<span><o:p></o:p></span></p><p class="MsoNormal"><span>heartbeat_interval = 10<o:p></o:p></span></p><p class="MsoNormal"><span>heartbeat_timeout = 30<o:p></o:p></span></p><p class="MsoNormal"><span><o:p>&nbsp;</o:p></span></p><p class="MsoNormal"><span>#</span>启用加密 <span>[</span>通信内容加密传输，有效防止流量被拦截<span>]<o:p></o:p></span></p><p class="MsoNormal"><span>use_encryption = true<o:p></o:p></span></p><p class="MsoNormal"><span>#</span>启用压缩<span> [</span>传输内容进行压缩，有效减小传输的网络流量，加快流量转发速度，但会额外消耗一些<span>CPU</span>资源<span>]<o:p></o:p></span></p><p class="MsoNormal"><span>use_compression = true<o:p></o:p></span></p><p class="MsoNormal"><span><o:p>&nbsp;</o:p></span></p><p class="MsoNormal"><span>#</span>连接数量<span><o:p></o:p></span></p><p class="MsoNormal"><span>pool_count = 20<o:p></o:p></span></p><p class="MsoNormal"><span><o:p>&nbsp;</o:p></span></p><p class="MsoNormal"><span>#</span>内网穿透通常用<span>socks5<o:p></o:p></span></p><p class="MsoNormal"><span>[socks5]<o:p></o:p></span></p><p class="MsoNormal"><span>type = tcp<o:p></o:p></span></p><p class="MsoNormal"><span>#</span>连接<span>VPS</span>内网穿透的远程连接端口<span><o:p></o:p></span></p><p class="MsoNormal"><span>remote_port = 9066<o:p></o:p></span></p><p class="MsoNormal"><span>#</span>使用插件<span>socks5</span>代理<span><o:p></o:p></span></p><p class="MsoNormal"><span>plugin = socks5<o:p></o:p></span></p><p class="MsoNormal"><span>#socks5</span>连接口令 <span>[</span>根据实际情况进行配置<span>]<o:p></o:p></span></p><p class="MsoNormal"><span>#plugin_user = rebootORZ<o:p></o:p></span></p><p class="MsoNormal"><span>#plugin_passwd = 1qaz@123<o:p></o:p></span></p></td></tr></tbody></table></div></div>
 <h1 id="路径a-b-dmz-内网a">路径A-B-DMZ-内网A</h1>
 <p>VPS-B<br>
-<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image002.png" alt="clip_image002.png" loading="lazy"><br>
+<img src="https://rebootorz.github.io/post-images/1610348377623.png" alt="" loading="lazy"><br>
 监听7000端口<br>
-<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image003.png" alt="clip_image003.png" loading="lazy"><br>
+<img src="https://rebootorz.github.io/post-images/1610348626113.png" alt="" loading="lazy"><br>
 DMZ 服务器C<br>
-<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image004.png" alt="clip_image004.png" loading="lazy"><br>
+<img src="https://rebootorz.github.io/post-images/1610348664464.png" alt="" loading="lazy"><br>
 开放端口9066<br>
-<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image005.png" alt="clip_image005.png" loading="lazy"></p>
+<img src="https://rebootorz.github.io/post-images/1610348698949.png" alt="" loading="lazy"></p>
 <p>这时候我们本地主机（A）就可以挂着socks5:VPS-IP:9066来访问DMZ区可以访问的目标了，例如服务器C除了可以访问192.168.194.0/24，还可以访问192.168.111.0/24</p>
 <p>本地访问的话,第一种可以用Proxifier:<br>
-<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image006.png" alt="clip_image006.png" loading="lazy"><br>
+<img src="https://rebootorz.github.io/post-images/1610348739749.png" alt="" loading="lazy"><br>
 然后将我们要用的工具设置为走该代理：<br>
-<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image007.png" alt="clip_image007.png" loading="lazy"><br>
+<img src="https://rebootorz.github.io/post-images/1610348771781.png" alt="" loading="lazy"><br>
 例如访问3389，这时候就可以直接走代理访问服务器C的3389：<br>
 可以看到我们的流量都是通过socks5代理的<br>
-<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image008.png" alt="clip_image008.png" loading="lazy"><br>
+<img src="https://rebootorz.github.io/post-images/1610348807418.png" alt="" loading="lazy"><br>
 同时因为服务器C是跨两个网段的，所以也可以访问到服务器G:<br>
-<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image009.png" alt="clip_image009.png" loading="lazy"></p>
+<img src="https://rebootorz.github.io/post-images/1610348836219.png" alt="" loading="lazy"></p>
 <p>第二种，可以使用MSF:<br>
 当然第一层代理也可以用proxychains，但是这里为了演示就省去了着一种方式。<br>
 命令：setg proxies socks5:xx.xx.xx.xx:9066<br>
-<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image010.png" alt="clip_image010.png" loading="lazy"><br>
+<img src="https://rebootorz.github.io/post-images/1610349068108.png" alt="" loading="lazy"><br>
 这样就配置了一层全局代理了,因为服务器C跨两个网段，现在就可以用这个代理来扫描第二个网段了：<br>
-<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image011.png" alt="clip_image011.png" loading="lazy"></p>
+<img src="https://rebootorz.github.io/post-images/1610349109092.png" alt="" loading="lazy"></p>
 <h1 id="a-b-dmz-内网a-内网b">A-B-DMZ-内网A-内网B</h1>
 <p>在A-B-DMZ-内网A的基础上，要打通内网B就需要，让内网B的机器流量能够通过内网A的机器进行传递，所以此时服务器G相对于J就是服务端，J为客户端，服务器C相对于G是服务端，G是客户端，所以进行如下配置：<br>
 C上再运行一个服务端：<br>
 服务端的监听地址都是0.0.0.0，所以这里服务端配置沿用上面的，都无需做修改。<br>
-<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image012.png" alt="clip_image012.png" loading="lazy"></p>
+<img src="https://rebootorz.github.io/post-images/1610349141043.png" alt="" loading="lazy"></p>
 <p>G上运行一个客户端：<br>
 这里只需要将客户端连接的服务端地址修改为C的IP，同时修改开放的端口号，不能重复：<br>
-<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image013.png" alt="clip_image013.png" loading="lazy"><br>
-<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image014.png" alt="clip_image014.png" loading="lazy"><br>
-<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image015.png" alt="clip_image015.png" loading="lazy"></p>
-<p>此时就可以使用服务器G上的这个代理来攻击内网B了：<br>
+<img src="https://rebootorz.github.io/post-images/1610349189810.png" alt="" loading="lazy"><br>
+<img src="https://rebootorz.github.io/post-images/1610349248728.png" alt="" loading="lazy"><br>
+<img src="https://rebootorz.github.io/post-images/1610349221761.png" alt="" loading="lazy"><br>
+此时就可以使用服务器G上的这个代理来攻击内网B了：<br>
 因为这里需要使用到二层代理，所以需要配置为代理链的形式.<br>
 Proxifier:<br>
 创建代理链：<br>
-<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image016.png" alt="clip_image016.png" loading="lazy"><br>
+<img src="https://rebootorz.github.io/post-images/1610349281857.png" alt="" loading="lazy"><br>
 修改规则：<br>
-<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image017.png" alt="clip_image017.png" loading="lazy"><br>
+<img src="https://rebootorz.github.io/post-images/1610349309131.png" alt="" loading="lazy"><br>
 这时候就可以访问到内网B的机器了：<br>
-<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image018.png" alt="clip_image018.png" loading="lazy"></p>
+<img src="https://rebootorz.github.io/post-images/1610349330298.png" alt="" loading="lazy"></p>
 <p>使用MSF:<br>
 在前面的基础上，多配置一层代理即可：<br>
-setg proxies socks5:XXXXX:9066,socks5:192.168.</p>
-<p>111.130:9065<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image019.png" alt="clip_image019.png" loading="lazy"><br>
+setg proxies socks5:XXXXX:9066,socks5:192.168.111.130:9065<br>
+<img src="https://rebootorz.github.io/post-images/1610349395085.png" alt="" loading="lazy"><br>
 此时就通内网B了：<br>
-<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image020.png" alt="clip_image020.png" loading="lazy"><br>
-如果在使用的过程中出现如下提示，是因为配置代理的时候没有设置允许反向代理，所以运行set</p>
-<p>reverseallowproxy true即可：<img src="file:///Users/rebootorz/Library/Group%20Containers/UBF8T346G9.Office/TemporaryItems/msohtmlclip/clip_image021.png" alt="clip_image021.png" loading="lazy"></p>
+<img src="https://rebootorz.github.io/post-images/1610349414451.png" alt="" loading="lazy"><br>
+如果在使用的过程中出现如下提示，是因为配置代理的时候没有设置允许反向代理，所以运行set<br>
+reverseallowproxy true即可：<br>
+<img src="https://rebootorz.github.io/post-images/1610349446768.png" alt="" loading="lazy"></p>
 <h1 id="总结">总结</h1>
 <p>其实我们打通服务器C的时候，由于C和G都是双网卡的跨网段机器，通过C去打内网A,再通过G去打内网B，完全可行了，但是在实际场景中，特别是红队场景，往往是需要多个人同时参与到攻击中，所以需要利用FRP来创建这个隧道，使得更多的人可以进到内网。</p>
 
@@ -185,7 +186,7 @@ setg proxies socks5:XXXXX:9066,socks5:192.168.</p>
 
       <div class="sm-12 md-4 col sidebar">
   <div class="paper info-container">
-    <img src="https://rebootorz.github.io/images/avatar.png?v=1610347808353" class="no-responsive avatar">
+    <img src="https://rebootorz.github.io/images/avatar.png?v=1610349455450" class="no-responsive avatar">
     <div class="text-muted">一名默默无闻的攻城狮</div>
     <div class="social-container">
       
@@ -239,7 +240,7 @@ setg proxies socks5:XXXXX:9066,socks5:192.168.</p>
     </div>
     <div class="row">
       
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge secondary">
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge warning">
           红队
         </a>
       
