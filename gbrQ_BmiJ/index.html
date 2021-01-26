@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>标签列表 | rebootORZ</title>
+<title>[Go]普通函数调用与闭包的区别 | rebootORZ</title>
 <meta name="description" content="一名默默无闻的攻城狮">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -32,6 +32,7 @@
 
   </head>
   <body>
+  
     <nav class="navbar border fixed split-nav">
   <div class="nav-brand">
     <h3><a href="https://rebootorz.github.io">rebootORZ</a></h3>
@@ -96,20 +97,102 @@
     <div id="top" class="row site">
       <div class="sm-12 md-8 col">
         <div class="paper">
-          <h2 class="tag-list-title">标签列表</h2>
-          <div class="row tags-container">
+          <article class="article">
+            <h1>[Go]普通函数调用与闭包的区别</h1>
+            <p class="article-meta">
+              2021-01-26
+              
+            </p>
             
-              <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge ">
-                红队
-              </a>
-            
-              <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge warning">
-                物联网安全
-              </a>
-            
-          </div>
+            <div class="post-content">
+              <pre><code>package main
+
+
+import (
+　　&quot;fmt&quot;
+)
+
+ func main() {
+　　 a := []int{1, 2, 3}
+ 　　for _, i := range a {
+　　 　　fmt.Println(i)
+　　　　 defer p(i)
+　　 }
+ }
+ 
+ func p(i int) {
+　　fmt.Println(i)
+ }
+</code></pre>
+<p>运行这段程序，输出结果为</p>
+<pre><code>
+1
+
+2
+
+3
+
+3
+
+2
+
+1
+</code></pre>
+<p>这里就是普通的函数调用，每次调用func p时，完成 i 的值复制，然后打印，此时 i 值复制了3次，分别是1，2，3。由于defer是后进先出，所以执行变成3，2，1。</p>
+<p>下面我我们用闭包改写下程序：</p>
+<pre><code>
+package main
+
+import (
+　　&quot;fmt&quot;
+)
+
+func main() {
+　　a := []int{1, 2, 3}
+　　for _, i := range a {
+　　　　fmt.Println(i)
+　　　　defer func() {
+  　　　　 fmt.Println(i)
+　　　　}()
+    }
+}
+</code></pre>
+<p>运行这段程序，输出结果为</p>
+<pre><code>
+1
+
+2
+
+3
+
+3
+
+3
+
+3
+</code></pre>
+<p>在闭包函数里，这个i是闭包函数外面的参数（即不是闭包函数中的参数），所在当在fmt.Println(i)中进行引用的时候，因为闭包函数是“地址引用”，而非“值引用”，所以前面正常输出是1、2、3，而到了defer时，按照原本的“后入先出”进行输出的话，但由于到了这里的时候i的地址上是3，虽然参数i的地址没变，但是值变了，所以在Println(i)的时候输出都是3，而不是3、2、1。</p>
+
+            </div>
+          </article>
         </div>
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://rebootorz.github.io/OqIWaMPts/">
+                <h3 class="post-title">
+                  利用XSS使Win10机器蓝屏
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
       </div>
+
       <div class="sm-12 md-4 col sidebar">
   <div class="paper info-container">
     <img src="https://rebootorz.github.io/images/avatar.png?v=1611677543677" class="no-responsive avatar">
@@ -202,7 +285,7 @@
     </div>
     <div class="row">
       
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge secondary">
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge ">
           红队
         </a>
       
@@ -216,7 +299,8 @@
     高度自律  绝对自由 | <a class="rss" href="https://rebootorz.github.io/atom.xml" target="_blank">RSS</a>
   </div>
 </div>
-  
+
+
     </div>
 
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
