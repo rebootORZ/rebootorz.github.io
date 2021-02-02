@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>利用XSS使Win10机器蓝屏 | rebootORZ</title>
+<title>[Go] 2.Map | rebootORZ</title>
 <meta name="description" content="一名默默无闻的攻城狮">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -98,22 +98,121 @@
       <div class="sm-12 md-8 col">
         <div class="paper">
           <article class="article">
-            <h1>利用XSS使Win10机器蓝屏</h1>
+            <h1>[Go] 2.Map</h1>
             <p class="article-meta">
-              2021-01-19
+              2021-02-02
               
-                <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge success">
-                  红队
+                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge secondary">
+                  Golang
                 </a>
               
             </p>
             
             <div class="post-content">
-              <h1 id="payload">Payload</h1>
-<p>在谷歌浏览器触发：</p>
-<pre><code>&lt;script&gt;document.location = '\\\\.\\globalroot\\device\\condrv\\kernelconnect';&lt;/script&gt;
+              <p>#定义<br>
+是无序的键值对，类似python的字典。</p>
+<p>#语法<br>
+使用关键字map来声明：<br>
+map[KeyType]ValueType<br>
+<strong>注意：</strong><br>
+1.必须指定key,value的类型，插入的记录类型必须匹配。<br>
+2.key具有唯一性，不能重复。<br>
+3.KeyType可以是基础数据类型（例如bool,数字类型、字符串），不能是数组、切片、map,它的取值必须是能够使用 == 进行比较。<br>
+4.ValueType可以是任意类型。<br>
+5.无序性<br>
+6.线程不安全，一个gotuntine在对map进行写的时候，另外的goroutine不能进行读和写操作，Go1.6版本以后会抛出runtime错误信息。</p>
+<p>#声明和初始化<br>
+1.使用var声明</p>
+<pre><code>var cMap map[string]int  //只定义（声明），此时cMap为nil
+fmt.Println(cMap == nil)
+cMap[&quot;北京&quot;] = 1 //报错，因为cMap为nil
+//在进行赋值之前，需要先用make进行初始化
+cMap = make(map[string]int)
+cMap[&quot;北京&quot;] = 1 //此时就不会报错了。
 </code></pre>
-<figure data-type="image" tabindex="1"><img src="https://rebootorz.github.io/post-images/1611025908007.png" alt="" loading="lazy"></figure>
+<p>2.使用make进行短声明</p>
+<pre><code>cMap := make(map[string]int) //进行来初始化
+cMap[&quot;北京&quot;] = 1
+
+//指定初始容量
+cMap = mkae(map[string]int,100)
+cMap[&quot;北京&quot;] = 1
+</code></pre>
+<p>说明：在使用make初始化map的时候，可以指定初始化容量，这个能在预估map的key数量的情况下，减少动态分配的次数，从而提升性能。<br>
+3.简短声明</p>
+<pre><code>cMap := map[string]int{&quot;北京&quot;:1}
+</code></pre>
+<p>4.var、make结合<br>
+var cMap = make(map[string]int)<br>
+cMap[&quot;北京&quot;] = 1<br>
+<strong>注意：</strong><br>
+从上面4种方法看下来，如果是直接用var,且声明的时候没有进行初始化的（没有make或者赋初始值），map的值是nil，要赋值之前需要先make初始化才行。</p>
+<p>#基本操作</p>
+<pre><code>cMap := map[string]int{}
+cMap[&quot;北京&quot;] = 1 //写
+
+code := cMap[&quot;北京&quot;]  //读
+fmt.println(code)
+
+code = cMap[&quot;广州&quot;] //读不存在的key
+fmt.Println(code)
+
+code,ok = cMap[&quot;广州&quot;] //检查key是否存在
+if ok {
+    fmt.Println(code)
+}else{
+    fmt.Println(&quot;key not exist&quot;)
+}
+
+delete(cMap,&quot;北京&quot;) //删除指定key
+fmt.Println(&quot;北京&quot;)
+</code></pre>
+<p>#循环和无序性</p>
+<pre><code>cMap := map[string]int{&quot;北京&quot;:1,&quot;上海&quot;:2,&quot;广州&quot;:3,&quot;深圳&quot;:4}
+
+for city,code := range cMap {  //因为无序性，所以每次迭代的结果的顺序都不同。
+    fmt.Printf(&quot;%s:%d&quot;,city,code)
+    fmt.Println() 
+}
+</code></pre>
+<p>#线程不安全</p>
+<pre><code>cMap := make(map[string]int)
+var wg sync.WaitGroup
+wg.Add(2)
+
+go func(){
+    cMap[&quot;北京&quot;] =1
+    wg.Done()
+}()
+
+go func(){
+    cMap[&quot;上海&quot;] = 2
+    wg.Done()
+}()
+
+wg.Wait()
+</code></pre>
+<p>在Go1.6之后的版本，多次运行此段代码，将会遇到如下错误信息：</p>
+<pre><code>fatal error: concurrent map writes
+
+goroutine x [running]
+runtime.throw(0x10c64b4,0x15)
+....
+</code></pre>
+<p>解决方法：<br>
+1.对读写操作加锁<br>
+2.使用security map，例如 sync.map</p>
+<p>#map嵌套</p>
+<pre><code>provinces := make（map[string]map[string]int)  //map中key的value也是map
+
+provinces[&quot;北京&quot;] = map[string]int{
+    &quot;东城区&quot;:1,
+    &quot;西城区&quot;:2,
+    &quot;朝阳区&quot;:3,
+    &quot;海淀区&quot;:4,
+}
+fmt.Println(provinces[&quot;北京&quot;])
+</code></pre>
 
             </div>
           </article>
@@ -124,9 +223,9 @@
               <div class="next">
                 下一篇
               </div>
-              <a href="https://rebootorz.github.io/LSzteQmAT/">
+              <a href="https://rebootorz.github.io/UxsJHz3Ap/">
                 <h3 class="post-title">
-                  MAC&amp;KALI进行WiFi破解
+                  [Go] 1.切片
                 </h3>
               </a>
             </div>
@@ -249,11 +348,11 @@
     </div>
     <div class="row">
       
-        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge success">
+        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge warning">
           Golang
         </a>
       
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge ">
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge success">
           红队
         </a>
       

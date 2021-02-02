@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>利用XSS使Win10机器蓝屏 | rebootORZ</title>
+<title>[Go] 3.自定义类型 | rebootORZ</title>
 <meta name="description" content="一名默默无闻的攻城狮">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -98,22 +98,105 @@
       <div class="sm-12 md-8 col">
         <div class="paper">
           <article class="article">
-            <h1>利用XSS使Win10机器蓝屏</h1>
+            <h1>[Go] 3.自定义类型</h1>
             <p class="article-meta">
-              2021-01-19
+              2021-02-02
               
-                <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge success">
-                  红队
+                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge ">
+                  Golang
                 </a>
               
             </p>
             
             <div class="post-content">
-              <h1 id="payload">Payload</h1>
-<p>在谷歌浏览器触发：</p>
-<pre><code>&lt;script&gt;document.location = '\\\\.\\globalroot\\device\\condrv\\kernelconnect';&lt;/script&gt;
+              <p>#定义<br>
+在go中，可以通过自定义类型来表示一些特殊的数据结构和业务逻辑。<br>
+使用关键字 type 来声明：<br>
+type NAME TYPE</p>
+<p>#声明语法<br>
+1.单次声明<br>
+type City string<br>
+2.批量声明</p>
+<pre><code>type(
+    B0 = int8
+    B1 = int16
+    B2 = int32
+    B3 = int64
+)
+type(
+    A0 int8
+    A1 int16
+    A2 int32
+    A3 int64
+)
 </code></pre>
-<figure data-type="image" tabindex="1"><img src="https://rebootorz.github.io/post-images/1611025908007.png" alt="" loading="lazy"></figure>
+<p>#示例</p>
+<pre><code>package main
+
+import &quot;fmt&quot;
+
+type City string
+func main(){
+    city := City(&quot;上海&quot;)
+    fmt.Println(city)
+}
+</code></pre>
+<p>#基本操作</p>
+<pre><code>package main
+
+import &quot;fmt&quot;
+
+type City string
+type Age int
+
+func main(){
+    city := City(&quot;北京&quot;)
+    fmt.Println(&quot;I live in&quot;,city + &quot; 上海&quot;) //字符串拼接
+    fmt.Println(len(city))  //len方法
+    
+    middle := Age(12)
+    if middle &gt;= 12{
+        fmt.Println(&quot;Middle is bigger than 12&quot;)
+    }
+}
+</code></pre>
+<p>总结：自定义类型的原始类型的所有操作同样适用。</p>
+<p>#函数参数</p>
+<pre><code>package main
+
+import &quot;fmt&quot;
+
+type Age int
+
+func main(){
+    middle := Age(12)
+    printAge(middle)
+}
+
+func printAge(age int){
+    fmt.Println(&quot;Age is&quot;, age)
+}
+</code></pre>
+<p>当我们运行代码的时候会出现:./main.go:11:10: cannot use middle (type Age) as type int in argument to printAge 的错误。<br>
+因为 printAge 方法期望的是 int 类型，但是我们传入的参数是 Age ，他们虽然具有相同的 值，但为不同的类型。<br>
+我们可以采用显式的类型转换( printAge(int(primary)) )来修复。</p>
+<p>#不同自定义类型间的操作</p>
+<pre><code>package main
+
+import &quot;fmt&quot;
+
+type Age int
+type Height int
+
+func main(){
+    age := Age(12)
+    height := Height(175)
+    fmt.Println(height / age)
+}
+</code></pre>
+<p>当我们运行代码会出现 ./main.go:12:21: invalid operation: height / age (mismatched types Height and Age) 错误，修复方法使用显式转换:</p>
+<pre><code>fmt.Println(int(height) / int(age))
+</code></pre>
 
             </div>
           </article>
@@ -124,9 +207,9 @@
               <div class="next">
                 下一篇
               </div>
-              <a href="https://rebootorz.github.io/LSzteQmAT/">
+              <a href="https://rebootorz.github.io/0rTcaW73A/">
                 <h3 class="post-title">
-                  MAC&amp;KALI进行WiFi破解
+                  [Go] 2.Map
                 </h3>
               </a>
             </div>
@@ -249,7 +332,7 @@
     </div>
     <div class="row">
       
-        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge success">
+        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge secondary">
           Golang
         </a>
       

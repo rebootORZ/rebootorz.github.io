@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>利用XSS使Win10机器蓝屏 | rebootORZ</title>
+<title>[Go] 9.异常处理 | rebootORZ</title>
 <meta name="description" content="一名默默无闻的攻城狮">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -98,22 +98,114 @@
       <div class="sm-12 md-8 col">
         <div class="paper">
           <article class="article">
-            <h1>利用XSS使Win10机器蓝屏</h1>
+            <h1>[Go] 9.异常处理</h1>
             <p class="article-meta">
-              2021-01-19
+              2021-02-02
               
-                <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge success">
-                  红队
+                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge success">
+                  Golang
                 </a>
               
             </p>
             
             <div class="post-content">
-              <h1 id="payload">Payload</h1>
-<p>在谷歌浏览器触发：</p>
-<pre><code>&lt;script&gt;document.location = '\\\\.\\globalroot\\device\\condrv\\kernelconnect';&lt;/script&gt;
+              <p>#defer<br>
+defer通常用于延迟调用指定的函数。例如：</p>
+<pre><code>func outerFunc() {
+        defer fmt.Printf(&quot; World!\n&quot;)
+        fmt.Print(&quot;Hello&quot;) }
 </code></pre>
-<figure data-type="image" tabindex="1"><img src="https://rebootorz.github.io/post-images/1611025908007.png" alt="" loading="lazy"></figure>
+<p>最终输出：<br>
+&quot;Hello World!&quot;<br>
+这是因为：defer会在outerFunc退出之前执行打印操作，因此被defer调用的函数也称为“延迟函数”。<br>
+##defer 常用场景：<br>
+defer语句经常被用于处理成对的操作，如打开和关闭，连接和断开连接，加锁和释放锁。恰当使用 defer 能够保证资源正确释放。以下是几个例子:</p>
+<pre><code>// 使用 defer 关闭 http 请求响应体的 Body 
+func closeBody(url string) error {
+        resp, err := http.Get(url) 
+        defer resp.Body.Close()
+        // ... do more stuff ...
+        return err 
+}
+</code></pre>
+<pre><code>// 使用 defer 关闭文件句柄
+func closeFile(filename string) error{
+        f, err := os.Open(filename) 
+        defer f.Close()
+        // ... do more stuff ...
+        return err 
+}
+// 使用 defer 解锁
+func BillCustomer(c *Customer) {
+        c.mutex.Lock()
+        defer c.mutex.Unlock() 
+        // ... do more stuff ...
+        return
+}
+</code></pre>
+<p>defer使用中一些注意点</p>
+<ul>
+<li>例子 1</li>
+</ul>
+<pre><code>func printNumber() {
+    for i := 0; i&lt;5; i++{
+        defer func(){ 
+            fmt.Println(i)
+        }() 
+    }
+}
+</code></pre>
+<p>最终输出的结果是 5 5 5 5 5 。 这是因为 defer 所调用的函数是延迟执行的。等到执行 defer 所调用的函数时，i 已经是 5 了。接着看下面这个例子 2:</p>
+<pre><code>func printNum() {
+    for i := 0; i &lt; 5; i++ {
+            defer func(v int) { 
+                    fmt.Println(v)
+            }(i) 
+    }
+}
+</code></pre>
+<p>这个例子最终输出的是: 4 3 2 1 0 。这是因为，上一个例子中，defer调用的函数中i的值一直都没被赋予，而是到了最后要执行defer的时候，次数i的值已经是5了。而这个例子中，defer调用的这个匿名函数声明完就被调用了，并且把i的值传给了v，然后因为defer的执行顺序是栈的形式，按照后进先出的原则，所以输出是4 3 2 1 0。<br>
+例子 3:</p>
+<pre><code>func  testDefer() (i int) {
+        defer func() {
+                fmt.Println(i)
+                i = 4
+        }()
+        return 2
+}
+</code></pre>
+<p>最终返回的是 4 。因为 return 2执行后，变量 i 赋值为 2,但是随后执行了defer函数，i被赋值为4，所以最终返回结果为4。<br>
+#panic<br>
+当程序遇到致命错误导致无法继续运行时就会出发 panic , 例如:数组越界，空指针等。<br>
+以下代码将会出发数组越界异常。</p>
+<pre><code>s := []int{1, 2, 3}
+for i := 0; i &lt;= 4; i++ {
+        fmt.Println(s[i])
+}
+</code></pre>
+<p>上述例子中因为数组越界，触发了 runtime 异常，导致程序退出。在实际开发中，也可以主动调用 panic 函数达到同样效果。</p>
+<pre><code>func panicFunc() {
+        panic(errors.New(&quot;this is test for panic&quot;))
+}
+</code></pre>
+<p>#recover<br>
+顾名思义，recover 函数能使当前程序从 panic 中恢复。recover 能够拦截 panic 事件，使得<br>
+程序不会因为意外而触发 panic 事件而完全退出。<br>
+recover 函数返回的是一个 interfac{} 类型的结果，如果捕获到了 panic 事件，该结果就为非 nil。见下例：</p>
+<pre><code>func panicFunc() {
+        defer func() {
+                if p := recover(); p != nil { 
+                        fmt.Println(&quot;recover panic&quot;)
+                } 
+        }()
+        panic(errors.New(&quot;this is test for panic&quot;))
+}
+func main() { 
+        fmt.Println(&quot;before panic&quot;)
+        panicFunc()
+        fmt.Println(&quot;after panic&quot;) 
+}
+</code></pre>
 
             </div>
           </article>
@@ -124,9 +216,9 @@
               <div class="next">
                 下一篇
               </div>
-              <a href="https://rebootorz.github.io/LSzteQmAT/">
+              <a href="https://rebootorz.github.io/z4gmLQp1H/">
                 <h3 class="post-title">
-                  MAC&amp;KALI进行WiFi破解
+                  [Go] 8.分支循环
                 </h3>
               </a>
             </div>
@@ -253,7 +345,7 @@
           Golang
         </a>
       
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge ">
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge secondary">
           红队
         </a>
       

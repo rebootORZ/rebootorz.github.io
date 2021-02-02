@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>[Go] 5.函数 | rebootORZ</title>
+<meta name="description" content="一名默默无闻的攻城狮">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1612264243855">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://rebootorz.github.io/styles/main.css">
+
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KB4J95VFFD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KB4J95VFFD');
+</script>
+
+
+  </head>
+  <body>
+  
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://rebootorz.github.io">rebootORZ</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
+        
+          <li>
+            
+              <a href="/" class="menu">
+                首页
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="/archives" class="menu">
+                归档
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="/tags" class="menu">
+                标签
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="/post/about" class="menu">
+                关于
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="menu">
+                Golang学习之路
+              </a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          <article class="article">
+            <h1>[Go] 5.函数</h1>
+            <p class="article-meta">
+              2021-02-02
+              
+                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge secondary">
+                  Golang
+                </a>
+              
+            </p>
+            
+            <div class="post-content">
+              <p>#定义<br>
+函数是语句序列的集合，能够将一个大的工作分解为小的任务，对外隐藏了实现细节。<br>
+<strong>函数组成：</strong></p>
+<ul>
+<li>函数名</li>
+<li>参数列表(parameter-list)</li>
+<li>返回值(result-list)</li>
+<li>函数体(body)</li>
+</ul>
+<pre><code>func name(参数列表)(返回值列表){
+    函数体
+}
+</code></pre>
+<p><strong>单返回值函数：</strong></p>
+<pre><code>func plus(a,b int)(res int){
+    return a+b
+}
+</code></pre>
+<p><strong>多返回值函数：</strong></p>
+<pre><code>func multi()(string, int){
+    return &quot;name&quot;, 18
+}
+</code></pre>
+<p><strong>命名返回值：</strong></p>
+<pre><code>// 被命名多返回参数的值为该类型的默认零值。
+// 该例子中 name 默认初始化为空字符串， height 默认初始化为 0
+func namedReturnValue()(name string, height int){
+    name = &quot;xiaoming&quot;
+    height = 180
+    return
+}
+</code></pre>
+<p>**注：**说白了就是给出了返回值的参数名，例如例子中给出了&quot;name&quot;和&quot;height&quot;，如果在函数中需要用到这两个参数，则它们的初始值是它们类型对应的默认零值，例如这里name就是&quot;&quot;(空)，height就是0。<br>
+例如下面这个例子，设置了返回值的参数名后，在函数中给name赋值为&quot;test&quot; ，而height没有赋值，所以返回的时候依然是int的零值，即0。所以打印后输出为&quot;test 0&quot;<br>
+<img src="https://rebootorz.github.io/post-images/1612263943765.png" alt="" loading="lazy"></p>
+<p><strong>参数可变函数：</strong></p>
+<pre><code>func sum(nums ...int)int{   // 用三个点，代表这个参数的数量是不固定的。
+    fmt.Println(&quot;len of nums is：&quot;,len(nums))  // 这里的len(nums)就是传递过来的参数格式，所以这里nums其实是个列表
+    res :=0
+    for _, v := range nums{
+        res += v
+    }
+    return res
+}
+
+func main(){
+    fmt.Println(sum(1))
+    fmt.Println(sum(1,2))
+    fmt.Println(sum(1,2,3))  // 传递几个参数，函数就接收几个
+}
+</code></pre>
+<p>执行结果如下：</p>
+<pre><code>len of nums is： 1
+1
+len of nums is： 2
+3
+len of nums is： 3
+6
+</code></pre>
+<p><strong>匿名函数：</strong></p>
+<ul>
+<li>Go 支持匿名函数，匿名函数就是没有名字的函数</li>
+<li>如果我们某个函数只是希望使用一次，可以考虑使用匿名函数</li>
+<li>匿名函数也可以实现多次调用。</li>
+<li>全局匿名函数，将匿名函数赋值给一个全局变量，再通过该全局变量进行调用。<br>
+<em>匿名函数使用方式 1</em><br>
+在定义匿名函数时就直接调用，这种方式匿名函数只能调用一次</li>
+</ul>
+<pre><code>res1 := func (n1 int, n2 int) int {
+    return n1 + n2
+}(10, 20)  // 定义完直接调用
+</code></pre>
+<p><em>匿名函数使用方式 2</em><br>
+将匿名函数赋给一个变量(函数变量)，再通过该变量来调用匿名函数<br>
+注：这个和直接用func定义没啥区别，如果硬要说区别，那就是性能区别，但匿名函数如果比较简单会被编译器优化成inline函数，那样就没啥区别了。</p>
+<pre><code>a := func (n1 int, n2 int) int {
+    return n1 - n2
+}     
+res2 := a(10, 30)
+res3 := a(90, 30)
+</code></pre>
+<p><em>匿名函数使用方式 3</em><br>
+如果将匿名函数赋给一个全局变量，那么这个匿名函数，就成为一个全局匿名函数，可以在整个程序有效。</p>
+<pre><code>var (
+    //Fun1就是一个全局匿名函数
+    Fun1 = func (n1 int, n2 int) int {   //这里Fun1的定义不需要“:”，因为只有在函数体内部才需要冒号。
+        return n1 * n2
+    }
+)
+
+func main() {
+    //全局匿名函数的使用
+    res4 := Fun1(4, 9)
+    fmt.Println(&quot;res4=&quot;, res4)
+}
+</code></pre>
+<p><strong>闭包</strong><br>
+<em>简单理解：</em></p>
+<ul>
+<li>闭包就是能够读取其他函数内部变量的函数。</li>
+<li>只有函数内部的子函数才能读取局部变量，因此可以把闭包简单理解成”定义在一个函数内部的函数”。```</li>
+</ul>
+<pre><code>package main
+
+import &quot;fmt&quot;
+
+func getSequence() func() int {
+   i:=0
+   return func() int {
+      i+=1
+     return i  
+   }
+}
+
+func main(){
+   /* nextNumber 为一个函数，函数 i 为 0 */
+   nextNumber := getSequence()  
+
+   /* 调用 nextNumber 函数，i 变量自增 1 并返回 */
+   fmt.Println(nextNumber())
+   fmt.Println(nextNumber())
+   fmt.Println(nextNumber())
+   
+   /* 创建新的函数 nextNumber1，并查看结果 */
+   nextNumber1 := getSequence()  
+   fmt.Println(nextNumber1())
+   fmt.Println(nextNumber1())
+}
+</code></pre>
+<p><strong>函数作为参数</strong></p>
+<pre><code>func sayHello(name string){
+    fmt.Println(&quot;Hello&quot;, name)
+}
+
+func logger(f func(string), name string){  // 这里的f func(string)的意思是参数f,它的类型是一个接收string类型参数的函数。
+    fmt.Println(&quot;start calling method sayHello&quot;)
+    f(name)
+    fmt.Println(&quot;end calling method sayHellog&quot;)
+}
+
+func main(){
+    logger(sayHello, &quot;鸣人&quot;)  //这里将sayHello函数作为参数值，传递给f，将字符串“鸣人”传递给name
+}
+</code></pre>
+<p><strong>传值和传引用</strong><br>
+注：指针中&amp;是取地址，*是取值</p>
+<pre><code>func sendValue(name string){
+    name = &quot;naruto&quot;
+}
+
+func sendAddress(name *string){
+    *name = &quot;naruto&quot;
+}
+
+func main(){
+    // 传值和传引用
+    str := &quot;鸣人&quot;
+    fmt.Println(&quot;before calling sendValue, str：&quot;,str)
+    sendValue(str)
+    fmt.Println(&quot;after calling sendValue, str：&quot;,str)
+
+    fmt.Println(&quot;before calling sendAddress, str：&quot;,str)
+    sendAddress(&amp;str)  // 这里将str的地址传给了值指针name，相当于让*name指向&amp;str上的值，所以修改了*name的值，就是修改了str的值
+    fmt.Println(&quot;after calling sendAddress,str：&quot;,str)
+}
+</code></pre>
+<p>执行结果：</p>
+<pre><code>before calling sendValue, str： 鸣人
+after calling sendValue, str： 鸣人
+before calling sendAddress, str： 鸣人
+after calling sendAddress,str： naruto
+</code></pre>
+
+            </div>
+          </article>
+        </div>
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://rebootorz.github.io/K1Hy1MSM0/">
+                <h3 class="post-title">
+                  [Go] 4.结构体
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
+      </div>
+
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://rebootorz.github.io/images/avatar.png?v=1612264243855" class="no-responsive avatar">
+    <div class="text-muted">一名默默无闻的攻城狮</div>
+    <div class="social-container">
+      
+        
+          <a href="https://github.com/rebootORZ" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/_UnWMbR-r/">[Go] 9.异常处理</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/z4gmLQp1H/">[Go] 8.分支循环</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/LGmqka8O9/">[Go] 7.接口</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/k3YOnVa0S/">[Go] 6.方法</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/7fnmOsG5V/">[Go] 5.函数</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/K1Hy1MSM0/">[Go] 4.结构体</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/ld0c2reGf/">[Go] 3.自定义类型</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/0rTcaW73A/">[Go] 2.Map</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/UxsJHz3Ap/">[Go] 1.切片</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/gbrQ_BmiJ/">[Go]普通函数调用与闭包的区别</a>
+            </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge secondary">
+          Golang
+        </a>
+      
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge warning">
+          红队
+        </a>
+      
+        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge secondary">
+          物联网安全
+        </a>
+      
+    </div>
+  </div>
+  <div class="paper">
+    高度自律  绝对自由 | <a class="rss" href="https://rebootorz.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
+  </body>
+</html>

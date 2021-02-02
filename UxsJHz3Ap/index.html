@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>利用XSS使Win10机器蓝屏 | rebootORZ</title>
+<title>[Go] 1.切片 | rebootORZ</title>
 <meta name="description" content="一名默默无闻的攻城狮">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -98,22 +98,119 @@
       <div class="sm-12 md-8 col">
         <div class="paper">
           <article class="article">
-            <h1>利用XSS使Win10机器蓝屏</h1>
+            <h1>[Go] 1.切片</h1>
             <p class="article-meta">
-              2021-01-19
+              2021-02-02
               
-                <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge success">
-                  红队
+                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge warning">
+                  Golang
                 </a>
               
             </p>
             
             <div class="post-content">
-              <h1 id="payload">Payload</h1>
-<p>在谷歌浏览器触发：</p>
-<pre><code>&lt;script&gt;document.location = '\\\\.\\globalroot\\device\\condrv\\kernelconnect';&lt;/script&gt;
+              <p>#切片组成要素：<br>
+指针：指向底层数组<br>
+长度：切片中元素的长度，不能大于容量<br>
+容量：指针所指向的底层数组的总容量</p>
+<p>#常见初始化方式：<br>
+1.使用make初始化<br>
+slice := make([]int,5) //初始化长度和容量都为5的切片<br>
+slice := make([]int,5,10) //初始化长度为5，容量为10的切片</p>
+<p>2.使用简短定义<br>
+slice := []int{1,2,3,4,5} //[]中没有指定，这样的是切片，指定的话是数组。长度、容量都是5，具体看下图<br>
+<img src="https://rebootorz.github.io/post-images/1612263770880.png" alt="" loading="lazy"><br>
+3.使用数组来初始化切片<br>
+arr := [5]int{1,2,3,4,5}<br>
+slice := arr[0:3]  //左闭右开区间，最终为[1 2 3]  注意，这里是中括号，元素之间是空格</p>
+<p>4.使用切片来初始化切片<br>
+sliceA := []int{1,2,3,4,5}<br>
+sliceB := sliceA[0:3] //左闭右开区间，最终sliceB为[1 2 3]</p>
+<p>#长度和容量</p>
+<pre><code>package main
+
+import (
+    &quot;fmt&quot;
+)
+
+func main(){
+    slice := []int{1,2,3,4,5}
+    fmt.Println(&quot;len: &quot;,len(slice))
+    fmt.Println(&quot;cap: &quot;,cap(slice))
+
+    //改变长度
+    slice = append(slice,6) //长度变为6，而不是增加6
+    fmt.Println(&quot;after append operation: &quot;)
+    fmt.Println(&quot;len: &quot;,len(slice))
+    fmt.Println(&quot;cap: &quot;,cap(slice)) //注意，当改变长度后，导致来底层数组容量不足时，会自动重新非配数组的空间，通常是当前切片长度的两倍。
+}
 </code></pre>
-<figure data-type="image" tabindex="1"><img src="https://rebootorz.github.io/post-images/1611025908007.png" alt="" loading="lazy"></figure>
+<p>#注意点<br>
+如果多个切片共享一个底层数组，当一个切片的改变，导致底层数组的改变，或者是直接对底层数组的修改，将会影响上层多个切片的值。</p>
+<pre><code>package main
+
+import(
+    &quot;fmt&quot;
+)
+
+func main(){
+    slice := []int{1,2,3,4,5}
+    newSlice := slice[0:3]
+    fmt.Println(&quot;befor modifying underlying array:&quot;) //修改底层数组之前
+    fmt.Println(&quot;slice: &quot;,slice)
+    fmt.Println(&quot;newSlice: &quot;,newSlice)
+    fmt.Println()
+
+    newSlice[0] = 6
+    fmt.Println(&quot;after modifying underlying array:&quot;)  //修改底层数组之后
+    fmt.Println(&quot;slice: &quot;,slice)
+    fmt.Println(&quot;newSlice: &quot;,newSlice)
+}
+</code></pre>
+<p>执行结果：</p>
+<pre><code>befor modifying underlying array:
+slice:  [1 2 3 4 5]
+newSlice:  [1 2 3]
+
+after modifying underlying array:
+slice:  [6 2 3 4 5]
+newSlice:  [6 2 3]
+</code></pre>
+<p>##使用copy方法可以避免共享同一个底层数组</p>
+<pre><code>package main
+
+import(
+    &quot;fmt&quot;
+)
+
+func main(){
+    slice := []int{1,2,3,4,5}
+    newSlice := make([]int,len(slice)) //上一个代码中用的是“切片生成切片”，它们都是指向同一个底层数组。而这里是用make重新生成了一个切片，有自己指向的底层数组
+//copy函数：
+//1.不同类型的切片无法复制
+//2.如果s1的长度大于s2的长度，将s2中对应位置上的值替换s1中对应位置的值
+//3.如果s1的长度小于s2的长度，多余的将不做替换   
+    copy(newSlice,slice)  //使用slice的值替换newSlice的值
+    fmt.Println(&quot;befor modifying underlying array:&quot;) //修改底层数组之前
+    fmt.Println(&quot;slice: &quot;,slice)
+    fmt.Println(&quot;newSlice: &quot;,newSlice)
+    fmt.Println()
+
+    newSlice[0] = 6
+    fmt.Println(&quot;after modifying underlying array:&quot;)  //修改底层数组之后
+    fmt.Println(&quot;slice: &quot;,slice)
+    fmt.Println(&quot;newSlice: &quot;,newSlice)
+}
+</code></pre>
+<p>输出结果如下：</p>
+<pre><code>befor modifying underlying array:
+slice:  [1 2 3 4 5]
+newSlice:  [1 2 3 4 5]
+
+after modifying underlying array:
+slice:  [1 2 3 4 5]
+newSlice:  [6 2 3 4 5]
+</code></pre>
 
             </div>
           </article>
@@ -124,9 +221,9 @@
               <div class="next">
                 下一篇
               </div>
-              <a href="https://rebootorz.github.io/LSzteQmAT/">
+              <a href="https://rebootorz.github.io/gbrQ_BmiJ/">
                 <h3 class="post-title">
-                  MAC&amp;KALI进行WiFi破解
+                  [Go]普通函数调用与闭包的区别
                 </h3>
               </a>
             </div>
@@ -253,7 +350,7 @@
           Golang
         </a>
       
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge ">
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge success">
           红队
         </a>
       

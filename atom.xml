@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://rebootorz.github.io</id>
     <title>rebootORZ</title>
-    <updated>2021-01-27T06:21:14.368Z</updated>
+    <updated>2021-02-02T11:11:03.743Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://rebootorz.github.io"/>
     <link rel="self" href="https://rebootorz.github.io/atom.xml"/>
@@ -11,66 +11,73 @@
     <icon>https://rebootorz.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, rebootORZ</rights>
     <entry>
+        <title type="html"><![CDATA[[Go] 9.异常处理]]></title>
+        <id>https://rebootorz.github.io/_UnWMbR-r/</id>
+        <link href="https://rebootorz.github.io/_UnWMbR-r/">
+        </link>
+        <updated>2021-02-02T11:10:18.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[[Go] 8.分支循环]]></title>
+        <id>https://rebootorz.github.io/z4gmLQp1H/</id>
+        <link href="https://rebootorz.github.io/z4gmLQp1H/">
+        </link>
+        <updated>2021-02-02T11:09:49.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[[Go] 7.接口]]></title>
+        <id>https://rebootorz.github.io/LGmqka8O9/</id>
+        <link href="https://rebootorz.github.io/LGmqka8O9/">
+        </link>
+        <updated>2021-02-02T11:06:26.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[[Go] 6.方法]]></title>
+        <id>https://rebootorz.github.io/k3YOnVa0S/</id>
+        <link href="https://rebootorz.github.io/k3YOnVa0S/">
+        </link>
+        <updated>2021-02-02T11:06:05.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[[Go] 5.函数]]></title>
+        <id>https://rebootorz.github.io/7fnmOsG5V/</id>
+        <link href="https://rebootorz.github.io/7fnmOsG5V/">
+        </link>
+        <updated>2021-02-02T11:04:57.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[[Go] 4.结构体]]></title>
+        <id>https://rebootorz.github.io/K1Hy1MSM0/</id>
+        <link href="https://rebootorz.github.io/K1Hy1MSM0/">
+        </link>
+        <updated>2021-02-02T11:04:23.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[[Go] 3.自定义类型]]></title>
+        <id>https://rebootorz.github.io/ld0c2reGf/</id>
+        <link href="https://rebootorz.github.io/ld0c2reGf/">
+        </link>
+        <updated>2021-02-02T11:03:53.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[[Go] 2.Map]]></title>
+        <id>https://rebootorz.github.io/0rTcaW73A/</id>
+        <link href="https://rebootorz.github.io/0rTcaW73A/">
+        </link>
+        <updated>2021-02-02T11:03:13.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[[Go] 1.切片]]></title>
+        <id>https://rebootorz.github.io/UxsJHz3Ap/</id>
+        <link href="https://rebootorz.github.io/UxsJHz3Ap/">
+        </link>
+        <updated>2021-02-02T11:00:36.000Z</updated>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[[Go]普通函数调用与闭包的区别]]></title>
         <id>https://rebootorz.github.io/gbrQ_BmiJ/</id>
         <link href="https://rebootorz.github.io/gbrQ_BmiJ/">
         </link>
         <updated>2021-01-26T15:55:06.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[利用XSS使Win10机器蓝屏]]></title>
-        <id>https://rebootorz.github.io/OqIWaMPts/</id>
-        <link href="https://rebootorz.github.io/OqIWaMPts/">
-        </link>
-        <updated>2021-01-19T03:10:36.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[MAC&KALI进行WiFi破解]]></title>
-        <id>https://rebootorz.github.io/LSzteQmAT/</id>
-        <link href="https://rebootorz.github.io/LSzteQmAT/">
-        </link>
-        <updated>2021-01-16T16:08:48.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[node.js反弹shell]]></title>
-        <id>https://rebootorz.github.io/AzVbzRuN4/</id>
-        <link href="https://rebootorz.github.io/AzVbzRuN4/">
-        </link>
-        <updated>2021-01-15T06:07:24.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Invoke-Obfuscation实现ps1脚本免杀]]></title>
-        <id>https://rebootorz.github.io/HdxsJLVVU/</id>
-        <link href="https://rebootorz.github.io/HdxsJLVVU/">
-        </link>
-        <updated>2021-01-14T05:58:27.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Powershell免杀上线]]></title>
-        <id>https://rebootorz.github.io/6jdjqWmOL/</id>
-        <link href="https://rebootorz.github.io/6jdjqWmOL/">
-        </link>
-        <updated>2021-01-14T05:54:21.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[FRP多层穿透实战]]></title>
-        <id>https://rebootorz.github.io/T5B_aJTTL/</id>
-        <link href="https://rebootorz.github.io/T5B_aJTTL/">
-        </link>
-        <updated>2021-01-11T06:49:23.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[简单穿透]]></title>
-        <id>https://rebootorz.github.io/jian-dan-chuan-tou/</id>
-        <link href="https://rebootorz.github.io/jian-dan-chuan-tou/">
-        </link>
-        <updated>2021-01-11T05:25:19.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[WiFi Pineapple之Evil Portal]]></title>
-        <id>https://rebootorz.github.io/WiFI-Pineapple-Evil-Portal/</id>
-        <link href="https://rebootorz.github.io/WiFI-Pineapple-Evil-Portal/">
-        </link>
-        <updated>2021-01-09T15:54:58.000Z</updated>
     </entry>
 </feed>
