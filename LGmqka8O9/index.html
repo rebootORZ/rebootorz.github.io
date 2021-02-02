@@ -7,7 +7,7 @@
 <meta name="description" content="一名默默无闻的攻城狮">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1612264659307">
+<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1612264802561">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 <link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
@@ -102,20 +102,20 @@
             <p class="article-meta">
               2021-02-02
               
-                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge warning">
+                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge secondary">
                   Golang
                 </a>
               
             </p>
             
             <div class="post-content">
-              <p>#定义<br>
-接口是一组方法签名的集合，然后我们可以定义一个结构体实现该接口所有方法。因此，接口就是定义了对象的行为。<br>
+              <h1 id="定义">定义</h1>
+<p>接口是一组方法签名的集合，然后我们可以定义一个结构体实现该接口所有方法。因此，接口就是定义了对象的行为。<br>
 例如，结构体Dog可以walk和bark， 如果一个接口声明了walk和bark的方法签名，而Dog实现了walk和bark方法，那么Dog就实现了该接口。<br>
 接口的主要工作是仅提供由方法名称，输入参数和返回类型组成的方法签名集合。 由类型（例如struct结构体）来声明方法并实现它们。<br>
-如果您曾经是面向对象的程序员，您肯定会经常使用implements关键字来实现接口。 但是在go中，你没有明确提到一个类型是否实现了一个接口。 如果一个类型实现了在接口中定义的签名方法，则称该类型实现该接口。 就像说它像鸭子一样走路，像鸭子一样游泳，像鸭子一样嘎嘎叫，那就是鸭子。<br>
-#定义接口<br>
-与struct类似，我们需要使用类型别名，通过interface关键字来简化接口声明。</p>
+如果您曾经是面向对象的程序员，您肯定会经常使用implements关键字来实现接口。 但是在go中，你没有明确提到一个类型是否实现了一个接口。 如果一个类型实现了在接口中定义的签名方法，则称该类型实现该接口。 就像说它像鸭子一样走路，像鸭子一样游泳，像鸭子一样嘎嘎叫，那就是鸭子。</p>
+<h1 id="定义接口">定义接口</h1>
+<p>与struct类似，我们需要使用类型别名，通过interface关键字来简化接口声明。</p>
 <pre><code>type Shape interface {
     Area() float64
     Perimeter() float64
@@ -125,9 +125,9 @@
 由于interface也是一种类型，我们可以创建它的类型的变量。 在上面的例子中，我们可以创建一个类型为接口Shape的变量s。<br>
 <img src="https://rebootorz.github.io/post-images/1612264036828.png" alt="" loading="lazy"><br>
 在我们对上面例子输出结果困惑前，让我解释一下。 接口有两种类型。 <strong>静态类型的接口是接口本身</strong>，例如上面的程序中的Shape。 接口没有静态值，而是指向动态值。 接口类型的变量可以保存实现接口的Type的值(这里的Type指的是类型别名，例如实现了接口的结构体的别名)。 该类型的值成为接口的动态值，该类型成为接口的动态类型。<br>
-从上面的结果，我们可以看到接口的值是nil而且接口的类型也是nil。 这是因为此时，接口不知道是谁会实现它。 当我们使用带有接口参数的fmt包中的Println函数时，它指向接口的动态值，而Printf函数中的％T语法指的是接口的动态类型。 但实际上，接口的类型是Shape。<br>
-#实现接口<br>
-让我们定义Shape接口提供的签名方法Area和Perimeter方法。 同时我们创建一个Rect结构体并使其实现Shape接口。<br>
+从上面的结果，我们可以看到接口的值是nil而且接口的类型也是nil。 这是因为此时，接口不知道是谁会实现它。 当我们使用带有接口参数的fmt包中的Println函数时，它指向接口的动态值，而Printf函数中的％T语法指的是接口的动态类型。 但实际上，接口的类型是Shape。</p>
+<h1 id="实现接口">实现接口</h1>
+<p>让我们定义Shape接口提供的签名方法Area和Perimeter方法。 同时我们创建一个Rect结构体并使其实现Shape接口。<br>
 <img src="https://rebootorz.github.io/post-images/1612264073026.png" alt="" loading="lazy"><br>
 所以在上面的程序中，我们创建了Shape接口和矩形结构体类型Rect。 然后我们使用Rect接收器类型定义了Area和Perimeter等方法。 因此Rect实现了这些方法。 由于这些方法是由Shape接口定义的，因此Rect实现了Shape接口。<br>
 我们可以通过创建nil接口并为其指定Rect类型的结构来确认。 由于Rect实现了Shape接口，因此完全有效。 从上面的结果可以看出，s的动态类型现在是Rect，s的动态值是struct Rect的值，即{5 4}。 动态因为，我们可以为不同类型分配新的结构，也实现接口Shape。<br>
@@ -166,7 +166,7 @@
 
       <div class="sm-12 md-4 col sidebar">
   <div class="paper info-container">
-    <img src="https://rebootorz.github.io/images/avatar.png?v=1612264659307" class="no-responsive avatar">
+    <img src="https://rebootorz.github.io/images/avatar.png?v=1612264802561" class="no-responsive avatar">
     <div class="text-muted">一名默默无闻的攻城狮</div>
     <div class="social-container">
       
@@ -282,11 +282,11 @@
           Golang
         </a>
       
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge ">
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge secondary">
           红队
         </a>
       
-        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge warning">
+        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge success">
           物联网安全
         </a>
       

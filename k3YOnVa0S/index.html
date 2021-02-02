@@ -7,7 +7,7 @@
 <meta name="description" content="一名默默无闻的攻城狮">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1612264659307">
+<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1612264802561">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 <link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
@@ -102,15 +102,15 @@
             <p class="article-meta">
               2021-02-02
               
-                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge warning">
+                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge success">
                   Golang
                 </a>
               
             </p>
             
             <div class="post-content">
-              <p>#定义<br>
-Go中的struct结构类似于面向对象中的类。面向对象中，除了成员变量还有方法。<br>
+              <h1 id="定义">定义</h1>
+<p>Go中的struct结构类似于面向对象中的类。面向对象中，除了成员变量还有方法。<br>
 Go中也有方法，它是一种特殊的函数，定义于struct之上(与struct关联、绑定)，被称为struct的receiver。<br>
 它的定义方式大致如下：</p>
 <pre><code>type mytype struct{}
@@ -128,7 +128,7 @@ func (recv *mytype) my_method(para) return_type {}
 <li>同一个接收者的方法名不能重复 (没有重载)，如果是结构体，方法名还不能和字段名重复。</li>
 <li>值作为接收者无法修改其值，如果有更改需求，需要使用指针类型。</li>
 </ul>
-<p>#简单例子</p>
+<h1 id="简单例子">简单例子</h1>
 <pre><code>package main
 
 type T struct{}
@@ -140,8 +140,8 @@ func main() {
     t.F()  //调用方法
 }
 </code></pre>
-<p>#接收者类型不是任意类型<br>
-<strong>例如：</strong></p>
+<h1 id="接收者类型不是任意类型">接收者类型不是任意类型</h1>
+<p><strong>例如：</strong></p>
 <pre><code>package main
 
 func (i int64) F() {}
@@ -158,8 +158,8 @@ func main() {
     t := T(10)
     t.F() }
 </code></pre>
-<p>#命名冲突<br>
-1.接收者定义的方法名不能重复，例如：</p>
+<h1 id="命名冲突">命名冲突</h1>
+<p>1.接收者定义的方法名不能重复，例如：</p>
 <pre><code>package main
 
 type T struct{}
@@ -185,9 +185,9 @@ t.F() }
 </code></pre>
 <p>运行代码我们会得到 : type T has both field and method named F 类似错误。<br>
 小结: 同一个接收者的方法名不能重复 (没有重载);<br>
-如果是结构体，方法名不能和字段重复。<br>
-#接收者可以同时为值和指针<br>
-在 Go 语言中，方法的接收者可以同时为值或者指针，例如:</p>
+如果是结构体，方法名不能和字段重复。</p>
+<h1 id="接收者可以同时为值和指针">接收者可以同时为值和指针</h1>
+<p>在 Go 语言中，方法的接收者可以同时为值或者指针，例如:</p>
 <pre><code>package main
 
 type T struct{}
@@ -205,9 +205,9 @@ func main(){
     t1.N()
 }
 </code></pre>
-<p>可以看到无论是值类型T还是指针类型&amp;T都可以同时访问F和N方法。<br>
-#值和指针作为接收者的区别<br>
-同样我们先看一段代码：</p>
+<p>可以看到无论是值类型T还是指针类型&amp;T都可以同时访问F和N方法。</p>
+<h1 id="值和指针作为接收者的区别">值和指针作为接收者的区别</h1>
+<p>同样我们先看一段代码：</p>
 <pre><code>package main
 
 import &quot;fmt&quot;
@@ -264,7 +264,7 @@ func main() {
 
       <div class="sm-12 md-4 col sidebar">
   <div class="paper info-container">
-    <img src="https://rebootorz.github.io/images/avatar.png?v=1612264659307" class="no-responsive avatar">
+    <img src="https://rebootorz.github.io/images/avatar.png?v=1612264802561" class="no-responsive avatar">
     <div class="text-muted">一名默默无闻的攻城狮</div>
     <div class="social-container">
       
@@ -376,11 +376,11 @@ func main() {
     </div>
     <div class="row">
       
-        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge secondary">
+        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge warning">
           Golang
         </a>
       
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge ">
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge secondary">
           红队
         </a>
       

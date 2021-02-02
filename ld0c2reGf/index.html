@@ -7,7 +7,7 @@
 <meta name="description" content="一名默默无闻的攻城狮">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1612264659307">
+<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1612264802561">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 <link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
@@ -109,12 +109,12 @@
             </p>
             
             <div class="post-content">
-              <p>#定义<br>
-在go中，可以通过自定义类型来表示一些特殊的数据结构和业务逻辑。<br>
+              <h1 id="定义">定义</h1>
+<p>在go中，可以通过自定义类型来表示一些特殊的数据结构和业务逻辑。<br>
 使用关键字 type 来声明：<br>
 type NAME TYPE</p>
-<p>#声明语法<br>
-1.单次声明<br>
+<h1 id="声明语法">声明语法</h1>
+<p>1.单次声明<br>
 type City string<br>
 2.批量声明</p>
 <pre><code>type(
@@ -130,7 +130,7 @@ type(
     A3 int64
 )
 </code></pre>
-<p>#示例</p>
+<h1 id="示例">示例</h1>
 <pre><code>package main
 
 import &quot;fmt&quot;
@@ -141,7 +141,7 @@ func main(){
     fmt.Println(city)
 }
 </code></pre>
-<p>#基本操作</p>
+<h1 id="基本操作">基本操作</h1>
 <pre><code>package main
 
 import &quot;fmt&quot;
@@ -161,7 +161,7 @@ func main(){
 }
 </code></pre>
 <p>总结：自定义类型的原始类型的所有操作同样适用。</p>
-<p>#函数参数</p>
+<h1 id="函数参数">函数参数</h1>
 <pre><code>package main
 
 import &quot;fmt&quot;
@@ -180,7 +180,7 @@ func printAge(age int){
 <p>当我们运行代码的时候会出现:./main.go:11:10: cannot use middle (type Age) as type int in argument to printAge 的错误。<br>
 因为 printAge 方法期望的是 int 类型，但是我们传入的参数是 Age ，他们虽然具有相同的 值，但为不同的类型。<br>
 我们可以采用显式的类型转换( printAge(int(primary)) )来修复。</p>
-<p>#不同自定义类型间的操作</p>
+<h1 id="不同自定义类型间的操作">不同自定义类型间的操作</h1>
 <pre><code>package main
 
 import &quot;fmt&quot;
@@ -220,7 +220,7 @@ func main(){
 
       <div class="sm-12 md-4 col sidebar">
   <div class="paper info-container">
-    <img src="https://rebootorz.github.io/images/avatar.png?v=1612264659307" class="no-responsive avatar">
+    <img src="https://rebootorz.github.io/images/avatar.png?v=1612264802561" class="no-responsive avatar">
     <div class="text-muted">一名默默无闻的攻城狮</div>
     <div class="social-container">
       
@@ -336,7 +336,7 @@ func main(){
           Golang
         </a>
       
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge ">
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge secondary">
           红队
         </a>
       
