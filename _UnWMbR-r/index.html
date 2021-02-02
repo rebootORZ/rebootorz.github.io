@@ -7,7 +7,7 @@
 <meta name="description" content="一名默默无闻的攻城狮">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1612264243855">
+<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1612264659307">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 <link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
@@ -102,24 +102,24 @@
             <p class="article-meta">
               2021-02-02
               
-                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge success">
+                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge secondary">
                   Golang
                 </a>
               
             </p>
             
             <div class="post-content">
-              <p>#defer<br>
-defer通常用于延迟调用指定的函数。例如：</p>
+              <h1 id="defer">defer</h1>
+<p>defer通常用于延迟调用指定的函数。例如：</p>
 <pre><code>func outerFunc() {
         defer fmt.Printf(&quot; World!\n&quot;)
         fmt.Print(&quot;Hello&quot;) }
 </code></pre>
 <p>最终输出：<br>
 &quot;Hello World!&quot;<br>
-这是因为：defer会在outerFunc退出之前执行打印操作，因此被defer调用的函数也称为“延迟函数”。<br>
-##defer 常用场景：<br>
-defer语句经常被用于处理成对的操作，如打开和关闭，连接和断开连接，加锁和释放锁。恰当使用 defer 能够保证资源正确释放。以下是几个例子:</p>
+这是因为：defer会在outerFunc退出之前执行打印操作，因此被defer调用的函数也称为“延迟函数”。</p>
+<h2 id="defer-常用场景">defer 常用场景：</h2>
+<p>defer语句经常被用于处理成对的操作，如打开和关闭，连接和断开连接，加锁和释放锁。恰当使用 defer 能够保证资源正确释放。以下是几个例子:</p>
 <pre><code>// 使用 defer 关闭 http 请求响应体的 Body 
 func closeBody(url string) error {
         resp, err := http.Get(url) 
@@ -188,8 +188,8 @@ for i := 0; i &lt;= 4; i++ {
         panic(errors.New(&quot;this is test for panic&quot;))
 }
 </code></pre>
-<p>#recover<br>
-顾名思义，recover 函数能使当前程序从 panic 中恢复。recover 能够拦截 panic 事件，使得<br>
+<h1 id="recover">recover</h1>
+<p>顾名思义，recover 函数能使当前程序从 panic 中恢复。recover 能够拦截 panic 事件，使得<br>
 程序不会因为意外而触发 panic 事件而完全退出。<br>
 recover 函数返回的是一个 interfac{} 类型的结果，如果捕获到了 panic 事件，该结果就为非 nil。见下例：</p>
 <pre><code>func panicFunc() {
@@ -229,7 +229,7 @@ func main() {
 
       <div class="sm-12 md-4 col sidebar">
   <div class="paper info-container">
-    <img src="https://rebootorz.github.io/images/avatar.png?v=1612264243855" class="no-responsive avatar">
+    <img src="https://rebootorz.github.io/images/avatar.png?v=1612264659307" class="no-responsive avatar">
     <div class="text-muted">一名默默无闻的攻城狮</div>
     <div class="social-container">
       
@@ -341,15 +341,15 @@ func main() {
     </div>
     <div class="row">
       
-        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge success">
+        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge secondary">
           Golang
         </a>
       
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge secondary">
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge warning">
           红队
         </a>
       
-        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge secondary">
+        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge success">
           物联网安全
         </a>
       
