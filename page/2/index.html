@@ -1,65 +1,521 @@
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
-    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
-    <link rel="stylesheet" href="https://rebootorz.github.io/media/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/css/live2d.css">
-    <link rel="stylesheet" href="https://rebootorz.github.io/styles/main.css">
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
 
-    <!-- pjax 加载valine文件 -->
-    <script src="https://rebootorz.github.io/media/js/valine.min.js"></script>
-    <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
-    <meta name="description" content="一名默默无闻的攻城狮" />
-    <meta http-equiv="x-pjax-version" content="v123">
-    <title>rebootORZ</title>
-</head>
+<title>rebootORZ</title>
+<meta name="description" content="一名默默无闻的攻城狮">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1612625116095">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://rebootorz.github.io/styles/main.css">
 
 
-<body>
-    <!-- 响应式布局，针对PC端内容显示 -->
-    <div id="content">
-        <div class="nav-large">
-            <div class="row">
-                
-                 
-                </div>
-            </div>
-            <div id="bg">
-            </div>
-            <div id="bgchoice" style="display: none">
-            </div>
-            
-            <div id="bgurl" style="display:none"></div>
-             
-        <div id="landlord">
-            <div class="message" style="opacity:0"></div>
-            <canvas id="live2d" width="240" height="250" class="live2d"></canvas>
-        </div>
-    </div>
-    
-    <div id="domainname" style="display:none">https://rebootorz.github.io
-        </div>
-        
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
 
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KB4J95VFFD"></script>
 <script>
-    var bgchoice = $('#bgchoice').html();
-    var bg = $('#bg');
-    var bgurl = document.getElementById("bgurl").innerHTML;
-    if (bgchoice == 'default')
-        for (var i = 0; i < 3; i++)
-            bgurl = bgurl.replace("\\", "/");
-    bg.css("background", "url('" + bgurl + "')");
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-    window.onload = function () {
-        aplayerbtnInit();
-    }
+  gtag('config', 'G-KB4J95VFFD');
 </script>
-<!-- 页内pjax刷新 -->
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
-<script src="https://cdn.bootcdn.net/ajax/libs/jquery.pjax/2.0.1/jquery.pjax.js"></script>
 
+
+  </head>
+  <body>
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://rebootorz.github.io">rebootORZ</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
         
-</body>
+          <li>
+            
+              <a href="/" class="menu">
+                首页
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="/archives" class="menu">
+                归档
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="/tags" class="menu">
+                标签
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="/post/about" class="menu">
+                关于
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="menu">
+                Golang学习之路
+              </a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          
+  <article class="article">
+    <h2 class="article-title">
+      <a href="https://rebootorz.github.io/K1Hy1MSM0/">[Go] 4.结构体</a>
+    </h2>
+    <p class="article-meta">
+      2021-02-02
+      
+        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge secondary">
+          Golang
+        </a>
+      
+    </p>
+    <p class="text-lead">
+      
+    </p>
+    <div class="row">
+      <a href="https://rebootorz.github.io/K1Hy1MSM0/" class="readmore-link">
+        <button>
+          Read More
+        </button>
+      </a>
+    </div>
+  </article>
+
+  <article class="article">
+    <h2 class="article-title">
+      <a href="https://rebootorz.github.io/ld0c2reGf/">[Go] 3.自定义类型</a>
+    </h2>
+    <p class="article-meta">
+      2021-02-02
+      
+        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge ">
+          Golang
+        </a>
+      
+    </p>
+    <p class="text-lead">
+      
+    </p>
+    <div class="row">
+      <a href="https://rebootorz.github.io/ld0c2reGf/" class="readmore-link">
+        <button>
+          Read More
+        </button>
+      </a>
+    </div>
+  </article>
+
+  <article class="article">
+    <h2 class="article-title">
+      <a href="https://rebootorz.github.io/0rTcaW73A/">[Go] 2.Map</a>
+    </h2>
+    <p class="article-meta">
+      2021-02-02
+      
+        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge secondary">
+          Golang
+        </a>
+      
+    </p>
+    <p class="text-lead">
+      
+    </p>
+    <div class="row">
+      <a href="https://rebootorz.github.io/0rTcaW73A/" class="readmore-link">
+        <button>
+          Read More
+        </button>
+      </a>
+    </div>
+  </article>
+
+  <article class="article">
+    <h2 class="article-title">
+      <a href="https://rebootorz.github.io/UxsJHz3Ap/">[Go] 1.切片</a>
+    </h2>
+    <p class="article-meta">
+      2021-02-02
+      
+        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge warning">
+          Golang
+        </a>
+      
+    </p>
+    <p class="text-lead">
+      
+    </p>
+    <div class="row">
+      <a href="https://rebootorz.github.io/UxsJHz3Ap/" class="readmore-link">
+        <button>
+          Read More
+        </button>
+      </a>
+    </div>
+  </article>
+
+  <article class="article">
+    <h2 class="article-title">
+      <a href="https://rebootorz.github.io/gbrQ_BmiJ/">[Go]普通函数调用与闭包的区别</a>
+    </h2>
+    <p class="article-meta">
+      2021-01-26
+      
+        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge secondary">
+          Golang
+        </a>
+      
+    </p>
+    <p class="text-lead">
+      
+    </p>
+    <div class="row">
+      <a href="https://rebootorz.github.io/gbrQ_BmiJ/" class="readmore-link">
+        <button>
+          Read More
+        </button>
+      </a>
+    </div>
+  </article>
+
+  <article class="article">
+    <h2 class="article-title">
+      <a href="https://rebootorz.github.io/OqIWaMPts/">利用XSS使Win10机器蓝屏</a>
+    </h2>
+    <p class="article-meta">
+      2021-01-19
+      
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge secondary">
+          红队
+        </a>
+      
+    </p>
+    <p class="text-lead">
+      
+    </p>
+    <div class="row">
+      <a href="https://rebootorz.github.io/OqIWaMPts/" class="readmore-link">
+        <button>
+          Read More
+        </button>
+      </a>
+    </div>
+  </article>
+
+  <article class="article">
+    <h2 class="article-title">
+      <a href="https://rebootorz.github.io/LSzteQmAT/">MAC&amp;KALI进行WiFi破解</a>
+    </h2>
+    <p class="article-meta">
+      2021-01-17
+      
+        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge ">
+          物联网安全
+        </a>
+      
+    </p>
+    <p class="text-lead">
+      
+    </p>
+    <div class="row">
+      <a href="https://rebootorz.github.io/LSzteQmAT/" class="readmore-link">
+        <button>
+          Read More
+        </button>
+      </a>
+    </div>
+  </article>
+
+  <article class="article">
+    <h2 class="article-title">
+      <a href="https://rebootorz.github.io/AzVbzRuN4/">node.js反弹shell</a>
+    </h2>
+    <p class="article-meta">
+      2021-01-15
+      
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge ">
+          红队
+        </a>
+      
+    </p>
+    <p class="text-lead">
+      
+    </p>
+    <div class="row">
+      <a href="https://rebootorz.github.io/AzVbzRuN4/" class="readmore-link">
+        <button>
+          Read More
+        </button>
+      </a>
+    </div>
+  </article>
+
+  <article class="article">
+    <h2 class="article-title">
+      <a href="https://rebootorz.github.io/HdxsJLVVU/">Invoke-Obfuscation实现ps1脚本免杀</a>
+    </h2>
+    <p class="article-meta">
+      2021-01-14
+      
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge warning">
+          红队
+        </a>
+      
+    </p>
+    <p class="text-lead">
+      
+    </p>
+    <div class="row">
+      <a href="https://rebootorz.github.io/HdxsJLVVU/" class="readmore-link">
+        <button>
+          Read More
+        </button>
+      </a>
+    </div>
+  </article>
+
+  <article class="article">
+    <h2 class="article-title">
+      <a href="https://rebootorz.github.io/6jdjqWmOL/">Powershell免杀上线</a>
+    </h2>
+    <p class="article-meta">
+      2021-01-14
+      
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge warning">
+          红队
+        </a>
+      
+    </p>
+    <p class="text-lead">
+      
+    </p>
+    <div class="row">
+      <a href="https://rebootorz.github.io/6jdjqWmOL/" class="readmore-link">
+        <button>
+          Read More
+        </button>
+      </a>
+    </div>
+  </article>
+
+
+        </div>
+        
+        <div class="row flex-edges">
+  
+    <a href="https://rebootorz.github.io/" class="paper-btn">
+      上一页
+    </a>
+  
+  
+    <a href="https://rebootorz.github.io/page/3/" class="paper-btn">
+      下一页
+    </a>
+  
+</div>
+
+      </div>
+      
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://rebootorz.github.io/images/avatar.png?v=1612625116095" class="no-responsive avatar">
+    <div class="text-muted">一名默默无闻的攻城狮</div>
+    <div class="social-container">
+      
+        
+          <a href="https://github.com/rebootORZ" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/KBF21wEvg/">[Go] 12.锁</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/VwkM_t1Le/">红队常见浏览器密码抓取破解</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/aC7_yNHBz/">记录一些突破性的XSS Payload（Updating）</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/cDP755kpw/">[Go] 11.Channel</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/msC3viyDp/">[Go] 10.Goroutine（并发）</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/_UnWMbR-r/">[Go] 9.异常处理</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/z4gmLQp1H/">[Go] 8.分支循环</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/LGmqka8O9/">[Go] 7.接口</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/k3YOnVa0S/">[Go] 6.方法</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/7fnmOsG5V/">[Go] 5.函数</a>
+            </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge ">
+          Golang
+        </a>
+      
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge secondary">
+          红队
+        </a>
+      
+        <a href="https://rebootorz.github.io/tag/NycXQ8xNz/" class="badge success">
+          渗透技巧
+        </a>
+      
+        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge success">
+          物联网安全
+        </a>
+      
+    </div>
+  </div>
+  <div class="paper">
+    高度自律  绝对自由 | <a class="rss" href="https://rebootorz.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+    </div>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
+  </body>
 </html>
