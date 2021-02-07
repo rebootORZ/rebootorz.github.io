@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://rebootorz.github.io</id>
     <title>rebootORZ</title>
-    <updated>2021-02-07T18:58:19.545Z</updated>
+    <updated>2021-02-07T20:24:44.917Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://rebootorz.github.io"/>
     <link rel="self" href="https://rebootorz.github.io/atom.xml"/>
@@ -10,6 +10,13 @@
     <logo>https://rebootorz.github.io/images/avatar.png</logo>
     <icon>https://rebootorz.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, rebootORZ</rights>
+    <entry>
+        <title type="html"><![CDATA[Golang shellcode 免杀加载器]]></title>
+        <id>https://rebootorz.github.io/JZFkUUfLP/</id>
+        <link href="https://rebootorz.github.io/JZFkUUfLP/">
+        </link>
+        <updated>2021-02-07T20:20:49.000Z</updated>
+    </entry>
     <entry>
         <title type="html"><![CDATA[[Go] 跨平台编译]]></title>
         <id>https://rebootorz.github.io/d08DQeKXz/</id>
@@ -72,12 +79,5 @@
         <link href="https://rebootorz.github.io/z4gmLQp1H/">
         </link>
         <updated>2021-02-02T11:09:49.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[[Go] 7.接口]]></title>
-        <id>https://rebootorz.github.io/LGmqka8O9/</id>
-        <link href="https://rebootorz.github.io/LGmqka8O9/">
-        </link>
-        <updated>2021-02-02T11:06:26.000Z</updated>
     </entry>
 </feed>

