@@ -1,190 +1,112 @@
-<!DOCTYPE html>
 <html>
-
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta content="yes" name="apple-mobile-web-app-capable" />
-<meta content="black" name="apple-mobile-web-app-status-bar-style" />
-<meta name="referrer" content="never">
-<meta name="keywords" content="">
-<meta name="description" content="欢迎访问[rebootORZ]的个人博客">
-<meta name="author" content="kveln">
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>[Go] 2.Map | rebootORZ</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
-<link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
-<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-<link
-  href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
-  rel='stylesheet' type='text/css'>
-<link rel="alternate" type="application/rss+xml" title="[Go] 2.Map | rebootORZ » Feed"
-  href="https://rebootorz.github.io/atom.xml">
-<link rel="stylesheet"
-  href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
-<link href="https://rebootorz.github.io/styles/main.css" rel="stylesheet">
-<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1612788437529">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://rebootorz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="[Go] 2.Map | rebootORZ - Atom Feed" href="https://rebootorz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
-<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/css/live2d.css">
 
-<script>hljs.initHighlightingOnLoad();</script>
-
-  <meta property="og:description" content="[Go] 2.Map" />
-  <meta property="og:url" content="https://rebootorz.github.io/0rTcaW73A/" />
-  <meta property="og:locale" content="zh-CN" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="rebootORZ" />
-  <!-- <script src="../assets/styles/scripts/tocScript.js"></script> -->
-</head>
-
-<body>
-  <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-  <div class="container">
-    <a class="navbar-brand" href="https://rebootorz.github.io">rebootORZ</a>
-    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-      aria-label="Toggle navigation">
-      Menu
-      <i class="fas fa-bars"></i>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarResponsive">
-      <ul class="navbar-nav ml-auto">
-        
-        <li class="nav-item">
-          
-          <a class="nav-link" href="/">首页</a>
-          
-        </li>
-        
-        <li class="nav-item">
-          
-          <a class="nav-link" href="/archives">归档</a>
-          
-        </li>
-        
-        <li class="nav-item">
-          
-          <a class="nav-link" href="/tags">标签</a>
-          
-        </li>
-        
-        <li class="nav-item">
-          
-          <a class="nav-link" href="/post/about">关于</a>
-          
-        </li>
-        
-        <li class="nav-item">
-          
-          <a class="nav-link" href="https://rebootorz.github.io/tag/VLOcVZGpM/">Golang学习之路</a>
-          
-        </li>
-        
-        <li class="nav-item">
-          <div class="gridea-search-container">
-            <form id="gridea-search-form" style="position: relative" data-update="1612787927845"
-              action="/search/index.html">
-              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
-              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
-            </form>
-          </div>
-        </li>
-      </ul>
-    </div>
+    <meta name="description" content="定义
+是无序的键值对，类似python的字典。
+语法
+使用关键字map来声明：
+map[KeyType]ValueType
+注意：
+1.必须指定key,value的类型，插入的记录类型必须匹配。
+2.key具有唯一性，不能重复。
+3.Key..." />
+    <meta name="keywords" content="Golang" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://rebootorz.github.io">
+  <img class="avatar" src="https://rebootorz.github.io/images/avatar.png?v=1612788437529" alt="">
+  </a>
+  <h1 class="site-title">
+    rebootORZ
+  </h1>
+  <p class="site-description">
+    一名默默无闻的攻城狮
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="menu">
+          Golang学习之路
+        </a>
+      
+    
   </div>
-</nav>
-  <!-- Page Header -->
-  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-  <div class="container">
-    <a class="navbar-brand" href="https://rebootorz.github.io">rebootORZ</a>
-    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-      aria-label="Toggle navigation">
-      Menu
-      <i class="fas fa-bars"></i>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarResponsive">
-      <ul class="navbar-nav ml-auto">
-        
-        <li class="nav-item">
-          
-          <a class="nav-link" href="/">首页</a>
-          
-        </li>
-        
-        <li class="nav-item">
-          
-          <a class="nav-link" href="/archives">归档</a>
-          
-        </li>
-        
-        <li class="nav-item">
-          
-          <a class="nav-link" href="/tags">标签</a>
-          
-        </li>
-        
-        <li class="nav-item">
-          
-          <a class="nav-link" href="/post/about">关于</a>
-          
-        </li>
-        
-        <li class="nav-item">
-          
-          <a class="nav-link" href="https://rebootorz.github.io/tag/VLOcVZGpM/">Golang学习之路</a>
-          
-        </li>
-        
-        <li class="nav-item">
-          <div class="gridea-search-container">
-            <form id="gridea-search-form" style="position: relative" data-update="1612787927845"
-              action="/search/index.html">
-              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
-              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
-            </form>
-          </div>
-        </li>
-      </ul>
-    </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
   </div>
-</nav>
-<header class="masthead" style="background-image: url('https://rebootorz.github.io/media/images/home-bg.jpg')">
-  <div class="overlay"></div>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-        
-          <!-- 没Title为其他页面Header -->
-          
-            <!-- 没Title并且有headerType为Post：文章Header -->
-            <div class="post-heading">
-              <span class="tags">
-                
-                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="tag">Golang</a>
-                
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              [Go] 2.Map
+            </h2>
+            <div class="post-info">
+              <span>
+                2021-02-02
               </span>
-              <h1>[Go] 2.Map</h1>
-              <span class="meta">
-                Posted on
-                2021-02-02，4 min read
+              <span>
+                4 min read
               </span>
+              
+                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="post-tag">
+                  # Golang
+                </a>
+              
             </div>
-          
-        
-      </div>
-    </div>
-  </div>
-</header>
-  <!-- Post Content -->
-  <article id="post-content-article">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto post-content-container">
-          
-          <h1 id="定义">定义</h1>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="定义">定义</h1>
 <p>是无序的键值对，类似python的字典。</p>
 <h1 id="语法">语法</h1>
 <p>使用关键字map来声明：<br>
@@ -289,7 +211,9 @@ provinces[&quot;北京&quot;] = map[string]int{
 fmt.Println(provinces[&quot;北京&quot;])
 </code></pre>
 
-          <div class="toc-container"><ul class="markdownIt-TOC">
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
 <li><a href="#%E5%AE%9A%E4%B9%89">定义</a></li>
 <li><a href="#%E8%AF%AD%E6%B3%95">语法</a></li>
 <li><a href="#%E5%A3%B0%E6%98%8E%E5%92%8C%E5%88%9D%E5%A7%8B%E5%8C%96">声明和初始化</a></li>
@@ -298,97 +222,74 @@ fmt.Println(provinces[&quot;北京&quot;])
 <li><a href="#%E7%BA%BF%E7%A8%8B%E4%B8%8D%E5%AE%89%E5%85%A8">线程不安全</a></li>
 <li><a href="#map%E5%B5%8C%E5%A5%97">map嵌套</a></li>
 </ul>
-</div>
-          
-          <hr />
-          <p class="next-post">下一篇：
-            <a href="https://rebootorz.github.io/UxsJHz3Ap/">
-              <span class="post-title">
-                [Go] 1.切片&rarr;
-              </span>
-            </a>
-          </p>
-          
-          <div class="comment" style="text-align: center;">
-            
 
-            
-            
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://rebootorz.github.io/UxsJHz3Ap/">
+              <h3 class="post-title">
+                [Go] 1.切片
+              </h3>
+            </a>
           </div>
-        </div>
-      </div>
-  </article>
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <ul class="list-inline text-center">
-            
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-              <!-- <li class="list-inline-item">
-              <a href="https://rebootorz.github.io/atom.xml" target="_blank">
-                <span class="fa-stack fa-lg">
-                  <i class="fas fa-circle fa-stack-2x"></i>
-                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
-                </span>
-              </a>
-              </li> -->
-          </ul>
-          <p class="copyright text-muted">Copyright &copy;<span>rebootORZ</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
-        </div>
+        
+
+        
+
+        <div class="site-footer">
+  高度自律  绝对自由
+  <a class="rss" href="https://rebootorz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
       </div>
     </div>
-   </footer>
-  <!-- Bootstrap core JavaScript -->
-  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-  <!-- <script src="https://rebootorz.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
-  <!-- Bootstrap core JavaScript -->
-  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
-  <!-- <script src="https://rebootorz.github.io/media/scripts/clean-blog.min.js"></script> -->
-  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
-  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
-<a id="back_to_top" href="#" class="back_to_top">
-  <span>▲</span></a>
-<script>$(document).ready((function(_this) {
-    return function() {
-      var bt;
-      bt = $('#back_to_top');
-      if ($(document).width() > 480) {
-        $(window).scroll(function() {
-          var st;
-          st = $(window).scrollTop();
-          if (st > 30) {
-            return bt.css('display', 'block')
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
           } else {
-            return bt.css('display', 'none')
+            link.classList.remove("current");
           }
         });
-        return bt.click(function() {
-          $('body,html').animate({
-            scrollTop: 0
-          },
-          800);
-          return false
-        })
-      }
-    }
-  })(this));</script>
-  
-  <script src="https://rebootorz.github.io/media/scripts/tocScript.js"></script>
-</body>
+      });
 
+    </script>
+  </body>
 </html>
