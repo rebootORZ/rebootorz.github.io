@@ -1,115 +1,190 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" >
 
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta name="referrer" content="never">
+<meta name="keywords" content="">
+<meta name="description" content="欢迎访问[rebootORZ]的个人博客">
+<meta name="author" content="kveln">
 <title>[Go] 跨平台编译 | rebootORZ</title>
-<meta name="description" content="一名默默无闻的攻城狮">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+<link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link
+  href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+  rel='stylesheet' type='text/css'>
+<link rel="alternate" type="application/rss+xml" title="[Go] 跨平台编译 | rebootORZ » Feed"
+  href="https://rebootorz.github.io/atom.xml">
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+<link href="https://rebootorz.github.io/styles/main.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1612782594916">
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
 
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="stylesheet" href="https://unpkg.com/papercss@1.6.1/dist/paper.min.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-<link rel="stylesheet" href="https://rebootorz.github.io/styles/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/850552586/ericamcdn@0.1/css/live2d.css">
 
+<script>hljs.initHighlightingOnLoad();</script>
 
-<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <meta property="og:description" content="[Go] 跨平台编译" />
+  <meta property="og:url" content="https://rebootorz.github.io/d08DQeKXz/" />
+  <meta property="og:locale" content="zh-CN" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="rebootORZ" />
+  <!-- <script src="../assets/styles/scripts/tocScript.js"></script> -->
+</head>
 
-
-<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KB4J95VFFD"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-KB4J95VFFD');
-</script>
-
-
-  </head>
-  <body>
-  
-    <nav class="navbar border fixed split-nav">
-  <div class="nav-brand">
-    <h3><a href="https://rebootorz.github.io">rebootORZ</a></h3>
-  </div>
-  <div class="collapsible">
-    <input id="collapsible1" type="checkbox" name="collapsible1">
-    <button>
-      <label for="collapsible1">
-        <div class="bar1"></div>
-        <div class="bar2"></div>
-        <div class="bar3"></div>
-      </label>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://rebootorz.github.io">rebootORZ</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
     </button>
-    <div class="collapsible-body">
-      <ul class="inline">
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
         
-          <li>
-            
-              <a href="/" class="menu">
-                首页
-              </a>
-            
-          </li>
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
         
-          <li>
-            
-              <a href="/archives" class="menu">
-                归档
-              </a>
-            
-          </li>
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
         
-          <li>
-            
-              <a href="/tags" class="menu">
-                标签
-              </a>
-            
-          </li>
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
         
-          <li>
-            
-              <a href="/post/about" class="menu">
-                关于
-              </a>
-            
-          </li>
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
         
-          <li>
-            
-              <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="menu">
-                Golang学习之路
-              </a>
-            
-          </li>
+        <li class="nav-item">
+          
+          <a class="nav-link" href="https://rebootorz.github.io/tag/VLOcVZGpM/">Golang学习之路</a>
+          
+        </li>
         
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1612787722899"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
       </ul>
     </div>
   </div>
 </nav>
-
-    <div id="top" class="row site">
-      <div class="sm-12 md-8 col">
-        <div class="paper">
-          <article class="article">
-            <h1>[Go] 跨平台编译</h1>
-            <p class="article-meta">
-              2021-02-08
-              
-                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge success">
-                  Golang
-                </a>
-              
-            </p>
-            
-            <div class="post-content">
-              <h1 id="说明">说明</h1>
+  <!-- Page Header -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="https://rebootorz.github.io">rebootORZ</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+      data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+      aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/">首页</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/archives">归档</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/tags">标签</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="/post/about">关于</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          
+          <a class="nav-link" href="https://rebootorz.github.io/tag/VLOcVZGpM/">Golang学习之路</a>
+          
+        </li>
+        
+        <li class="nav-item">
+          <div class="gridea-search-container">
+            <form id="gridea-search-form" style="position: relative" data-update="1612787722899"
+              action="/search/index.html">
+              <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+              <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<header class="masthead" style="background-image: url('https://rebootorz.github.io/media/images/home-bg.jpg')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        
+          <!-- 没Title为其他页面Header -->
+          
+            <!-- 没Title并且有headerType为Post：文章Header -->
+            <div class="post-heading">
+              <span class="tags">
+                
+                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="tag">Golang</a>
+                
+              </span>
+              <h1>[Go] 跨平台编译</h1>
+              <span class="meta">
+                Posted on
+                2021-02-08，1 min read
+              </span>
+            </div>
+          
+        
+      </div>
+    </div>
+  </div>
+</header>
+  <!-- Post Content -->
+  <article id="post-content-article">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto post-content-container">
+          
+          <h1 id="说明">说明</h1>
 <p>跨平台编译操作很简单，具体原理还没去了解，但是这里有个坑，做下记录。</p>
 <h1 id="跨平台编译命令如下">跨平台编译命令如下：</h1>
 <p><strong>注：</strong> 对应的位置填入需要编译的类型即可。</p>
@@ -136,198 +211,107 @@ go build main.go
 </code></pre>
 <p>PS:网上很多教程里面，MAC和LINUX下的编译命令都是分行写的，测试下来发现这样执行并不能成功，写成一行就成功了。ORZ</p>
 
-            </div>
-          </article>
-        </div>
-        <div class="paper" data-aos="fade-in">
-          
-            <div class="next-post">
-              <div class="next">
-                下一篇
-              </div>
-              <a href="https://rebootorz.github.io/HAUEHo9Ma/">
-                <h3 class="post-title">
-                  记录文件上传Tips（Updating）
-                </h3>
-              </a>
-            </div>
-          
-        </div>
-        
-      </div>
-
-      <div class="sm-12 md-4 col sidebar">
-  <div class="paper info-container">
-    <img src="https://rebootorz.github.io/images/avatar.png?v=1612782594916" class="no-responsive avatar">
-    <div class="text-muted">一名默默无闻的攻城狮</div>
-    <div class="social-container">
-      
-        
-          <a href="https://github.com/rebootORZ" target="_blank">
-            <i class="fab fa-github"></i>
-          </a>
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    </div>
-  </div>
-  <div class="paper">
-    <div class="sidebar-title">
-      最新文章
-    </div>
-    <div class="row">
-      <ul>
-        
-          
-            <li>
-              <a href="https://rebootorz.github.io/z9xOXiKxp/">利用CloudFlare隐藏C2</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://rebootorz.github.io/pJm4kwWjb/">Github Monitor 部署排错</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://rebootorz.github.io/JZFkUUfLP/">Golang shellcode 免杀加载器</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://rebootorz.github.io/d08DQeKXz/">[Go] 跨平台编译</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://rebootorz.github.io/HAUEHo9Ma/">记录文件上传Tips（Updating）</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://rebootorz.github.io/KBF21wEvg/">[Go] 12.锁</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://rebootorz.github.io/VwkM_t1Le/">红队常见浏览器密码抓取破解</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://rebootorz.github.io/aC7_yNHBz/">记录一些突破性的XSS Payload（Updating）</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://rebootorz.github.io/cDP755kpw/">[Go] 11.Channel</a>
-            </li>
-          
-        
-          
-            <li>
-              <a href="https://rebootorz.github.io/msC3viyDp/">[Go] 10.Goroutine（并发）</a>
-            </li>
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-      </ul>
-    </div>
-  </div>
-  <div class="paper">
-    <div class="sidebar-title">
-      标签列表
-    </div>
-    <div class="row">
-      
-        <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="badge success">
-          红队
-        </a>
-      
-        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="badge ">
-          Golang
-        </a>
-      
-        <a href="https://rebootorz.github.io/tag/NycXQ8xNz/" class="badge warning">
-          渗透技巧
-        </a>
-      
-        <a href="https://rebootorz.github.io/tag/4EHijLUV6/" class="badge warning">
-          物联网安全
-        </a>
-      
-    </div>
-  </div>
-  <div class="paper">
-    高度自律  绝对自由 | <a class="rss" href="https://rebootorz.github.io/atom.xml" target="_blank">RSS</a>
-  </div>
+          <div class="toc-container"><ul class="markdownIt-TOC">
+<li><a href="#%E8%AF%B4%E6%98%8E">说明</a></li>
+<li><a href="#%E8%B7%A8%E5%B9%B3%E5%8F%B0%E7%BC%96%E8%AF%91%E5%91%BD%E4%BB%A4%E5%A6%82%E4%B8%8B">跨平台编译命令如下：</a>
+<ul>
+<li><a href="#mac-%E4%B8%8B%E7%BC%96%E8%AF%91-linux-%E5%92%8C-windows-64%E4%BD%8D%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F">Mac 下编译 Linux 和 Windows 64位可执行程序</a></li>
+<li><a href="#linux-%E4%B8%8B%E7%BC%96%E8%AF%91-mac-%E5%92%8C-windows-64%E4%BD%8D%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F">Linux 下编译 Mac 和 Windows 64位可执行程序</a></li>
+<li><a href="#windows-%E4%B8%8B%E7%BC%96%E8%AF%91-mac-%E5%92%8C-linux-64%E4%BD%8D%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F">Windows 下编译 Mac 和 Linux 64位可执行程序</a></li>
+</ul>
+</li>
+</ul>
 </div>
+          
+          <hr />
+          <p class="next-post">下一篇：
+            <a href="https://rebootorz.github.io/HAUEHo9Ma/">
+              <span class="post-title">
+                记录文件上传Tips（Updating）&rarr;
+              </span>
+            </a>
+          </p>
+          
+          <div class="comment" style="text-align: center;">
+            
 
-
+            
+            
+          </div>
+        </div>
+      </div>
+  </article>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <!-- <li class="list-inline-item">
+              <a href="https://rebootorz.github.io/atom.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              </li> -->
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;<span>rebootORZ</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
+        </div>
+      </div>
     </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://rebootorz.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="https://rebootorz.github.io/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
+    }
+  })(this));</script>
+  
+  <script src="https://rebootorz.github.io/media/scripts/tocScript.js"></script>
+</body>
 
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-
-<script type="application/javascript">
-
-AOS.init();
-
-hljs.initHighlightingOnLoad()
-
-</script>
-
-
-
-
-  </body>
 </html>
