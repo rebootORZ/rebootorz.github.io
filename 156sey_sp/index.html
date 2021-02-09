@@ -1,0 +1,242 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Veil-Evasion免杀框架 | rebootORZ</title>
+<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1612855925065">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://rebootorz.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Veil-Evasion免杀框架 | rebootORZ - Atom Feed" href="https://rebootorz.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="部署
+这里可以直接安装，也可以使用Docker快速部署。
+拉取镜像
+docker pull mattiasohlsson/veil
+启动容器
+docker run -it -v /tmp/veil-output:/var/lib/veil/..." />
+    <meta name="keywords" content="免杀,红队" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://rebootorz.github.io">
+  <img class="avatar" src="https://rebootorz.github.io/images/avatar.png?v=1612855925065" alt="">
+  </a>
+  <h1 class="site-title">
+    rebootORZ
+  </h1>
+  <p class="site-description">
+    一名默默无闻的攻城狮
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="menu">
+          Golang学习之路
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Veil-Evasion免杀框架
+            </h2>
+            <div class="post-info">
+              <span>
+                2021-02-09
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://rebootorz.github.io/tag/1xemCsPBb/" class="post-tag">
+                  # 免杀
+                </a>
+              
+                <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="post-tag">
+                  # 红队
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="部署">部署</h1>
+<p>这里可以直接安装，也可以使用Docker快速部署。</p>
+<pre><code>拉取镜像
+docker pull mattiasohlsson/veil
+启动容器
+docker run -it -v /tmp/veil-output:/var/lib/veil/output:Z mattiasohlsson/veil
+这里将/tmp/veil-output与容器内的目录做了挂载，所以生成的文件实际是在本机的/tmp/veil-output下
+</code></pre>
+<h1 id="使用">使用</h1>
+<p>启动后有如下选项：<br>
+<img src="https://rebootorz.github.io/post-images/1612854987185.png" alt="" loading="lazy"><br>
+我们做的是文件免杀，选择第一个：<br>
+use 1<br>
+<img src="https://rebootorz.github.io/post-images/1612855034464.png" alt="" loading="lazy"><br>
+查看所有类型的payload<br>
+list<br>
+<img src="https://rebootorz.github.io/post-images/1612855081095.png" alt="" loading="lazy"><br>
+使用go的话免杀效果好，这里我选17<br>
+use 17<br>
+这里会有很多配置，主要是关于免杀的配置，具体解释如下：<br>
+<img src="https://rebootorz.github.io/post-images/1612855147679.png" alt="" loading="lazy"></p>
+<pre><code>BADMACS 设置为Y表示 查看运行环境的MAC地址如果不是虚拟机才会执行payload （反调试）
+CLICKTRACK 设置为4表示 表示需要4次点击才会执行
+CURSORCHECK 设置为100表示 运行环境的硬盘大小如果大于100GB才会执行payload （反沙箱）
+COMPILE_TO_EXE 设置为Y表示 编译为exe文件
+HOSTNAME 设置为Comp1表示 只有在Hostname计算机名为Comp1时才会执行payload（指定目标环境 反沙箱的方式）
+INJECT_METHOD 可设置为Virtual 或 Heap
+MINPROCS 设置为20表示 只有运行环境的运行进程数大于20时才会执行payload（指定目标环境 反沙箱的方式）
+PROCCHECK 设置为Y表示 只有运行环境的进程中没有虚拟机进程时才会执行payload（指定目标环境 反沙箱的方式）
+PROCESSORS 设置为2表示 只在至少2核的机器中才会执行payload（指定目标环境 反沙箱的方式）
+RAMCHECK 设置为Y表示 只在运行环境的内存为3G以上时才会执行payload（指定目标环境 反沙箱的方式）
+SLEEP 设置为10表示 休眠10秒 以检测是否运行过程中被加速（反沙箱）
+USERNAME 设置为Tom表示 只有在当前用户名为Tom的机器中才执行payload。
+USERPROMPT 设置为Y表示 在injection之前提醒用户（提示一个错误框，让用户误以为该程序执行错误才无法打开）
+DEBUGGER 设置为Y表示 当被调试器不被attached时才会执行payload （反调试）
+DOMAIN 设置为Comp表示 受害者计算机只有加入Comp域中时，才会执行payload（指定目标环境 反沙箱的方式）
+UTCCHECK 设置为Y表示 只在运行环境的系统使用UTC时间时，才会执行payload
+</code></pre>
+<p>因为实战中也经常会遇到宿主机是虚拟机的情况，例如云桌面这种的，所以这里我没有配置虚拟机检测，其他选项都更偏向于目标性很强的那种攻击时才会用到的检测，所以这里我只配置了个SLEEP<br>
+set sleep 10<br>
+继续生成：<br>
+generate<br>
+接下来选择shellcode类型，我这里使用的是cs的veil shellcode，所以选择3，然后用CS去生成veil shellcode后复制到这里：<br>
+<img src="https://rebootorz.github.io/post-images/1612855454247.png" alt="" loading="lazy"><br>
+<img src="https://rebootorz.github.io/post-images/1612855546894.png" alt="" loading="lazy"><br>
+<img src="https://rebootorz.github.io/post-images/1612855590745.png" alt="" loading="lazy"><br>
+接着输入生成的文件名：<br>
+<img src="https://rebootorz.github.io/post-images/1612855633276.png" alt="" loading="lazy"><br>
+生成完成，下面那个提示不用管，生成后的文件存储在挂载目录中：/tmp/veil-output/<br>
+<img src="https://rebootorz.github.io/post-images/1612855655945.png" alt="" loading="lazy"><br>
+<img src="https://rebootorz.github.io/post-images/1612855714445.png" alt="" loading="lazy"><br>
+目标机器执行后成功上线（bypass 360）<br>
+<img src="https://rebootorz.github.io/post-images/1612855770965.png" alt="" loading="lazy"><br>
+查杀不出来：<br>
+<img src="https://rebootorz.github.io/post-images/1612855885645.png" alt="" loading="lazy"></p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E9%83%A8%E7%BD%B2">部署</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8">使用</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://rebootorz.github.io/tZ3LaM9Fj/">
+              <h3 class="post-title">
+                [Go免杀] shellcode 分离免杀-2
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  高度自律  绝对自由
+  <a class="rss" href="https://rebootorz.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

