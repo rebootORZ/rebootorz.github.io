@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://rebootorz.github.io</id>
     <title>rebootORZ</title>
-    <updated>2021-02-08T12:47:44.058Z</updated>
+    <updated>2021-02-09T05:59:55.094Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://rebootorz.github.io"/>
     <link rel="self" href="https://rebootorz.github.io/atom.xml"/>
@@ -10,6 +10,13 @@
     <logo>https://rebootorz.github.io/images/avatar.png</logo>
     <icon>https://rebootorz.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, rebootORZ</rights>
+    <entry>
+        <title type="html"><![CDATA[[Go免杀] shellcode 分离免杀-2]]></title>
+        <id>https://rebootorz.github.io/tZ3LaM9Fj/</id>
+        <link href="https://rebootorz.github.io/tZ3LaM9Fj/">
+        </link>
+        <updated>2021-02-09T05:58:33.000Z</updated>
+    </entry>
     <entry>
         <title type="html"><![CDATA[利用CloudFlare隐藏C2]]></title>
         <id>https://rebootorz.github.io/z9xOXiKxp/</id>
@@ -25,7 +32,7 @@
         <updated>2021-02-08T07:01:24.000Z</updated>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Golang shellcode 免杀加载器]]></title>
+        <title type="html"><![CDATA[[Go免杀] shellcode 分离免杀-1]]></title>
         <id>https://rebootorz.github.io/JZFkUUfLP/</id>
         <link href="https://rebootorz.github.io/JZFkUUfLP/">
         </link>
@@ -72,12 +79,5 @@
         <link href="https://rebootorz.github.io/cDP755kpw/">
         </link>
         <updated>2021-02-05T08:17:46.000Z</updated>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[[Go] 10.Goroutine（并发）]]></title>
-        <id>https://rebootorz.github.io/msC3viyDp/</id>
-        <link href="https://rebootorz.github.io/msC3viyDp/">
-        </link>
-        <updated>2021-02-05T04:03:01.000Z</updated>
     </entry>
 </feed>
