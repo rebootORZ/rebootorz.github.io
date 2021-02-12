@@ -2,27 +2,21 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>[Go]普通函数调用与闭包的区别 | rebootORZ</title>
+<title>公网MSF shell进行内网攻击 | rebootORZ</title>
 <link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1613165791700">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://rebootorz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="[Go]普通函数调用与闭包的区别 | rebootORZ - Atom Feed" href="https://rebootorz.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="公网MSF shell进行内网攻击 | rebootORZ - Atom Feed" href="https://rebootorz.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="package main
-
-
-import (
-　　&quot;fmt&quot;
-)
-
- func main() {
-　　 a := []int{1, 2, 3}
- 　　for _, i := range a {
-　　 　　fmt.Pri..." />
-    <meta name="keywords" content="Golang" />
+    <meta name="description" content="获取到公网反弹的shell后的操作：
+添加路由
+第一步：run get_local_subnets （获取当前路由）
+第二步：run autoroute -s 192.168.3.0/24 （添加路由）
+第三步：run autoroute ..." />
+    <meta name="keywords" content="红队" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
@@ -90,95 +84,42 @@ import (
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              [Go]普通函数调用与闭包的区别
+              公网MSF shell进行内网攻击
             </h2>
             <div class="post-info">
               <span>
-                2021-01-26
+                2021-02-13
               </span>
               <span>
-                2 min read
+                1 min read
               </span>
               
-                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="post-tag">
-                  # Golang
+                <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="post-tag">
+                  # 红队
                 </a>
               
             </div>
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <pre><code>package main
-
-
-import (
-　　&quot;fmt&quot;
-)
-
- func main() {
-　　 a := []int{1, 2, 3}
- 　　for _, i := range a {
-　　 　　fmt.Println(i)
-　　　　 defer p(i)
-　　 }
- }
- 
- func p(i int) {
-　　fmt.Println(i)
- }
-</code></pre>
-<p>运行这段程序，输出结果为</p>
-<pre><code>
-1
-
-2
-
-3
-
-3
-
-2
-
-1
-</code></pre>
-<p>这里就是普通的函数调用，每次调用func p时，完成 i 的值复制，然后打印，此时 i 值复制了3次，分别是1，2，3。由于defer是后进先出，所以执行变成3，2，1。</p>
-<p>下面我我们用闭包改写下程序：</p>
-<pre><code>
-package main
-
-import (
-　　&quot;fmt&quot;
-)
-
-func main() {
-　　a := []int{1, 2, 3}
-　　for _, i := range a {
-　　　　fmt.Println(i)
-　　　　defer func() {
-  　　　　 fmt.Println(i)
-　　　　}()
-    }
-}
-</code></pre>
-<p>运行这段程序，输出结果为</p>
-<pre><code>
-1
-
-2
-
-3
-
-3
-
-3
-
-3
-</code></pre>
-<p>在闭包函数里，这个i是闭包函数外面的参数（即不是闭包函数中的参数），所在当在fmt.Println(i)中进行引用的时候，因为闭包函数是“地址引用”，而非“值引用”，所以前面正常输出是1、2、3，而到了defer时，按照原本的“后入先出”进行输出的话，但由于到了这里的时候i的地址上是3，虽然参数i的地址没变，但是值变了，所以在Println(i)的时候输出都是3，而不是3、2、1。</p>
+                <p>获取到公网反弹的shell后的操作：</p>
+<h1 id="添加路由">添加路由</h1>
+<p>第一步：run get_local_subnets （获取当前路由）<br>
+第二步：run autoroute -s 192.168.3.0/24 （添加路由）<br>
+第三步：run autoroute -p （查看已添加路由）</p>
+<h1 id="使用payload进行攻击">使用Payload进行攻击</h1>
+<p>第一步：background（转换到后台）<br>
+第二步：use scanner/portscan/tcp （先扫描开放445端口的PC）<br>
+第三步：exploit（开始扫描）</p>
+<p>**注意：**扫描出来开放了445端口的PC，不一定就存在445漏洞。</p>
 
               </div>
               <div class="toc-container">
-                
+                <ul class="markdownIt-TOC">
+<li><a href="#%E6%B7%BB%E5%8A%A0%E8%B7%AF%E7%94%B1">添加路由</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8payload%E8%BF%9B%E8%A1%8C%E6%94%BB%E5%87%BB">使用Payload进行攻击</a></li>
+</ul>
+
               </div>
             </div>
           </article>
@@ -187,9 +128,9 @@ func main() {
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://rebootorz.github.io/OqIWaMPts/">
+            <a href="https://rebootorz.github.io/156sey_sp/">
               <h3 class="post-title">
-                利用XSS使Win10机器蓝屏
+                Veil-Evasion免杀框架
               </h3>
             </a>
           </div>
