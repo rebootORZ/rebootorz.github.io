@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>[Go] 跨平台编译 | rebootORZ</title>
-<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1613319222654">
+<link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1613325047235">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://rebootorz.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="[Go] 跨平台编译 | rebootORZ - Atom Feed" href="https://rebootorz.github.io/atom.xml">
@@ -15,8 +15,10 @@
 跨平台编译操作很简单，具体原理还没去了解，但是这里有个坑，做下记录。
 跨平台编译命令如下：
 注： 对应的位置填入需要编译的类型即可。
-Mac 下编译 Linux 和 Windows 64位可执行程序
-CGO_ENABLED=0 GOO..." />
+编译的命令中可以加入：
+-ldflags &quot;-H windowsgui&quot;
+
+即可..." />
     <meta name="keywords" content="Golang" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -26,7 +28,7 @@ CGO_ENABLED=0 GOO..." />
       <div class="main-content">
         <div class="site-header">
   <a href="https://rebootorz.github.io">
-  <img class="avatar" src="https://rebootorz.github.io/images/avatar.png?v=1613319222654" alt="">
+  <img class="avatar" src="https://rebootorz.github.io/images/avatar.png?v=1613325047235" alt="">
   </a>
   <h1 class="site-title">
     rebootORZ
@@ -92,7 +94,7 @@ CGO_ENABLED=0 GOO..." />
                 2021-02-08
               </span>
               <span>
-                1 min read
+                2 min read
               </span>
               
                 <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="post-tag">
@@ -106,7 +108,11 @@ CGO_ENABLED=0 GOO..." />
                 <h1 id="说明">说明</h1>
 <p>跨平台编译操作很简单，具体原理还没去了解，但是这里有个坑，做下记录。</p>
 <h1 id="跨平台编译命令如下">跨平台编译命令如下：</h1>
-<p><strong>注：</strong> 对应的位置填入需要编译的类型即可。</p>
+<p><strong>注：</strong> 对应的位置填入需要编译的类型即可。<br>
+编译的命令中可以加入：</p>
+<pre><code>-ldflags &quot;-H windowsgui&quot;
+</code></pre>
+<p>即可编译成无窗口的程序。</p>
 <h2 id="mac-下编译-linux-和-windows-64位可执行程序">Mac 下编译 Linux 和 Windows 64位可执行程序</h2>
 <pre><code>CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build  main.go
 </code></pre>
