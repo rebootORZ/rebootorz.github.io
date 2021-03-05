@@ -2,11 +2,14 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://rebootorz.github.io</id>
     <title>rebootORZ</title>
-    <updated>2021-03-05T04:52:06.105Z</updated>
+    <updated>2021-03-05T04:53:36.241Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://rebootorz.github.io"/>
     <link rel="self" href="https://rebootorz.github.io/atom.xml"/>
-    <subtitle>一名默默无闻的攻城狮</subtitle>
+    <subtitle>-
+  雪压枝头低，虽低不着泥。
+  一朝红日出，定要与天齐。
+                                      -</subtitle>
     <logo>https://rebootorz.github.io/images/avatar.png</logo>
     <icon>https://rebootorz.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, rebootORZ</rights>
