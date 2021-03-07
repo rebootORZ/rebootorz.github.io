@@ -10,14 +10,14 @@
 <meta name="keywords" content="">
 <meta name="description" content="欢迎访问[rebootORZ]的个人博客">
 <meta name="author" content="kveln">
-<title>[Go] 7.接口 | rebootORZ</title>
+<title>[工具开发] knightScan | rebootORZ</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
 <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
 <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
 <link
   href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
   rel='stylesheet' type='text/css'>
-<link rel="alternate" type="application/rss+xml" title="[Go] 7.接口 | rebootORZ » Feed"
+<link rel="alternate" type="application/rss+xml" title="[工具开发] knightScan | rebootORZ » Feed"
   href="https://rebootorz.github.io/atom.xml">
 <link rel="stylesheet"
   href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
@@ -30,8 +30,8 @@
 
 <script>hljs.initHighlightingOnLoad();</script>
 
-  <meta property="og:description" content="[Go] 7.接口" />
-  <meta property="og:url" content="https://rebootorz.github.io/LGmqka8O9/" />
+  <meta property="og:description" content="[工具开发] knightScan" />
+  <meta property="og:url" content="https://rebootorz.github.io/bvkkpyMSi/" />
   <meta property="og:locale" content="zh-CN" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="rebootORZ" />
@@ -165,11 +165,13 @@
                 
                 <a href="https://rebootorz.github.io/tag/VLOcVZGpM/" class="tag">Golang</a>
                 
+                <a href="https://rebootorz.github.io/tag/BjedM9kLx/" class="tag">红队</a>
+                
               </span>
-              <h1>[Go] 7.接口</h1>
+              <h1>[工具开发] knightScan</h1>
               <span class="meta">
                 Posted on
-                2021-02-02，5 min read
+                2021-03-07，1 min read
               </span>
             </div>
           
@@ -184,53 +186,40 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto post-content-container">
           
-          <h1 id="定义">定义</h1>
-<p>接口是一组方法签名的集合，然后我们可以定义一个结构体实现该接口所有方法。因此，接口就是定义了对象的行为。<br>
-例如，结构体Dog可以walk和bark， 如果一个接口声明了walk和bark的方法签名，而Dog实现了walk和bark方法，那么Dog就实现了该接口。<br>
-接口的主要工作是仅提供由方法名称，输入参数和返回类型组成的方法签名集合。 由类型（例如struct结构体）来声明方法并实现它们。<br>
-如果您曾经是面向对象的程序员，您肯定会经常使用implements关键字来实现接口。 但是在go中，你没有明确提到一个类型是否实现了一个接口。 如果一个类型实现了在接口中定义的签名方法，则称该类型实现该接口。 就像说它像鸭子一样走路，像鸭子一样游泳，像鸭子一样嘎嘎叫，那就是鸭子。</p>
-<h1 id="定义接口">定义接口</h1>
-<p>与struct类似，我们需要使用类型别名，通过interface关键字来简化接口声明。</p>
-<pre><code>type Shape interface {
-    Area() float64
-    Perimeter() float64
-}
+          <h1 id="knightscan">knightScan</h1>
+<h1 id="项目地址">项目地址:</h1>
+<pre><code>https://github.com/rebootORZ/knightScan/
 </code></pre>
-<p>上面的代码中，我们定义了Shape接口，它有两个方法Area和Perimeter，他们不接收任何参数并返回float64。 任何实现这两个方法的类型我们都认为它实现了Shape接口。<br>
-由于interface也是一种类型，我们可以创建它的类型的变量。 在上面的例子中，我们可以创建一个类型为接口Shape的变量s。<br>
-<img src="https://rebootorz.github.io/post-images/1612264036828.png" alt="" loading="lazy"><br>
-在我们对上面例子输出结果困惑前，让我解释一下。 接口有两种类型。 <strong>静态类型的接口是接口本身</strong>，例如上面的程序中的Shape。 接口没有静态值，而是指向动态值。 接口类型的变量可以保存实现接口的Type的值(这里的Type指的是类型别名，例如实现了接口的结构体的别名)。 该类型的值成为接口的动态值，该类型成为接口的动态类型。<br>
-从上面的结果，我们可以看到接口的值是nil而且接口的类型也是nil。 这是因为此时，接口不知道是谁会实现它。 当我们使用带有接口参数的fmt包中的Println函数时，它指向接口的动态值，而Printf函数中的％T语法指的是接口的动态类型。 但实际上，接口的类型是Shape。</p>
-<h1 id="实现接口">实现接口</h1>
-<p>让我们定义Shape接口提供的签名方法Area和Perimeter方法。 同时我们创建一个Rect结构体并使其实现Shape接口。<br>
-<img src="https://rebootorz.github.io/post-images/1612264073026.png" alt="" loading="lazy"><br>
-所以在上面的程序中，我们创建了Shape接口和矩形结构体类型Rect。 然后我们使用Rect接收器类型定义了Area和Perimeter等方法。 因此Rect实现了这些方法。 由于这些方法是由Shape接口定义的，因此Rect实现了Shape接口。<br>
-我们可以通过创建nil接口并为其指定Rect类型的结构来确认。 由于Rect实现了Shape接口，因此完全有效。 从上面的结果可以看出，s的动态类型现在是Rect，s的动态值是struct Rect的值，即{5 4}。 动态因为，我们可以为不同类型分配新的结构，也实现接口Shape。<br>
-我们可以在s上调用Area方法，因为s的具体类型是Rect而Rect实现了Area方法。 我们还可以看到，我们可以将s与类型为Rect的r struct进行比较，因为它们都具有相同的Rect具体类型且具有相同的值。<br>
-让我们改变s的动态类型和值。<br>
-<img src="https://rebootorz.github.io/post-images/1612264128143.png" alt="" loading="lazy"><br>
-由于新的struct类型Circle也实现了Shape接口，我们可以为s分配一个Circle类型的结构。<br>
-现在我想你可以理解为什么接口的类型和价值是动态的。 就像我们在切片课中看到的那样切片保持对数组的引用，我们可以说通过动态保持对基础类型的引用，接口也以类似的方式工作。<br>
-你能猜出下面的程序会发生什么吗？<br>
-<img src="https://rebootorz.github.io/post-images/1612264159543.png" alt="" loading="lazy"><br>
-在上面的程序中，我们删除了Perimeter方法。 上面的程序不会编译通过，编译器会抛出错误</p>
-<pre><code>program.go:22: cannot use Rect literal (type Rect) as type Shape in assignment:
-        Rect does not implement Shape (missing Perimeter method)
-</code></pre>
-<p>从上面的错误中可以明显看出，为了成功实现接口，您需要实现接口声明的所有方法。</p>
+<h1 id="应用场景">应用场景:</h1>
+<p>当进入内网后，无法通过常规手段（弱口令、PTH、系统漏洞）横向时，需要打点，那么就需要先进行资产探测。</p>
+<h1 id="解决问题">解决问题：</h1>
+<p>一般常见的工具都是探测端口，需要自己再去访问才知道具体系统。写这个工具的目的就是直接内置常见web端口，根据给定IP范围（CIDR）探测端口开放情况，再查看web服务的title,从而帮助攻击队友快速定位重要系统。</p>
+<h1 id="注">注：</h1>
+<p>探测端口采用ICMP，可能需要管理员权限。</p>
+<h1 id="usage">Usage:</h1>
+<p>go run main.go -h 192.168.1.0/24<br>
+go run main.go -h 192.168.1.0/16</p>
+<h1 id="todo">ToDo:</h1>
+<p>1.优化工具的并发<br>
+2.优化https访问<br>
+3.增加无害指纹识别（尽量不触发内网设备告警）</p>
 
           <div class="toc-container"><ul class="markdownIt-TOC">
-<li><a href="#%E5%AE%9A%E4%B9%89">定义</a></li>
-<li><a href="#%E5%AE%9A%E4%B9%89%E6%8E%A5%E5%8F%A3">定义接口</a></li>
-<li><a href="#%E5%AE%9E%E7%8E%B0%E6%8E%A5%E5%8F%A3">实现接口</a></li>
+<li><a href="#knightscan">knightScan</a></li>
+<li><a href="#%E9%A1%B9%E7%9B%AE%E5%9C%B0%E5%9D%80">项目地址:</a></li>
+<li><a href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF">应用场景:</a></li>
+<li><a href="#%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98">解决问题：</a></li>
+<li><a href="#%E6%B3%A8">注：</a></li>
+<li><a href="#usage">Usage:</a></li>
+<li><a href="#todo">ToDo:</a></li>
 </ul>
 </div>
           
           <hr />
           <p class="next-post">下一篇：
-            <a href="https://rebootorz.github.io/k3YOnVa0S/">
+            <a href="https://rebootorz.github.io/QeDzkk86m/">
               <span class="post-title">
-                [Go] 6.方法&rarr;
+                [2021] 读书小记&rarr;
               </span>
             </a>
           </p>
