@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>蓝牙 on rebootORZ Security</title>
+    <link>https://rebootorz.github.io/tags/%E8%93%9D%E7%89%99/</link>
+    <description>Recent content in 蓝牙 on rebootORZ Security</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-Hans</language>
+    <copyright>&lt;a rel=&#34;license&#34; href=&#34;http://creativecommons.org/licenses/by-nc-sa/4.0/&#34;&gt;&lt;img alt=&#34;知识共享许可协议&#34; style=&#34;border-width:0&#34; src=&#34;https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png&#34; /&gt;&lt;/a&gt;&lt;br /&gt;本作品采用&lt;a rel=&#34;license&#34; href=&#34;http://creativecommons.org/licenses/by-nc-sa/4.0/&#34;&gt;知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议&lt;/a&gt;进行许可。&lt;br /&gt;&lt;br /&gt;背景使用了 &lt;a href=&#34;https://www.pexels.com/zh-cn/&#34; target=&#34;_blank&#34;&gt;Pexels&lt;/a&gt; 上 &lt;a href=&#34;https://www.pexels.com/zh-cn/@minan1398&#34; target=&#34;_blank&#34;&gt;Min An&lt;/a&gt; 拍摄的&lt;a href=&#34;https://www.pexels.com/zh-cn/photo/1454794/&#34; target=&#34;_blank&#34;&gt;图片&lt;/a&gt;。</copyright>
+    <lastBuildDate>Tue, 05 Jul 2022 17:19:58 +0800</lastBuildDate><atom:link href="https://rebootorz.github.io/tags/%E8%93%9D%E7%89%99/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux下操控小米手环1代</title>
+      <link>https://rebootorz.github.io/posts/linux%E4%B8%8B%E6%93%8D%E6%8E%A7%E5%B0%8F%E7%B1%B3%E6%89%8B%E7%8E%AF1%E4%BB%A3/</link>
+      <pubDate>Tue, 05 Jul 2022 17:19:58 +0800</pubDate>
+      
+      <guid>https://rebootorz.github.io/posts/linux%E4%B8%8B%E6%93%8D%E6%8E%A7%E5%B0%8F%E7%B1%B3%E6%89%8B%E7%8E%AF1%E4%BB%A3/</guid>
+      <description>Linux下操控小米手环1代-reboot 这个方法相比于直接在手机上装个软件控制，有点多此一举的感觉，但是个人感觉用linux来控制还是比手</description>
+    </item>
+    
+  </channel>
+</rss>

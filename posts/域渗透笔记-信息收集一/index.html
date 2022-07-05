@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>域渗透笔记 信息收集（一） | rebootORZ Security</title>
+
+    
+<link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+
+
+
+<meta name="author" content="rebootORZ" />
+<meta name="description" content="域渗透笔记-信息收集（一） 写在最前面： 该系列文章间断性更新，主要内容为域渗透中的技术点梳理。 所有提到的技术点都保证是实践过，能够实现的，实践" />
+
+
+
+<meta name="generator" content="Hugo 0.101.0" />
+
+<link rel="canonical" href="https://rebootorz.github.io/posts/%E5%9F%9F%E6%B8%97%E9%80%8F%E7%AC%94%E8%AE%B0-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E4%B8%80/" />
+
+
+<meta property="og:title" content="域渗透笔记 信息收集（一）" />
+<meta property="og:description" content="域渗透笔记-信息收集（一） 写在最前面： 该系列文章间断性更新，主要内容为域渗透中的技术点梳理。 所有提到的技术点都保证是实践过，能够实现的，实践" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://rebootorz.github.io/posts/%E5%9F%9F%E6%B8%97%E9%80%8F%E7%AC%94%E8%AE%B0-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E4%B8%80/" /><meta property="og:image" content="https://rebootorz.github.io/me/background.jpg"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-07-05T17:30:31+08:00" />
+<meta property="article:modified_time" content="2022-07-05T17:30:31+08:00" />
+
+
+
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://rebootorz.github.io/me/background.jpg"/>
+
+<meta name="twitter:title" content="域渗透笔记 信息收集（一）"/>
+<meta name="twitter:description" content="域渗透笔记-信息收集（一） 写在最前面： 该系列文章间断性更新，主要内容为域渗透中的技术点梳理。 所有提到的技术点都保证是实践过，能够实现的，实践"/>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" integrity="sha256-UXesixbeLkB/UYxVTzuj/gg3+LMzgwAmg3zD+C4ZASQ=" crossorigin="anonymous">
+<link rel="stylesheet" href="/css/icomoon.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@1.13.1/css/OverlayScrollbars.min.css" integrity="sha256-WKijf8KI68sbq8Znd6yMepIuFF0wdWfIt6gk3JWcQfk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css">
+<link rel="stylesheet" href="/css/site.css" />
+
+<style>
+  .ui.header a:not(.item, .ui.button):hover {
+    text-decoration: underline;
+  }
+
+  
+  a:not(.item, .ui.button) {
+    color: seagreen !important;
+  }
+  
+
+  
+  .inverted a:not(.item, .ui.button) {
+     color: darkseagreen !important;
+  }
+  
+
+  
+  body.default {
+    
+    background-color: #fff;
+    
+
+    
+    background-image: url(/me/black_background.jpg);
+    
+  }
+  
+
+  
+  body.dark {
+    
+
+    
+    background-image: url(/me/light_background.jpeg);
+    
+  }
+  
+</style>
+
+
+    
+
+
+
+
+
+
+
+    
+    <link rel="stylesheet" href="/css/custom.css" />
+    
+  </head>
+
+  <body class="default">
+    
+<nav class="ui secondary menu dream-menu dream-nav">
+
+  <a class="item dream-flip-toggle" title="翻转！">
+    <i class="large link bullseye icon"></i>
+  </a>
+  <a class="item" href="https://rebootorz.github.io" title="首页">
+    <i class="large link home icon"></i>
+  </a>
+  
+  <a class="item" onclick="themeSwitch(event)">
+    <i class="large link icon theme-switch"></i>
+  </a>
+  
+  
+  <a class="item" title="搜索" onclick="toggleSearch(event)">
+    <i class="large link search icon"></i>
+  </a>
+  
+</nav>
+
+    <div class="flip-container">
+      <div class="flipper">
+        <section class="front">
+          <div class="dream-max-width">
+            
+<div class="ui relaxed centered grid dream-grid dream-grid-single">
+  
+  
+  
+  
+
+  
+  <aside class="sixteen wide mobile sixteen wide tablet three wide computer column dream-single-aside">
+    
+    <div class="ui segment toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#域渗透笔记-信息收集一">域渗透笔记-信息收集（一）</a></li>
+  </ul>
+</nav>
+    </div>
+    
+
+    
+  </aside>
+  
+  <div class="sixteen wide mobile sixteen wide tablet ten wide computer column markdown-body dream-single" id="dream-save-post-as-img">
+    <section class="ui segment">
+      <header>
+        <h1 class="ui large header">域渗透笔记 信息收集（一）<span class="sub header">
+            <span class="left">
+              @
+              
+                
+                  rebootORZ
+                
+              
+
+              | 
+                  <span data-format="luxon">2022-07-05T17:30:31&#43;08:00</span>
+                
+
+              | 4 分钟阅读
+
+              
+              | 更新于
+                
+                  <span data-format="luxon">2022-07-05T17:30:31&#43;08:00</span>
+                
+              
+            </span>
+
+            
+            <span class="dream-share">
+  <a href="#" class="save-as-image" title="保存为图片" onclick="savePostAsImg()">
+    <i class="save icon"></i>
+  </a>
+  <a href="https://twitter.com/intent/tweet?text=%e5%9f%9f%e6%b8%97%e9%80%8f%e7%ac%94%e8%ae%b0%20%e4%bf%a1%e6%81%af%e6%94%b6%e9%9b%86%ef%bc%88%e4%b8%80%ef%bc%89&url=https%3a%2f%2frebootorz.github.io%2fposts%2f%25E5%259F%259F%25E6%25B8%2597%25E9%2580%258F%25E7%25AC%2594%25E8%25AE%25B0-%25E4%25BF%25A1%25E6%2581%25AF%25E6%2594%25B6%25E9%259B%2586%25E4%25B8%2580%2f" title="Twitter">
+    <i class="twitter icon"></i>
+  </a>
+  <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2frebootorz.github.io%2fposts%2f%25E5%259F%259F%25E6%25B8%2597%25E9%2580%258F%25E7%25AC%2594%25E8%25AE%25B0-%25E4%25BF%25A1%25E6%2581%25AF%25E6%2594%25B6%25E9%259B%2586%25E4%25B8%2580%2f" title="Facebook">
+    <i class="facebook icon"></i>
+  </a>
+</span>
+
+            
+          </span>
+        </h1>
+      </header>
+
+      <article class="main">
+        
+
+        <h2 id="域渗透笔记-信息收集一">域渗透笔记-信息收集（一）</h2>
+<ul>
+<li>写在最前面：</li>
+<li>该系列文章间断性更新，主要内容为域渗透中的技术点梳理。</li>
+<li>所有提到的技术点都保证是实践过，能够实现的，实践过程中踩到的坑都会提出来并给出解决方法。</li>
+<li>在渗透时，进入内网环境后第一件事情就是搞清楚两个问题：</li>
+<li>      A.我是谁？</li>
+<li>      B.我在哪？</li>
+<li>A.我是谁？</li>
+<li>whoami 查看当前用户和权限</li>
+</ul>
+<p><img src="/imgs/clip_image0017e4e4576-603b-4569-a521-9a4bcd5ab0d8-20220428154804-r88q9e6.png" alt="image"></p>
+<ul>
+<li>net user 查看有哪些用户</li>
+</ul>
+<p><img src="/imgs/clip_image002d318f8b3-f376-4351-9c71-cecaae6a97b3-20220428154804-88rmj2t.png" alt="image"></p>
+<ul>
+<li>whoami /all 获取域SID、组信息、特权等信</li>
+</ul>
+<p><img src="/imgs/clip_image0030ebeb593-b50e-4618-b8da-ce59b3ce5a44-20220428154804-rrr9grt.jpg" alt="image"></p>
+<ul>
+<li>net user XXX /domain 查看指定账户的详细信息</li>
+</ul>
+<p><img src="/imgs/clip_image00459d6b48b-91aa-4bde-b3af-b7467c5a9623-20220428154804-t2unpdt.png" alt="image"></p>
+<ul>
+<li>net localgroup administrators 查看本机管理员（通常会包含有域用户）</li>
+</ul>
+<p><img src="/imgs/clip_image0056ebe6de6-e9b3-4224-b95b-b35f228a339f-20220428154804-0fn8snd.png" alt="image"></p>
+<ul>
+<li>query user || qwinsta 查看当前在线的用户当想用3389登陆某个用户时，执行该命令是很必要的，否则可能将已登录的用户踢下线，从而惊动对方。</li>
+</ul>
+<p><img src="/imgs/clip_image006ef12752f-91e8-4c8b-80d3-6e9cda38ae08-20220428154804-s7qpfbi.png" alt="image"></p>
+<ul>
+<li>B.我在哪？</li>
+<li>ipconfig /all 查询网络信息</li>
+</ul>
+<p><img src="/imgs/clip_image007b8f99db7-77c1-4eb3-8ea6-111bc3e28f33-20220428154804-l7y76pu.png" alt="image"></p>
+<ul>
+<li>tasklist /v 查看进程列表</li>
+</ul>
+<p><img src="/imgs/clip_image008d9a9ad74-d073-4bc4-be9f-3ff415284ec0-20220428154804-10vlika.png" alt="image"></p>
+<ul>
+<li>wmic process list brief   查看进程列表 （与上一条命令略有不同）</li>
+</ul>
+<p><img src="/imgs/clip_image009f62112c3-3689-4bfb-9304-12738af7e9c7-20220428154804-3aetj7f.png" alt="image"></p>
+<ul>
+<li>systeminfo | findstr /B /C:&ldquo;OS Name&rdquo; /C:&ldquo;OS Version&rdquo; 查看是什么操作系统&amp;系统版本如果系统是英文的则匹配的关键字为&quot;OS Name&quot;和&quot;OS Version&quot;,当为中文系统时要换成“OS 名称”和“OS 版本”。当然，直接执行systeminfo再进行查看也可以，只是这个直接输出指定内容比较方便而已。</li>
+</ul>
+<p><img src="/imgs/clip_image010117585ea-4ba8-441e-8faf-ad1f390acb8e-20220428154804-t8diweg.png" alt="image"></p>
+<p><img src="/imgs/clip_image011bf5997a5-1853-4767-8057-1dbed0b0a8b4-20220428154804-3aiidae.png" alt="image"></p>
+<ul>
+<li>另外两种较慢的查询系统信息的方法：</li>
+<li>wmic product get name,versionpowershell &ldquo;Get-WmiObject -class Win32_Product | Select-Object -Property name,version&rdquo;</li>
+</ul>
+<p><img src="/imgs/clip_image012e07042e5-3689-44b4-b89e-82c921e8e358-20220428154804-snk3ixt.png" alt="image"></p>
+<p><img src="/imgs/clip_image0135ee079d6-fa1f-42b6-86b0-1b6f5dee9017-20220428154804-lbf4vwx.png" alt="image"></p>
+<ul>
+<li>netstat -ano 端口及网络连接情况查看如果这台主机是台代理服务器，则会有很多IP来连接他的代理端口如果是台用来更新的服务器，例如WSUS，则他可能会开放一个8530端口（WSUS是Windows Server Update Services的简称）如果是DNS服务器则可能开着53端口PS：如果这台主机可以访问外网，同时发现这里存在大量powershell进程在向外进行连接，则多半可以判断该主机为沦陷的肉鸡（对外进行扫描）。</li>
+</ul>
+<p><img src="/imgs/clip_image014ff516f3c-08b5-4d4d-a261-2edc60241ba7-20220428154804-rtgzyyw.png" alt="image"></p>
+<ul>
+<li>systeminfo 查看补丁情况</li>
+</ul>
+<p><img src="/imgs/clip_image0152ce64ec1-4947-44b8-8517-c3cda913fe02-20220428154804-2fjafcc.png" alt="image"></p>
+<ul>
+<li>net share 查看本机共享wmic share get name,path,status</li>
+</ul>
+<p><img src="/imgs/clip_image0165511869f-73c9-405e-be73-82d83b67bbdb-20220428154804-j6gpjoh.png" alt="image"></p>
+<ul>
+<li>net view hostname 查看指定主机的共享</li>
+</ul>
+<p><img src="/imgs/clip_image017b7f98706-ac8a-4ab1-a154-aef38ea0b21e-20220428154804-329nmqu.png" alt="image"></p>
+<ul>
+<li>查看远程连接端口reg query &ldquo;hkey_local_machine\system\currentcontrolset\control\terminal server\winstations\RDP-Tcp&rdquo; /v portnumber</li>
+</ul>
+<p><img src="/imgs/clip_image018fc8c0098-d1e0-4402-bd20-c174864c24ba-20220428154804-kh0kgh0.png" alt="image"></p>
+<ul>
+<li>查询并开启远程连接端口Windows Server 2008 &amp; 2012打开3389：wmic /namespace:\\root\cimv2\terminalservices path win32_terminalservicesetting where (__CLASS !=&quot;&quot;) call setallowtsconnections 1wmic /namespace:\\root\cimv2\terminalservices path win32_tsgeneralsetting where (TerminalName=&lsquo;RDP-Tcp&rsquo;) call setuserauthenticationrequired 1reg add &ldquo;HKLM\SYSTEM\CURRENT\CONTROLSET\CONTROL\TERMINAL SERVER&rdquo;  /v  fSingleSessionPerUser   /t  REG_DWORD  /d  0  /f​Windows Server 2003 开启3389wmic path win32_terminalservicesetting where (__CLASS !=&quot;&quot;)   call  setallowtsconnections 1</li>
+</ul>
+<p><img src="/imgs/clip_image0194c6d647a-af29-47d7-aebb-7b3344e70716-20220428154804-ucoaujl.jpg" alt="image"></p>
+<ul>
+<li>判断是否有域</li>
+<li>ipconfig /all</li>
+</ul>
+<p><img src="/imgs/clip_image020e6984249-fc05-461f-a507-39189297fb5a-20220428154804-6nz75ux.png" alt="image"></p>
+<ul>
+<li>systeminfo如果systeminfo后，最下面的“登录服务器”字段值为&quot;WORDGROUP&quot;则说明此电脑不在域内</li>
+</ul>
+<p><img src="/imgs/clip_image0211316673b-ec8d-4053-babc-ae90396bfd8f-20220428154804-jlj5g2r.png" alt="image"></p>
+<p><img src="/imgs/clip_image02234edd46b-0180-49c3-8aec-1162b93cdd7b-20220428154804-bf07pby.jpg" alt="image"></p>
+<ul>
+<li>net config workstation</li>
+</ul>
+<p><img src="/imgs/clip_image0236feda98b-866f-47f3-b4a4-4491baafb0c0-20220428154804-safp20t.png" alt="image"></p>
+<ul>
+<li>net time /domain</li>
+</ul>
+<p><img src="/imgs/clip_image024fc5e5653-f09c-4a8c-aadc-1311db7b05a4-20220428154804-oyfa78f.png" alt="image"></p>
+<p><img src="/imgs/clip_image0257dfa2826-7e43-48d5-8e43-d7fe83484ee7-20220428154804-g51unwg.png" alt="image"></p>
+<ul>
+<li>-&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;</li>
+<li>查询防火墙配置</li>
+<li>查看防火墙配置：netsh firewall show config</li>
+</ul>
+<p><img src="/imgs/clip_image026f62073b7-7423-4479-8e34-cd1a5ece1ec5-20220428154804-46hzw6d.png" alt="image"></p>
+<ul>
+<li>设置防火墙日志存储位置：netsh advfirewall set currentprofile logging filename &ldquo;C:\Windows\temp\FirewallLOG.log</li>
+</ul>
+<p><img src="/imgs/clip_image027bfcf6e47-771d-457d-adb6-570d49ea5726-20220428154804-b3nd93z.png" alt="image"></p>
+<ul>
+<li>修改防火墙配置</li>
+<li>关闭防火墙Windows 2003之前：netsh firewall get opmode disable Windows 2003之后：netsh advfirewall set allprofiles state off</li>
+</ul>
+<p><img src="/imgs/clip_image028312eae55-375e-4fec-9457-e6a82cc3fff4-20220428154804-p5yw1wg.png" alt="image"></p>
+<ul>
+<li>修改防火墙配置Windows 2003之前：允许某个程序的全连接netsh firewall add allowdprogram C:\nc.exe &ldquo;allow nc&rdquo; enable​Windows 2003之后：允许某个程序连入netsh advfirewall firewall add rule name=&ldquo;pass nc&rdquo; dir=in action=allow program=&ldquo;C:\nc.exe&quot;允许某个程序外连netsh advfirewall firewall add rule name=&ldquo;pass nc&rdquo; dir=in action=allow program=&ldquo;C:\nc.exe&quot;开放3389端口：netsh advfirewall firewall add rule name=&ldquo;Remote Desktop&rdquo; protocol=TCP dir=in localport=3389 action=allow上面命令中的nc只是举例，实际情况中可以根据实际情况换别的程序。​上面命令的组成规律大概是这样的：netsh advfirewall firewall add rule(添加规则) name(规则名字)=&ldquo;XXX&rdquo; protocol(协议名字) 、in/out(进出站) action（操作）=allow/deny(放行或阻止) program=&lsquo;C:\&hellip;&rsquo;(程序的绝对路径)、localport(端口)</li>
+<li>在内网渗透过程中，命令较多，这些命令需要平时多敲才能熟练掌握，当然如果只是做普通的渗透可能不需全都记得很牢，只要要用的时候能够找到对应命令即可，但是在一些特殊的情况下可能就会要求你进行信息收集的速度够快，例如可能惊动对方安全人员的情况，就需要你的速度够快了。</li>
+<li>-&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;</li>
+<li>免责声明</li>
+<li>本文中提到的漏洞利用Poc和脚本仅供研究学习使用，请遵守《网络安全法》等相关法律法规。</li>
+</ul>
+
+      </article>
+    </section>
+
+    
+
+    
+
+    
+  </div>
+</div>
+
+
+            <footer class="ui basic center aligned segment" style="background-color: transparent;">
+              
+              <p>© 2021 - 2022 rebootORZ Security</p>
+              
+
+              <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/g1eny0ung/hugo-theme-dream" target="_blank">Dream</a>.</p>
+
+              
+            </footer>
+          </div>
+        </section>
+        <section class="back">
+          <div class="dream-max-width">
+            <header class="ui basic very padded segment dream-header">
+  
+  <div class="ui small circular image">
+    <img src="/me/gl.jpg" alt="avatar" />
+  </div>
+  
+
+  <div class="content">
+    <h1 class="ui medium header">rebootORZ Security , EXP Loading ...<span class="sub header">🦶走过的叫足迹 ，走不到叫憧憬。</span>
+    </h1>
+
+    <article class="ui horizontal list">
+      
+      <a class="item" href="/posts">
+        <i class="archive icon" title="归档"></i>
+      </a>
+      
+      <a class="item" href="/categories">
+        <i class="th list icon" title="所有分类"></i>
+      </a>
+      <a class="item" href="/tags">
+        <i class="tags icon" title="所有标签"></i>
+      </a>
+    </article>
+
+    
+    
+    
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+
+    
+
+    
+    
+    
+          <div class="dream-tags">
+          
+          
+          
+            <a class="ui label" href="/tags/docker/" title="Docker">
+              Docker
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/java/" title="java">
+              java
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/jsp/" title="jsp">
+              jsp
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/springboot/" title="SpringBoot">
+              SpringBoot
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/webshell/" title="webshell">
+              webshell
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/wifi/" title="WiFi">
+              WiFi
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/%E7%BA%A2%E9%98%9F%E6%8A%80%E6%9C%AF/" title="红队技术">
+              红队技术
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/%E8%93%9D%E7%89%99/" title="蓝牙">
+              蓝牙
+            </a>
+          
+          </div>
+    
+
+    
+  </div>
+</header>
+
+
+<div class="ui relaxed grid dream-grid dream-back">
+  
+  
+  
+
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    <article class="ui segment">
+      <div class="ui medium header">社交链接</div>
+      <nav class="ui secondary menu dream-menu dream-socials">
+  
+  <a class="item" href="/index.xml">
+    <i class="large rss square icon" title="RSS"></i>
+  </a>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <a class="item" href="https://github.com/https://github.com/rebootORZ/" target="_blank">
+    <i class="large github icon" title="GitHub"></i>
+  </a>
+  
+
+  
+
+  
+
+  
+</nav>
+
+    </article>
+  </div>
+
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    
+    <article class="ui segment">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。<br /><br />背景使用了 <a href="https://www.pexels.com/zh-cn/" target="_blank">Pexels</a> 上 <a href="https://www.pexels.com/zh-cn/@minan1398" target="_blank">Min An</a> 拍摄的<a href="https://www.pexels.com/zh-cn/photo/1454794/" target="_blank">图片</a>。
+    </article>
+    
+  </div>
+
+  
+</div>
+
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js" integrity="sha256-CgSoWC9w5wNmI1aN8dIMK+6DPelUEtvDr+Bc2m/0Nx8=" crossorigin="anonymous"></script>
+
+    
+    <div class="ui segment" id="dream-search">
+  <div class="ui search">
+    <div class="ui transparent input">
+      <input class="prompt" type="text" placeholder="搜索" />
+    </div>
+    <div class="results"></div>
+  </div>
+</div>
+<script>
+  $(document).ready(function () {
+    $.getJSON('https:\/\/rebootorz.github.io/index.json', function (data) {
+      $('.ui.search').search({
+        source: data,
+        searchFields: ['title'],
+        showNoResults: false,
+      })
+    })
+  })
+</script>
+<script src="/js/search.js"></script>
+
+    
+
+    
+
+    <script>
+  window.background = "#fff"
+  window.defaultDark =  null 
+  window.backgroundDark =  null 
+  window.backgroundImageDark = "/me/light_background.jpeg"
+  window.darkNav =  true 
+  window.maxTags =  null 
+  window.hasTwitterEmbed =  null 
+  window.fixedNav =  null 
+
+  if (window.hasTwitterEmbed) {
+    
+    window.twttr = (function (d, s, id) {
+      var js,
+        fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {}
+      if (d.getElementById(id)) return t
+      js = d.createElement(s)
+      js.id = id
+      js.src = 'https://platform.twitter.com/widgets.js'
+      fjs.parentNode.insertBefore(js, fjs)
+
+      t._e = []
+      t.ready = function (f) {
+        t._e.push(f)
+      }
+
+      return t
+    })(document, 'script', 'twitter-wjs')
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@1.13.1/js/jquery.overlayScrollbars.min.js" integrity="sha256-tBd38uWlvgfps3zHPrUb2ePBg+Z8EjMf0QloFONzpvU=" crossorigin="anonymous"></script>
+<script src="/js/header.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/theme.js"></script>
+
+    
+
+
+<script src="https://cdn.jsdelivr.net/npm/luxon@1.26.0" integrity="sha256-4sbTzmCCW9LGrIh5OsN8V5Pfdad1F1MwhLAOyXKnsE0=" crossorigin="anonymous"></script>
+<script>
+  format()
+
+  function format() {
+    $('span[data-format="luxon"]').each(function () {
+      var date = $(this).text()
+
+      $(this).text(luxon.DateTime.fromISO(date, { locale: "zh" }).toFormat("yyyy年MM月dd日"))
+    })
+  }
+</script>
+
+
+
+<script src="/js/scrollToTop.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.1/dist/html2canvas.min.js" integrity="sha256-uacRffSSMP9qpvNWhVmYLykBv9YKMA1d/VSIN1AmfyQ=" crossorigin="anonymous"></script>
+<script src="/js/post.js" defer></script>
+
+
+    
+
+    
+  </body>
+</html>

