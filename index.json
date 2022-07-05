@@ -4,4 +4,4 @@
 
   
 
-[{"categories":null,"description":"前言 本文章的目的在于探索极端环境下，使用java编写木马代替常见Go、C++、ps等后门的可能性，及免杀效果的探索。 环境 Macbook Catalina 10.15.5 Java 1.8.0_211 IDeaJ 2021.01 一个正","tags":["红队技术"],"title":"从Jar到Exe","url":"https://rebootorz.github.io/posts/%E4%BB%8Ejar%E5%88%B0exe/"},{"categories":null,"description":"前置知识 BMChache a. BMChache全称RDP Bitmap Chache，即RDP（远程桌面协议）位图缓存。是Windows为了加速RDP连接时的显示，减少数据","tags":["红队技术"],"title":"从mstsc缓存恢复图像","url":"https://rebootorz.github.io/posts/%E4%BB%8Emstsc%E7%BC%93%E5%AD%98%E6%81%A2%E5%A4%8D%E5%9B%BE%E5%83%8F/"}]
+[{"categories":["免杀"],"description":"前言 本文章的目的在于探索极端环境下，使用java编写木马代替常见Go、C++、ps等后门的可能性，及免杀效果的探索。 环境 Macbook Catalina 10.15.5 Java 1.8.0_211 IDeaJ 2021.01 一个正","tags":["红队技术"],"title":"从Jar到Exe","url":"https://rebootorz.github.io/posts/%E4%BB%8Ejar%E5%88%B0exe/"},{"categories":["内网信息收集"],"description":"前置知识 BMChache a. BMChache全称RDP Bitmap Chache，即RDP（远程桌面协议）位图缓存。是Windows为了加速RDP连接时的显示，减少数据","tags":["红队技术"],"title":"从mstsc缓存恢复图像","url":"https://rebootorz.github.io/posts/%E4%BB%8Emstsc%E7%BC%93%E5%AD%98%E6%81%A2%E5%A4%8D%E5%9B%BE%E5%83%8F/"}]

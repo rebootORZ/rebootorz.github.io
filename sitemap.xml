@@ -2,6 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://rebootorz.github.io/categories/</loc>
+    <lastmod>2022-07-05T13:56:26+08:00</lastmod>
+  </url><url>
     <loc>https://rebootorz.github.io/posts/</loc>
     <lastmod>2022-07-05T13:56:26+08:00</lastmod>
   </url><url>
@@ -20,6 +23,10 @@
     <loc>https://rebootorz.github.io/tags/%E7%BA%A2%E9%98%9F%E6%8A%80%E6%9C%AF/</loc>
     <lastmod>2022-07-05T13:56:26+08:00</lastmod>
   </url><url>
-    <loc>https://rebootorz.github.io/categories/</loc>
+    <loc>https://rebootorz.github.io/categories/%E5%85%8D%E6%9D%80/</loc>
+    <lastmod>2022-07-05T13:56:26+08:00</lastmod>
+  </url><url>
+    <loc>https://rebootorz.github.io/categories/%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/</loc>
+    <lastmod>2022-07-05T13:56:26+08:00</lastmod>
   </url>
 </urlset>
